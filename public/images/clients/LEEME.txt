@@ -1,0 +1,11 @@
+# Logos de clientes (banda inferior automática)
+
+Coloca aquí los logos (.png, .jpg, .jpeg, .webp, .svg).
+
+También se lee la carpeta:
+  public/images/projects/Logos empresas servicios/
+
+Cualquier logo nuevo en cualquiera de esas carpetas
+aparece solo en la banda deslizante (sin editar código).
+
+Recomendación: PNG con fondo transparente, ~80–120 px de alto.
