@@ -420,7 +420,6 @@ footer { background: var(--dark-900); padding: 64px 0 0; }
 .footer-col ul a::before { content:'→'; font-size:.7rem; opacity:.5; }
 .footer-bottom { padding: 20px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .footer-bottom p { color: rgba(255,255,255,.35); font-size: .78rem; }
-.footer-deploy-test { color: rgba(34,197,94,.75) !important; font-size: .72rem !important; }
 .footer-cert { display: flex; gap: 12px; }
 .cert-badge { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: 4px 10px; font-size: .7rem; color: rgba(255,255,255,.45); font-weight: 600; }
 
