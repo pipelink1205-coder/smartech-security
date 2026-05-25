@@ -44,5 +44,6 @@
     </div>
     <div class="container footer-bottom">
         <p>© {{ date('Y') }} Smart Tech Security. Todos los derechos reservados.</p>
+        <p class="footer-deploy-test">Sitio actualizado vía Git · 24/05/2026</p>
     </div>
 </footer>
