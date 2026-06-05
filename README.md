@@ -59,11 +59,13 @@ CREATE DATABASE smart_tech_security CHARACTER SET utf8mb4 COLLATE utf8mb4_unicod
 php artisan migrate --seed
 ```
 
-### 8. Instalar panel de administración (Filament)
+### 8. Instalar panel de administración (Filament 5)
 ```bash
 php artisan filament:install --panels
 php artisan make:filament-user  # Crear usuario admin
 ```
+
+Guía completa del panel: **[ADMIN.md](ADMIN.md)**
 
 ### 9. ¡Lanzar!
 ```bash
@@ -149,14 +151,9 @@ ADMIN_EMAIL=tu-email@gmail.com
 
 ## 🛡️ Panel de administración
 
-Accede en `/admin` con las credenciales creadas.
+Accede en `/admin` con el usuario creado con `make:filament-user`.
 
-Para añadir recursos Filament:
-```bash
-php artisan make:filament-resource Quote --generate
-php artisan make:filament-resource Service --generate
-php artisan make:filament-resource Project --generate
-```
+**Documentación:** [ADMIN.md](ADMIN.md) — usuarios, proyectos (mapa + galería), servicios, cotizaciones y qué sigue siendo por carpetas/archivos de config.
 
 ---
 

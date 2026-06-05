@@ -11,19 +11,24 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
 
     @livewireStyles
+    @stack('head')
     {{ $head ?? '' }}
 </head>
-<body>
+<body class="site-body">
+
+<x-ambient-bg />
+<x-brand-watermark />
 
 @include('components.navbar')
 @include('components.mobile-menu')
+<x-section-rail />
 
-<main>
+<main class="site-main">
     {{ $slot }}
 </main>
 
@@ -40,6 +45,7 @@
 </a>
 
 @livewireScripts
+@stack('scripts')
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

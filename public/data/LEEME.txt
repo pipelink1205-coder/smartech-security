@@ -1,0 +1,2 @@
+comunas-medellin.geojson — polígonos de comunas/corregimientos (desde proyecto Mapas_oferta).
+Usado por public/js/projects-map.js en la sección Trabajos realizados.

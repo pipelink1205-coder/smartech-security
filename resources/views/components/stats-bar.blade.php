@@ -1,5 +1,5 @@
-<section class="stats-bar">
-    <div class="container stats-grid">
+<x-section tone="gradient" class="stats-section">
+    <div class="stats-grid">
         @foreach(config('site.stats') as $stat)
             <div>
                 <div class="stat-num">{{ $stat['num'] }}</div>
@@ -7,4 +7,4 @@
             </div>
         @endforeach
     </div>
-</section>
+</x-section>

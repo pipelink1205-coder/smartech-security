@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Project;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ProjectGallery extends Component
@@ -23,6 +24,12 @@ class ProjectGallery extends Component
     {
         $this->selectedId = $id;
         $this->activeImage = 0;
+    }
+
+    #[On('map-select-project')]
+    public function onMapSelectProject(int $id): void
+    {
+        $this->selectProject($id);
     }
 
     public function selectImage(int $index): void
@@ -57,9 +64,10 @@ class ProjectGallery extends Component
         }
 
         return view('livewire.project-gallery', [
-            'projects' => $projects,
-            'selected' => $selected,
-            'gallery'  => $gallery,
+            'projects'    => $projects,
+            'selected'    => $selected,
+            'gallery'     => $gallery,
+            'mapProjects' => $projects->filter(fn ($p) => $p->latitude && $p->longitude)->map->toMapPayload()->values(),
         ]);
     }
 

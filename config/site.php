@@ -78,4 +78,17 @@ return [
         'Hogar / Apartamento', 'Empresa / Oficina', 'Hotel / Hostal',
         'Conjunto Residencial', 'Industria / Bodega', 'Otro',
     ],
+
+    /** Secciones del sitio (navegación por páginas en desktop / scroll en móvil). */
+    'sections' => [
+        ['id' => 'inicio', 'label' => 'Inicio'],
+        ['id' => 'servicios', 'label' => 'Servicios'],
+        ['id' => 'iptv', 'label' => 'IPTV'],
+        ['id' => 'proyectos', 'label' => 'Proyectos'],
+        ['id' => 'proceso', 'label' => 'Proceso'],
+        ['id' => 'testimonios', 'label' => 'Testimonios'],
+        ['id' => 'faq', 'label' => 'FAQ'],
+        ['id' => 'cobertura', 'label' => 'Cobertura'],
+        ['id' => 'contacto', 'label' => 'Contacto'],
+    ],
 ];

@@ -1,18 +1,21 @@
 <div class="project-portfolio">
     <div class="container">
-        <div class="section-header">
-            <span class="section-tag">{{ $featuredOnly ? 'Proyectos Recientes' : 'Portafolio' }}</span>
-            <h2 class="section-title">
-                @if($featuredOnly)
-                    Trabajos realizados en <span>Medellín</span> y el Valle de Aburrá
-                @else
-                    Trabajos en <span>Medellín</span> y el Valle de Aburrá
-                @endif
-            </h2>
-            <p class="section-sub">
-                Selecciona un servicio para ver la descripción y las fotos de evidencia del trabajo realizado.
-            </p>
-        </div>
+        <x-section-header
+            :tag="$featuredOnly ? 'Proyectos Recientes' : 'Portafolio'"
+            :subtitle="'Selecciona un servicio para ver la descripción y las fotos de evidencia del trabajo realizado.'"
+        >
+            <x-slot:heading>
+                <h2 class="section-title">
+                    @if($featuredOnly)
+                        Trabajos realizados en <span>Medellín</span> y el Valle de Aburrá
+                    @else
+                        Trabajos en <span>Medellín</span> y el Valle de Aburrá
+                    @endif
+                </h2>
+            </x-slot:heading>
+        </x-section-header>
+
+        @include('components.projects-map', ['mapProjects' => $mapProjects])
 
         <div class="project-portfolio-layout">
             <div class="project-portfolio-grid" role="list">
@@ -37,6 +40,9 @@
             @if($selected)
                 <aside class="project-portfolio-detail" aria-live="polite">
                     <h3 class="project-detail-title">{{ $selected->category }}</h3>
+                    @if($selected->address)
+                        <p class="project-detail-address">{{ $selected->address }}</p>
+                    @endif
                     <p class="project-detail-desc">{{ $selected->description }}</p>
 
                     @if(count($gallery) > 0)

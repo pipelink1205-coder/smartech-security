@@ -12,10 +12,36 @@ class Project extends Model
 
     protected $fillable = [
         'title', 'slug', 'category', 'description',
-        'location', 'image', 'is_featured', 'year',
+        'location', 'address', 'latitude', 'longitude', 'comuna_numero',
+        'image', 'is_featured', 'year',
     ];
 
-    protected $casts = ['is_featured' => 'boolean'];
+    protected $casts = [
+        'is_featured'     => 'boolean',
+        'latitude'        => 'float',
+        'longitude'       => 'float',
+        'comuna_numero'   => 'integer',
+    ];
+
+    public function scopeOnMap($q)
+    {
+        return $q->whereNotNull('latitude')->whereNotNull('longitude');
+    }
+
+    public function toMapPayload(): array
+    {
+        return [
+            'id'            => $this->id,
+            'category'      => $this->category,
+            'description'   => $this->description,
+            'address'       => $this->address,
+            'location'      => $this->location,
+            'comuna_numero' => $this->comuna_numero,
+            'latitude'      => $this->latitude,
+            'longitude'     => $this->longitude,
+            'image_url'     => $this->image_url,
+        ];
+    }
 
     public function scopeFeatured($q) { return $q->where('is_featured', true); }
 
