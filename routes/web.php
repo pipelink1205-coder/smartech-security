@@ -4,6 +4,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuoteController;
 
+// GeoJSON del mapa de comunas (sirve el archivo con headers correctos en producción)
+Route::get('/mapa/comunas.geojson', function () {
+    $path = public_path('data/comunas-medellin.geojson');
+
+    abort_unless(is_readable($path), 404);
+
+    return response()->file($path, [
+        'Content-Type' => 'application/geo+json; charset=utf-8',
+        'Cache-Control' => 'public, max-age=86400',
+    ]);
+})->name('map.comunas-geojson');
+
 // Página principal
 Route::get('/', [HomeController::class, 'index'])->name('home');
 

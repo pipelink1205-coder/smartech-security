@@ -13,6 +13,7 @@
     let layerPins = null;
     let labelZoomRaf = null;
     let activeComunaLayer = null;
+    let mapReady = false;
 
     const brand = {
         fill: '#d1fae5',
@@ -207,15 +208,65 @@
         pintarLabels(geo);
     }
 
+    function showMapError(message) {
+        if (el.querySelector('.projects-map-error')) return;
+        el.insertAdjacentHTML(
+            'beforeend',
+            `<p class="projects-map-error">${message}</p>`
+        );
+    }
+
+    function mapContainerVisible() {
+        const page = el.closest('.site-page');
+        if (!page || !document.body.classList.contains('site-paging')) {
+            return true;
+        }
+        return page.classList.contains('active');
+    }
+
+    function refreshMapSize() {
+        if (!map) return;
+        setTimeout(() => map.invalidateSize(), 50);
+        setTimeout(() => map.invalidateSize(), 300);
+    }
+
     el.addEventListener('click', (e) => {
         const btn = e.target.closest('[data-project-id]');
-        if (!btn) return;
+        if (!btn || !map) return;
         e.preventDefault();
         selectProject(parseInt(btn.dataset.projectId, 10));
         map.closePopup();
     });
 
+    async function loadGeoLayers() {
+        const res = await fetch(cfg.geoUrl, {
+            credentials: 'same-origin',
+            headers: { Accept: 'application/geo+json, application/json' },
+        });
+
+        if (!res.ok) {
+            throw new Error(`GeoJSON HTTP ${res.status}`);
+        }
+
+        const geo = await res.json();
+        if (!geo?.features?.length) {
+            throw new Error('GeoJSON vacío o inválido');
+        }
+
+        bindGeoLayer(geo);
+        pintarPins();
+    }
+
     async function init() {
+        if (mapReady) {
+            refreshMapSize();
+            return;
+        }
+
+        if (!mapContainerVisible()) {
+            return;
+        }
+
         map = L.map(el, { zoomControl: true, preferCanvas: true }).setView([6.2518, -75.5636], 11);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -224,31 +275,38 @@
         }).addTo(map);
 
         try {
-            const res = await fetch(cfg.geoUrl);
-            if (!res.ok) throw new Error('GeoJSON no disponible');
-            const geo = await res.json();
-            bindGeoLayer(geo);
-            pintarPins();
+            await loadGeoLayers();
         } catch (e) {
             console.warn('[Smartech map]', e);
-            el.insertAdjacentHTML(
-                'beforeend',
-                '<p class="projects-map-error">No se pudo cargar el mapa de comunas.</p>'
-            );
+            showMapError('No se pudo cargar el mapa de comunas. Verifique que el archivo GeoJSON esté en el servidor.');
         }
 
-        setTimeout(() => map.invalidateSize(), 300);
+        mapReady = true;
+        refreshMapSize();
+    }
+
+    function boot() {
+        if (mapContainerVisible()) {
+            init();
+            return;
+        }
 
         window.addEventListener('smartech-show-page', (event) => {
-            if (event.detail?.pageId === 'proyectos' && map) {
-                setTimeout(() => map.invalidateSize(), 250);
+            if (event.detail?.pageId === 'proyectos') {
+                init();
             }
         });
     }
 
+    window.addEventListener('smartech-show-page', (event) => {
+        if (event.detail?.pageId === 'proyectos' && map) {
+            refreshMapSize();
+        }
+    });
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', boot);
     } else {
-        init();
+        boot();
     }
 })();
