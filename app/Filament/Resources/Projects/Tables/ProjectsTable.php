@@ -28,10 +28,11 @@ class ProjectsTable
                     ->searchable()
                     ->sortable()
                     ->description(fn ($record) => $record->location),
-                TextColumn::make('category')
-                    ->label('Categoría')
+                TextColumn::make('service.name')
+                    ->label('Servicio')
                     ->badge()
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('comuna_numero')
                     ->label('Comuna')
                     ->placeholder('—')

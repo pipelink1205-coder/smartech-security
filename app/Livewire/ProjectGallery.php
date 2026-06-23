@@ -3,12 +3,15 @@
 namespace App\Livewire;
 
 use App\Models\Project;
+use App\Models\Service;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ProjectGallery extends Component
 {
-    public ?int $selectedId = null;
+    public ?int $selectedService = null;
+
+    public ?int $openProjectId = null;
 
     public int $activeImage = 0;
 
@@ -17,19 +20,42 @@ class ProjectGallery extends Component
     public function mount(bool $featuredOnly = false): void
     {
         $this->featuredOnly = $featuredOnly;
-        $this->selectedId = $this->projectsQuery()->value('id');
     }
 
-    public function selectProject(int $id): void
+    public function showAllServices(): void
     {
-        $this->selectedId = $id;
+        $this->filterService(null);
+    }
+
+    public function filterService(?int $id): void
+    {
+        $this->selectedService = $id;
+        $this->openProjectId = null;
+        $this->activeImage = 0;
+    }
+
+    public function openProject(int $id): void
+    {
+        $this->openProjectId = $id;
+        $this->activeImage = 0;
+    }
+
+    public function closeProject(): void
+    {
+        $this->openProjectId = null;
         $this->activeImage = 0;
     }
 
     #[On('map-select-project')]
     public function onMapSelectProject(int $id): void
     {
-        $this->selectProject($id);
+        $this->openProject($id);
+    }
+
+    #[On('close-project-lightbox')]
+    public function closeProjectFromEvent(): void
+    {
+        $this->closeProject();
     }
 
     public function selectImage(int $index): void
@@ -37,38 +63,66 @@ class ProjectGallery extends Component
         $this->activeImage = max(0, $index);
     }
 
+    public function nextImage(): void
+    {
+        $project = $this->resolvedOpenProject();
+        if (! $project) {
+            return;
+        }
+
+        $count = count($this->galleryFor($project));
+        if ($count <= 1) {
+            return;
+        }
+
+        $this->activeImage = ($this->activeImage + 1) % $count;
+    }
+
+    public function prevImage(): void
+    {
+        $project = $this->resolvedOpenProject();
+        if (! $project) {
+            return;
+        }
+
+        $count = count($this->galleryFor($project));
+        if ($count <= 1) {
+            return;
+        }
+
+        $this->activeImage = ($this->activeImage - 1 + $count) % $count;
+    }
+
     protected function projectsQuery()
     {
-        $q = Project::query()->with(['images' => fn ($q) => $q->orderBy('sort_order')]);
+        $q = Project::query()->with([
+            'service',
+            'images' => fn ($q) => $q->orderByDesc('is_cover')->orderBy('sort_order'),
+        ]);
 
         if ($this->featuredOnly) {
             $q->featured();
         }
 
+        if ($this->selectedService) {
+            $q->where('service_id', $this->selectedService);
+        }
+
         return $q->latest('year')->latest('id');
     }
 
-    public function render()
+    protected function resolvedOpenProject(): ?Project
     {
-        $projects = $this->projectsQuery()->get();
-        $selected = $projects->firstWhere('id', $this->selectedId) ?? $projects->first();
-
-        if ($selected && $this->selectedId !== $selected->id) {
-            $this->selectedId = $selected->id;
+        if (! $this->openProjectId) {
+            return null;
         }
 
-        $gallery = $selected ? $this->galleryFor($selected) : [];
-
-        if ($gallery && $this->activeImage >= count($gallery)) {
-            $this->activeImage = 0;
-        }
-
-        return view('livewire.project-gallery', [
-            'projects'    => $projects,
-            'selected'    => $selected,
-            'gallery'     => $gallery,
-            'mapProjects' => $projects->filter(fn ($p) => $p->latitude && $p->longitude)->map->toMapPayload()->values(),
-        ]);
+        return Project::query()
+            ->with([
+                'service',
+                'images' => fn ($q) => $q->orderByDesc('is_cover')->orderBy('sort_order'),
+            ])
+            ->find($this->openProjectId);
     }
 
     /** @return array<int, array{url: string, caption: ?string}> */
@@ -82,5 +136,48 @@ class ProjectGallery extends Component
         }
 
         return [['url' => $project->image_url, 'caption' => null]];
+    }
+
+    public function render()
+    {
+        $projects = $this->projectsQuery()->get();
+
+        $services = Service::query()
+            ->active()
+            ->ordered()
+            ->whereHas('projects', function ($q) {
+                if ($this->featuredOnly) {
+                    $q->featured();
+                }
+            })
+            ->withCount(['projects' => function ($q) {
+                if ($this->featuredOnly) {
+                    $q->featured();
+                }
+            }])
+            ->get();
+
+        $openProject = $this->resolvedOpenProject();
+        $gallery = $openProject ? $this->galleryFor($openProject) : [];
+
+        if ($gallery && $this->activeImage >= count($gallery)) {
+            $this->activeImage = 0;
+        }
+
+        $totalProjectsCount = Project::query()
+            ->when($this->featuredOnly, fn ($q) => $q->featured())
+            ->count();
+
+        return view('livewire.project-gallery', [
+            'projects'           => $projects,
+            'services'           => $services,
+            'totalProjectsCount' => $totalProjectsCount,
+            'openProject' => $openProject,
+            'gallery'     => $gallery,
+            'mapProjects' => $projects
+                ->filter(fn ($p) => $p->latitude !== null && $p->longitude !== null)
+                ->map->toMapPayload()
+                ->values(),
+        ]);
     }
 }

@@ -9,9 +9,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\View;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -21,112 +24,149 @@ class ProjectForm
     {
         return $schema
             ->components([
-                Section::make('Información general')
-                    ->schema([
-                        TextInput::make('title')
-                            ->label('Título')
-                            ->required()
-                            ->maxLength(255)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function ($set, ?string $state, ?string $old, $get): void {
-                                if (blank($get('slug'))) {
-                                    $set('slug', Str::slug($state ?? ''));
-                                }
-                            }),
-                        TextInput::make('slug')
-                            ->label('Identificador (URL)')
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true)
-                            ->helperText('Se genera del título si lo dejas vacío.'),
-                        Select::make('category')
-                            ->label('Categoría / servicio')
-                            ->options([
-                                'Seguridad Corporativa' => 'Seguridad Corporativa',
-                                'IPTV Hotelera' => 'IPTV Hotelera',
-                                'Energía Solar' => 'Energía Solar',
-                                'Control de Acceso' => 'Control de Acceso',
-                                'Redes Empresariales' => 'Redes Empresariales',
-                                'Domótica' => 'Domótica',
-                                'Alarmas' => 'Alarmas',
-                                'Cámaras y Videovigilancia' => 'Cámaras y Videovigilancia',
-                            ])
-                            ->searchable()
-                            ->required(),
-                        Textarea::make('description')
-                            ->label('Descripción')
-                            ->rows(4)
-                            ->columnSpanFull(),
-                        Grid::make(2)
-                            ->schema([
-                                TextInput::make('location')
-                                    ->label('Zona / ciudad')
-                                    ->maxLength(100)
-                                    ->helperText('Ej: El Poblado, Envigado'),
-                                TextInput::make('year')
-                                    ->label('Año del trabajo')
-                                    ->numeric()
-                                    ->minValue(2000)
-                                    ->maxValue(2100),
-                            ]),
-                        Toggle::make('is_featured')
-                            ->label('Destacado en la página de inicio')
-                            ->default(false)
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(2),
+                Placeholder::make('guia_proyecto')
+                    ->label('')
+                    ->content(new HtmlString(
+                        '<p class="text-sm text-gray-600 dark:text-gray-400 mb-1">'
+                        . '<strong>Datos</strong> → información del trabajo · '
+                        . '<strong>Fotos</strong> → evidencias · '
+                        . '<strong>Mapa</strong> → pin en el sitio público.'
+                        . '</p>'
+                    ))
+                    ->columnSpanFull(),
 
-                Section::make('Fotos del proyecto')
-                    ->description('Todas las fotos que verán los visitantes en la galería del sitio.')
-                    ->schema([
-                        Placeholder::make('fotos_ayuda')
-                            ->label('')
-                            ->content(new HtmlString(
-                                '<ul class="list-disc ps-5 text-sm text-gray-600 dark:text-gray-400 space-y-1">'
-                                . '<li><strong>Aquí subes todas las fotos</strong> (evidencias del trabajo).</li>'
-                                . '<li>La <strong>primera</strong> de la lista es la portada en el sitio.</li>'
-                                . '<li>Después de guardar, en la pestaña <strong>Galería de fotos</strong> puedes añadir más, editar textos o cambiar el orden.</li>'
-                                . '</ul>'
-                            ))
-                            ->columnSpanFull(),
-                        PublicAssetUpload::image('pending_gallery', 'images/projects')
-                            ->label('Subir fotos')
-                            ->multiple()
-                            ->reorderable()
-                            ->appendFiles()
-                            ->columnSpanFull(),
-                    ]),
+                Tabs::make('Proyecto')
+                    ->tabs([
+                        Tab::make('Datos')
+                            ->icon(Heroicon::OutlinedDocumentText)
+                            ->schema(self::datosTab()),
 
-                Section::make('Ubicación en el mapa del sitio')
-                    ->description('Marca dónde quedó instalado el trabajo para que aparezca en el mapa público.')
-                    ->schema([
-                        TextInput::make('address')
-                            ->label('Dirección')
-                            ->maxLength(255)
-                            ->placeholder('Ej: Carrera 72 # 11-11, Medellín')
-                            ->columnSpanFull(),
-                        View::make('filament.forms.project-location-picker')
-                            ->columnSpanFull(),
-                        Grid::make(3)
-                            ->schema([
-                                TextInput::make('latitude')
-                                    ->label('Latitud')
-                                    ->numeric()
-                                    ->step(0.000001)
-                                    ->live(debounce: 500),
-                                TextInput::make('longitude')
-                                    ->label('Longitud')
-                                    ->numeric()
-                                    ->step(0.000001)
-                                    ->live(debounce: 500),
-                                TextInput::make('comuna_numero')
-                                    ->label('Comuna Medellín (1–16)')
-                                    ->numeric()
-                                    ->minValue(1)
-                                    ->maxValue(16)
-                                    ->helperText('Solo si el trabajo está en Medellín. Fuera de la ciudad, déjalo vacío.'),
-                            ]),
+                        Tab::make('Fotos')
+                            ->icon(Heroicon::OutlinedPhoto)
+                            ->schema(self::fotosTab()),
+
+                        Tab::make('Mapa')
+                            ->icon(Heroicon::OutlinedMapPin)
+                            ->schema(self::mapaTab()),
                     ])
-                    ->columns(2),
+                    ->columnSpanFull()
+                    ->persistTabInQueryString(),
             ]);
+    }
+
+    /** @return list<\Filament\Schemas\Components\Component> */
+    protected static function datosTab(): array
+    {
+        return [
+            Grid::make(2)
+                ->schema([
+                    TextInput::make('title')
+                        ->label('Nombre del proyecto')
+                        ->required()
+                        ->maxLength(255)
+                        ->placeholder('Ej: Hotel Boutique El Poblado')
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function ($set, ?string $state, $get): void {
+                            if (blank($get('slug'))) {
+                                $set('slug', Str::slug($state ?? ''));
+                            }
+                        })
+                        ->columnSpan(1),
+                    Select::make('service_id')
+                        ->label('Servicio')
+                        ->relationship('service', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->required()
+                        ->columnSpan(1),
+                    Textarea::make('description')
+                        ->label('Descripción en el sitio')
+                        ->rows(3)
+                        ->placeholder('Qué se instaló y qué resultado tuvo el cliente.')
+                        ->columnSpanFull(),
+                    TextInput::make('location')
+                        ->label('Zona / municipio')
+                        ->maxLength(100)
+                        ->placeholder('El Poblado, Envigado…'),
+                    TextInput::make('year')
+                        ->label('Año')
+                        ->numeric()
+                        ->minValue(2000)
+                        ->maxValue(2100),
+                    Toggle::make('is_featured')
+                        ->label('Mostrar en la página de inicio')
+                        ->inline(false)
+                        ->columnSpanFull(),
+                ]),
+
+            Section::make('Avanzado')
+                ->description('Solo si necesitas cambiar la URL interna del proyecto.')
+                ->collapsed()
+                ->schema([
+                    TextInput::make('slug')
+                        ->label('Identificador (URL)')
+                        ->maxLength(255)
+                        ->unique(ignoreRecord: true),
+                ]),
+        ];
+    }
+
+    /** @return list<\Filament\Schemas\Components\Component> */
+    protected static function fotosTab(): array
+    {
+        return [
+            Placeholder::make('fotos_resumen')
+                ->label('')
+                ->content(new HtmlString(
+                    '<p class="text-sm text-gray-600 dark:text-gray-400">'
+                    . 'Sube evidencias del trabajo. Después de guardar, en <strong>Galería de fotos</strong> '
+                    . 'elige la portada (estrella), ordena y edita descripciones.'
+                    . '</p>'
+                ))
+                ->columnSpanFull(),
+            PublicAssetUpload::image('pending_gallery', 'images/projects')
+                ->label('Imágenes')
+                ->multiple()
+                ->reorderable()
+                ->appendFiles()
+                ->helperText('La primera imagen subida será portada si aún no hay otra marcada.')
+                ->columnSpanFull(),
+        ];
+    }
+
+    /** @return list<\Filament\Schemas\Components\Component> */
+    protected static function mapaTab(): array
+    {
+        return [
+            TextInput::make('address')
+                ->label('Dirección para visitantes')
+                ->maxLength(255)
+                ->placeholder('Carrera 72 # 11-11, Laureles')
+                ->helperText('Texto corto en el sitio. La búsqueda del mapa no lo modifica.')
+                ->columnSpanFull(),
+
+            View::make('filament.forms.project-location-picker')
+                ->columnSpanFull(),
+
+            Grid::make(3)
+                ->schema([
+                    TextInput::make('latitude')
+                        ->label('Latitud')
+                        ->numeric()
+                        ->step(0.000001)
+                        ->live(debounce: 500),
+                    TextInput::make('longitude')
+                        ->label('Longitud')
+                        ->numeric()
+                        ->step(0.000001)
+                        ->live(debounce: 500),
+                    TextInput::make('comuna_numero')
+                        ->label('Comuna (1–16)')
+                        ->numeric()
+                        ->minValue(1)
+                        ->maxValue(16)
+                        ->helperText('Solo Medellín. Fuera: vacío.'),
+                ]),
+        ];
     }
 }

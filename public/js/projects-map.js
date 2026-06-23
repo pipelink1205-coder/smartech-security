@@ -51,10 +51,48 @@
         if (typeof Livewire !== 'undefined') {
             Livewire.dispatch('map-select-project', { id });
         }
-        const panel = document.querySelector('.project-portfolio-detail');
-        if (panel) {
-            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
+    }
+
+    function buildProjectPopupContent(p) {
+        const addr = p.address ? `<br><small>${p.address}</small>` : '';
+        return (
+            `<div class="map-popup-card">` +
+            `<strong>${p.category}</strong>${addr}` +
+            `<button type="button" class="map-popup-btn" data-project-id="${p.id}">Ver</button>` +
+            `</div>`
+        );
+    }
+
+    function attachMarkerHoverPopup(marker) {
+        marker.on('mouseover', function () {
+            this.openPopup();
+        });
+
+        marker.on('mouseout', function () {
+            const popupEl = this.getPopup()?.getElement();
+            window.setTimeout(() => {
+                if (popupEl?.matches(':hover')) return;
+                if (this._icon?.matches(':hover')) return;
+                this.closePopup();
+            }, 140);
+        });
+
+        marker.on('popupopen', function () {
+            const popupEl = this.getPopup()?.getElement();
+            if (!popupEl) return;
+
+            popupEl.addEventListener(
+                'mouseleave',
+                () => {
+                    window.setTimeout(() => {
+                        if (!marker._icon?.matches(':hover')) {
+                            marker.closePopup();
+                        }
+                    }, 140);
+                },
+                { once: true }
+            );
+        });
     }
 
     function buildPinIcon() {
@@ -79,12 +117,12 @@
                 icon: buildPinIcon(),
                 title: p.category,
             });
-            const addr = p.address ? `<br><small>${p.address}</small>` : '';
-            marker.bindPopup(
-                `<strong>${p.category}</strong>${addr}<br>` +
-                    `<button type="button" class="map-popup-btn" data-project-id="${p.id}">Ver evidencias →</button>`
-            );
-            marker.on('click', () => selectProject(p.id));
+            marker.bindPopup(buildProjectPopupContent(p), {
+                closeButton: true,
+                autoClose: true,
+                closeOnClick: false,
+            });
+            attachMarkerHoverPopup(marker);
             marker.addTo(layerPins);
         });
         layerPins.addTo(map);
@@ -112,22 +150,30 @@
         }
 
         if (list.length === 1) {
-            selectProject(list[0].id);
+            L.popup()
+                .setLatLng(layer.getBounds().getCenter())
+                .setContent(buildProjectPopupContent(list[0]))
+                .openOn(map);
             return;
         }
 
         const items = list
-            .map(
-                (p) =>
-                    `<button type="button" class="map-popup-btn" data-project-id="${p.id}">${p.category}</button>`
-            )
+            .map((p) => {
+                const addr = p.address ? `<br><small>${p.address}</small>` : '';
+                return (
+                    `<div class="map-popup-item">` +
+                    `<strong>${p.category}</strong>${addr}` +
+                    `<button type="button" class="map-popup-btn" data-project-id="${p.id}">Ver</button>` +
+                    `</div>`
+                );
+            })
             .join('');
-        const popup = L.popup()
+        L.popup()
             .setLatLng(layer.getBounds().getCenter())
             .setContent(
                 `<div class="map-popup-list"><p class="map-popup-title">${list.length} trabajos en esta comuna</p>${items}</div>`
-            );
-        popup.openOn(map);
+            )
+            .openOn(map);
     }
 
     function opacidadEtiquetaPorZoom(z) {
