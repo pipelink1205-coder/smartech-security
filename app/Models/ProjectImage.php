@@ -10,7 +10,11 @@ class ProjectImage extends Model
 {
     use ResolvesMediaPath;
 
-    protected $fillable = ['project_id', 'path', 'caption', 'sort_order'];
+    protected $fillable = ['project_id', 'path', 'caption', 'sort_order', 'is_cover'];
+
+    protected $casts = [
+        'is_cover' => 'boolean',
+    ];
 
     public function project(): BelongsTo
     {
@@ -19,6 +23,6 @@ class ProjectImage extends Model
 
     public function getUrlAttribute(): string
     {
-        return $this->resolveMediaUrl($this->path) ?? asset('images/projects/placeholder.svg');
+        return $this->resolveMediaUrl($this->path) ?? '/images/projects/placeholder.svg';
     }
 }

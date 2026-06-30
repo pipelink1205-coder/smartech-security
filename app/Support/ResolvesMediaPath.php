@@ -14,18 +14,26 @@ trait ResolvesMediaPath
             return $path;
         }
 
+        $path = ltrim(str_replace('\\', '/', $path), '/');
+
         if (file_exists(public_path($path))) {
-            return asset($path);
+            return $this->publicAssetUrl($path);
         }
 
         $base = pathinfo($path, PATHINFO_DIRNAME) . '/' . pathinfo($path, PATHINFO_FILENAME);
         foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
             $candidate = "{$base}.{$ext}";
             if (file_exists(public_path($candidate))) {
-                return asset($candidate);
+                return $this->publicAssetUrl($candidate);
             }
         }
 
-        return asset($path);
+        return $this->publicAssetUrl($path);
+    }
+
+    /** Ruta relativa al dominio (evita mixed-content si APP_URL usa http en un sitio https). */
+    protected function publicAssetUrl(string $path): string
+    {
+        return '/' . ltrim(str_replace('\\', '/', $path), '/');
     }
 }

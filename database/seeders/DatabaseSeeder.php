@@ -89,6 +89,7 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'edificio-torre-ejecutiva',
                 'title' => 'Edificio Torre Ejecutiva',
                 'category' => 'Seguridad Corporativa',
+                'service_slug' => 'camaras-4k',
                 'location' => 'El Poblado',
                 'address' => 'Calle 10 # 43-30, El Poblado, Medellín',
                 'latitude' => 6.2087,
@@ -117,6 +118,7 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'conjunto-altos-envigado',
                 'title' => 'Conjunto Altos de Envigado',
                 'category' => 'Energía Solar',
+                'service_slug' => 'energia-solar',
                 'location' => 'Envigado',
                 'address' => 'Calle 39 Sur # 27-90, Envigado',
                 'latitude' => 6.1759,
@@ -131,6 +133,7 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'centro-comercial-mayorca',
                 'title' => 'Centro Comercial Mayorca',
                 'category' => 'Control de Acceso',
+                'service_slug' => 'control-acceso',
                 'location' => 'Itagüí',
                 'address' => 'Carrera 50 # 38-55, Itagüí',
                 'latitude' => 6.1847,
@@ -145,6 +148,7 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'textiles-medellin',
                 'title' => 'Textiles Medellín S.A.S.',
                 'category' => 'Redes Empresariales',
+                'service_slug' => 'redes-fibra',
                 'location' => 'Bello',
                 'address' => 'Autopista Norte Km 14, Bello',
                 'latitude' => 6.3373,
@@ -159,6 +163,7 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'apartamento-laureles',
                 'title' => 'Apartamento Inteligente Laureles',
                 'category' => 'Domótica',
+                'service_slug' => 'domotica',
                 'location' => 'La Candelaria',
                 'address' => 'Carrera 72 # 11-11, Medellín',
                 'latitude' => 6.24915,
@@ -204,6 +209,13 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($projects as $p) {
+            $serviceSlug = $p['service_slug'] ?? null;
+            unset($p['service_slug']);
+
+            if ($serviceSlug) {
+                $p['service_id'] = Service::query()->where('slug', $serviceSlug)->value('id');
+            }
+
             $project = Project::create($p);
 
             foreach ($galleries[$p['slug']] ?? [['path' => $p['image']]] as $order => $img) {

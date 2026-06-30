@@ -3,7 +3,7 @@
 
 <div class="projects-map-block" wire:ignore>
     <p class="projects-map-hint">
-        Haz clic en una <strong>comuna con trabajos</strong> (verde intenso) o en un <strong>pin</strong> para ver descripción y fotos de evidencia.
+        Pasa el cursor sobre un <strong>pin</strong> para ver el trabajo y pulsa <strong>Ver</strong> para abrir las fotos. También puedes hacer clic en una <strong>comuna con trabajos</strong> (verde intenso).
     </p>
     <div id="smartech-projects-map" class="projects-map-canvas" aria-label="Mapa de trabajos en Medellín"></div>
 </div>
@@ -18,5 +18,5 @@
             projects: @json($mapProjects ?? []),
         };
     </script>
-    <script src="{{ asset('js/projects-map.js') }}?v=3" defer></script>
+    <script src="{{ asset('js/projects-map.js') }}?v=4" defer></script>
 @endpush

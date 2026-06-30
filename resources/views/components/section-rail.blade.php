@@ -6,7 +6,7 @@
 <nav class="section-rail" id="sectionRail" aria-label="Secciones de la página">
     @foreach($sections as $section)
         <a
-            href="#{{ $section['id'] }}"
+            href="{{ route('home') }}#{{ $section['id'] }}"
             class="section-rail__dot"
             data-section="{{ $section['id'] }}"
             data-page-link="{{ $section['id'] }}"

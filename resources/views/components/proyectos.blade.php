@@ -10,7 +10,7 @@
                 <article class="project-card has-image">
                     <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy" />
                     <div class="project-overlay">
-                        <span class="project-tag">{{ $project->category }}</span>
+                        <span class="project-tag">{{ $project->service_name }}</span>
                         <h3>{{ $project->title }}</h3>
                         <p>{{ $project->description }}</p>
                         <p class="project-meta">{{ $project->location }} · {{ $project->year }}</p>
@@ -19,7 +19,9 @@
             @endforeach
         </div>
         <div class="projects-cta-row">
-            <a href="{{ route('proyectos') }}" class="btn btn-outline-white">Ver todos los proyectos</a>
+            <button type="button" class="btn btn-outline-white" data-scroll-to="smartech-projects-map">
+                Volver al mapa
+            </button>
         </div>
     </div>
 </section>

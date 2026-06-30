@@ -16,9 +16,9 @@
         <div class="footer-col">
             <h4>Servicios</h4>
             <ul>
-                <li><a href="#servicios">Cámaras de seguridad</a></li>
-                <li><a href="#servicios">Energía solar</a></li>
-                <li><a href="#servicios">Domótica</a></li>
+                <li><a href="{{ route('home') }}#servicios">Cámaras de seguridad</a></li>
+                <li><a href="{{ route('home') }}#servicios">Energía solar</a></li>
+                <li><a href="{{ route('home') }}#servicios">Domótica</a></li>
             </ul>
         </div>
         <div class="footer-col">
@@ -38,7 +38,7 @@
                     </a>
                 </li>
                 @endif
-                <li><a href="#contacto">Envigado, Antioquia</a></li>
+                <li><a href="{{ route('home') }}#contacto">Envigado, Antioquia</a></li>
             </ul>
         </div>
     </div>

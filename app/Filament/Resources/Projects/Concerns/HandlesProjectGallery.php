@@ -36,6 +36,18 @@ trait HandlesProjectGallery
             ]);
         }
 
+        $this->ensureProjectHasCover();
+
         $this->data['pending_gallery'] = [];
+    }
+
+    protected function ensureProjectHasCover(): void
+    {
+        if ($this->record->images()->where('is_cover', true)->exists()) {
+            return;
+        }
+
+        $cover = $this->record->images()->orderBy('sort_order')->first();
+        $cover?->update(['is_cover' => true]);
     }
 }

@@ -47,7 +47,16 @@ function triggerPageReveals(root = document) {
 window.showPage = function showPage(pageId, scrollBehavior = 'smooth') {
     const page = document.getElementById(pageId);
     if (!page) {
+        const homePath = new URL('/', window.location.origin).pathname;
+        if (window.location.pathname !== homePath) {
+            window.location.assign(`${homePath}#${pageId}`);
+            return;
+        }
         return;
+    }
+
+    if (typeof Livewire !== 'undefined') {
+        Livewire.dispatch('close-project-lightbox');
     }
 
     currentPage = pageId;
@@ -67,6 +76,18 @@ window.showPage = function showPage(pageId, scrollBehavior = 'smooth') {
     window.dispatchEvent(new CustomEvent('smartech-show-page', { detail: { pageId } }));
 };
 
+function bootFromHash() {
+    const pageId = window.location.hash.replace(/^#/, '');
+    if (!pageId || !document.getElementById(pageId)) {
+        return;
+    }
+    window.showPage(pageId, 'auto');
+}
+
+function cleanupOrphanLightboxes() {
+    document.querySelectorAll('body > .project-lightbox').forEach((el) => el.remove());
+}
+
 function applyPagingMode() {
     const paging = !isMobileLayout();
     document.body.classList.toggle('site-paging', paging);
@@ -80,6 +101,8 @@ function applyPagingMode() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    cleanupOrphanLightboxes();
+
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
     const menuClose = document.getElementById('mobile-menu-close');
@@ -94,6 +117,16 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = '';
         });
     }
+
+    document.querySelectorAll('[data-scroll-to]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const target = document.getElementById(btn.dataset.scrollTo);
+            if (!target) {
+                return;
+            }
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
 
     document.querySelectorAll('[data-page-link]').forEach((el) => {
         el.addEventListener('click', (e) => {
@@ -172,5 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     applyPagingMode();
+    bootFromHash();
     window.addEventListener('resize', applyPagingMode);
 });

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Solo referencia. En IIS de produccion use su propio public\web.config
+  (con PHP/FastCGI). No commitear web.config del servidor.
+-->
 <configuration>
   <system.webServer>
     <rewrite>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends Model
 {
@@ -15,6 +16,11 @@ class Service extends Model
         'is_active' => 'boolean',
         'features'  => 'array',
     ];
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
 
     public function scopeActive($q)   { return $q->where('is_active', true); }
     public function scopeOrdered($q)  { return $q->orderBy('order'); }
