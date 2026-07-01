@@ -6,6 +6,7 @@ use App\Support\ResolvesMediaPath;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Project extends Model
 {
@@ -13,7 +14,7 @@ class Project extends Model
 
     protected $fillable = [
         'service_id', 'title', 'slug', 'category', 'description',
-        'location', 'address', 'latitude', 'longitude', 'comuna_numero',
+        'location', 'address', 'latitude', 'longitude', 'comuna_numero', 'barrio',
         'image', 'is_featured', 'year',
     ];
 
@@ -31,6 +32,10 @@ class Project extends Model
                 $project->category = Service::query()
                     ->whereKey($project->service_id)
                     ->value('name') ?? $project->category;
+            }
+
+            if (blank($project->location) && filled($project->barrio)) {
+                $project->location = Str::title(Str::lower($project->barrio)) . ', Medellín';
             }
         });
     }

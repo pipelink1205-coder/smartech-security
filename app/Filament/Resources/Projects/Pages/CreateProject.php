@@ -26,7 +26,7 @@ class CreateProject extends CreateRecord
 
     protected function afterCreate(): void
     {
-        $this->syncPendingGallery();
+        $this->syncGallery();
     }
 
     protected function getRedirectUrl(): string

@@ -31,6 +31,15 @@
         border: 1px solid rgb(229 231 235); z-index: 0;
     }
     .dark .admin-location-map { border-color: rgb(55 65 81); }
+    .admin-loc-cands { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.5rem; }
+    .admin-loc-cand {
+        cursor: pointer; padding: 0.25rem 0.625rem; border-radius: 9999px;
+        font-size: 0.75rem; font-weight: 600; line-height: 1;
+        background: rgb(255 255 255); color: rgb(146 64 14);
+        border: 1px solid rgb(253 230 138);
+    }
+    .admin-loc-cand:hover { background: rgb(254 243 199); }
+    .dark .admin-loc-cand { background: rgb(120 53 15 / 0.5); color: rgb(253 230 138); border-color: rgb(180 83 9); }
 </style>
 
 <div class="admin-location-picker" wire:ignore>
@@ -63,7 +72,7 @@
 
     <p class="admin-location-meta">
         <span>Pin: <strong id="admin-location-coords-preview">Sin ubicación</strong></span>
-        <span>· Clic o arrastre en el mapa · OpenStreetMap (referencia aproximada)</span>
+        <span>· Clic o arrastre para recalcular la comuna · Medellín: API Alcaldía · Valle de Aburrá: OpenStreetMap</span>
     </p>
 
     <div id="{{ $mapId }}" class="admin-location-map" aria-label="Mapa para ubicar el proyecto"></div>

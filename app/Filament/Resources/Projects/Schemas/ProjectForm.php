@@ -84,10 +84,6 @@ class ProjectForm
                         ->rows(3)
                         ->placeholder('Qué se instaló y qué resultado tuvo el cliente.')
                         ->columnSpanFull(),
-                    TextInput::make('location')
-                        ->label('Zona / municipio')
-                        ->maxLength(100)
-                        ->placeholder('El Poblado, Envigado…'),
                     TextInput::make('year')
                         ->label('Año')
                         ->numeric()
@@ -119,17 +115,18 @@ class ProjectForm
                 ->label('')
                 ->content(new HtmlString(
                     '<p class="text-sm text-gray-600 dark:text-gray-400">'
-                    . 'Sube evidencias del trabajo. Después de guardar, en <strong>Galería de fotos</strong> '
-                    . 'elige la portada (estrella), ordena y edita descripciones.'
+                    . '<strong>La primera foto es la portada.</strong> Arrastra las imágenes para cambiar el orden; '
+                    . 'se guardan al guardar el proyecto.'
                     . '</p>'
                 ))
                 ->columnSpanFull(),
-            PublicAssetUpload::image('pending_gallery', 'images/projects')
-                ->label('Imágenes')
+            PublicAssetUpload::image('gallery', 'images/projects')
+                ->label('Fotos del proyecto')
                 ->multiple()
                 ->reorderable()
-                ->appendFiles()
-                ->helperText('La primera imagen subida será portada si aún no hay otra marcada.')
+                ->panelLayout('grid')
+                ->maxFiles(12)
+                ->helperText('JPG, PNG o WebP · hasta 12 fotos · la primera es la portada.')
                 ->columnSpanFull(),
         ];
     }
@@ -139,10 +136,10 @@ class ProjectForm
     {
         return [
             TextInput::make('address')
-                ->label('Dirección para visitantes')
+                ->label('Dirección del proyecto')
                 ->maxLength(255)
                 ->placeholder('Carrera 72 # 11-11, Laureles')
-                ->helperText('Texto corto en el sitio. La búsqueda del mapa no lo modifica.')
+                ->helperText('Escríbela y pulsa "Ubicar pin". En Medellín se usa la API oficial de la Alcaldía; la comuna y el barrio se completan solos.')
                 ->columnSpanFull(),
 
             View::make('filament.forms.project-location-picker')
@@ -150,22 +147,41 @@ class ProjectForm
 
             Grid::make(3)
                 ->schema([
-                    TextInput::make('latitude')
-                        ->label('Latitud')
-                        ->numeric()
-                        ->step(0.000001)
-                        ->live(debounce: 500),
-                    TextInput::make('longitude')
-                        ->label('Longitud')
-                        ->numeric()
-                        ->step(0.000001)
-                        ->live(debounce: 500),
+                    TextInput::make('location')
+                        ->label('Zona detectada')
+                        ->readOnly()
+                        ->dehydrated()
+                        ->placeholder('Se autocompleta con el mapa'),
                     TextInput::make('comuna_numero')
                         ->label('Comuna (1–16)')
                         ->numeric()
-                        ->minValue(1)
-                        ->maxValue(16)
-                        ->helperText('Solo Medellín. Fuera: vacío.'),
+                        ->readOnly()
+                        ->dehydrated()
+                        ->placeholder('Solo Medellín'),
+                    TextInput::make('barrio')
+                        ->label('Barrio')
+                        ->readOnly()
+                        ->dehydrated()
+                        ->placeholder('Se autocompleta'),
+                ]),
+
+            Section::make('Coordenadas (avanzado)')
+                ->description('Se completan solas. Ajústalas solo si el pin no cae en el sitio exacto.')
+                ->collapsed()
+                ->schema([
+                    Grid::make(2)
+                        ->schema([
+                            TextInput::make('latitude')
+                                ->label('Latitud')
+                                ->numeric()
+                                ->step(0.000001)
+                                ->live(debounce: 500),
+                            TextInput::make('longitude')
+                                ->label('Longitud')
+                                ->numeric()
+                                ->step(0.000001)
+                                ->live(debounce: 500),
+                        ]),
                 ]),
         ];
     }

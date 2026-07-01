@@ -8,46 +8,63 @@ trait HandlesProjectGallery
 {
     protected function stripVirtualProjectFields(array $data): array
     {
-        unset($data['pending_gallery']);
+        unset($data['gallery']);
 
         return $data;
     }
 
-    protected function syncPendingGallery(): void
+    /**
+     * Precarga la galería (rutas ordenadas) en el formulario al editar.
+     */
+    protected function fillGalleryState(array $data): array
     {
-        $paths = Arr::wrap($this->data['pending_gallery'] ?? []);
+        $data['gallery'] = $this->record
+            ->images()
+            ->orderByDesc('is_cover')
+            ->orderBy('sort_order')
+            ->pluck('path')
+            ->all();
 
-        if ($paths === []) {
-            return;
-        }
-
-        $sortOrder = (int) ($this->record->images()->max('sort_order') ?? 0);
-
-        foreach (array_values($paths) as $path) {
-            if (blank($path)) {
-                continue;
-            }
-
-            $sortOrder++;
-
-            $this->record->images()->create([
-                'path'       => $path,
-                'sort_order' => $sortOrder,
-            ]);
-        }
-
-        $this->ensureProjectHasCover();
-
-        $this->data['pending_gallery'] = [];
+        return $data;
     }
 
-    protected function ensureProjectHasCover(): void
+    /**
+     * Reconcilia la galería del formulario con las filas de ProjectImage:
+     * conserva el orden, marca la primera como portada y elimina las quitadas.
+     * (No borra archivos físicos por si están referenciados en otro proyecto.)
+     */
+    protected function syncGallery(): void
     {
-        if ($this->record->images()->where('is_cover', true)->exists()) {
-            return;
+        $paths = array_values(array_filter(
+            Arr::wrap($this->data['gallery'] ?? []),
+            static fn ($path) => filled($path),
+        ));
+
+        $project = $this->record;
+        $existing = $project->images()->get()->keyBy('path');
+        $keepIds = [];
+
+        foreach ($paths as $index => $path) {
+            $row = $existing->get($path);
+
+            if ($row) {
+                $row->update(['sort_order' => $index, 'is_cover' => $index === 0]);
+                $keepIds[] = $row->id;
+            } else {
+                $keepIds[] = $project->images()->create([
+                    'path'       => $path,
+                    'sort_order' => $index,
+                    'is_cover'   => $index === 0,
+                ])->id;
+            }
         }
 
-        $cover = $this->record->images()->orderBy('sort_order')->first();
-        $cover?->update(['is_cover' => true]);
+        $project->images()
+            ->whereNotIn('id', $keepIds ?: [0])
+            ->delete();
+
+        if (! $project->images()->where('is_cover', true)->exists()) {
+            $project->images()->orderBy('sort_order')->first()?->update(['is_cover' => true]);
+        }
     }
 }

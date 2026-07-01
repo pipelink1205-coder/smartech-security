@@ -103,53 +103,61 @@
                         @elseif($openProject->location)
                             <p class="project-detail-address">{{ $openProject->location }}</p>
                         @endif
-                        @if($openProject->description)
-                            <p class="project-detail-desc">{{ $openProject->description }}</p>
-                        @endif
                     </div>
 
-                    @if(count($gallery) > 0)
-                        <div class="project-lightbox-gallery">
-                            <div class="project-lightbox-stage">
+                    <div class="project-lightbox-body {{ $openProject->description ? 'has-aside' : '' }}">
+                        @if($openProject->description)
+                            <aside class="project-lightbox-aside">
+                                <div class="project-desc-bubble">
+                                    <span class="project-desc-bubble-label">Descripción</span>
+                                    <p>{{ $openProject->description }}</p>
+                                </div>
+                            </aside>
+                        @endif
+
+                        @if(count($gallery) > 0)
+                            <div class="project-lightbox-gallery">
+                                <div class="project-lightbox-stage">
+                                    @if(count($gallery) > 1)
+                                        <button type="button" class="project-lightbox-nav prev" wire:click="prevImage" aria-label="Foto anterior">‹</button>
+                                    @endif
+
+                                    <img
+                                        src="{{ $gallery[$activeImage]['url'] }}"
+                                        alt="{{ $gallery[$activeImage]['caption'] ?? $openProject->title }}"
+                                        class="project-lightbox-main-image"
+                                    />
+
+                                    @if(count($gallery) > 1)
+                                        <button type="button" class="project-lightbox-nav next" wire:click="nextImage" aria-label="Foto siguiente">›</button>
+                                    @endif
+                                </div>
+
                                 @if(count($gallery) > 1)
-                                    <button type="button" class="project-lightbox-nav prev" wire:click="prevImage" aria-label="Foto anterior">‹</button>
+                                    <div class="project-detail-thumbs project-lightbox-thumbs" role="tablist">
+                                        @foreach($gallery as $index => $item)
+                                            <button
+                                                type="button"
+                                                role="tab"
+                                                wire:click="selectImage({{ $index }})"
+                                                class="project-detail-thumb {{ $activeImage === $index ? 'is-active' : '' }}"
+                                                aria-selected="{{ $activeImage === $index ? 'true' : 'false' }}"
+                                                aria-label="Foto {{ $index + 1 }}"
+                                            >
+                                                <img src="{{ $item['url'] }}" alt="" loading="lazy" />
+                                            </button>
+                                        @endforeach
+                                    </div>
                                 @endif
 
-                                <img
-                                    src="{{ $gallery[$activeImage]['url'] }}"
-                                    alt="{{ $gallery[$activeImage]['caption'] ?? $openProject->title }}"
-                                    class="project-lightbox-main-image"
-                                />
-
-                                @if(count($gallery) > 1)
-                                    <button type="button" class="project-lightbox-nav next" wire:click="nextImage" aria-label="Foto siguiente">›</button>
+                                @if(!empty($gallery[$activeImage]['caption']))
+                                    <p class="project-detail-caption">{{ $gallery[$activeImage]['caption'] }}</p>
                                 @endif
                             </div>
-
-                            @if(count($gallery) > 1)
-                                <div class="project-detail-thumbs project-lightbox-thumbs" role="tablist">
-                                    @foreach($gallery as $index => $item)
-                                        <button
-                                            type="button"
-                                            role="tab"
-                                            wire:click="selectImage({{ $index }})"
-                                            class="project-detail-thumb {{ $activeImage === $index ? 'is-active' : '' }}"
-                                            aria-selected="{{ $activeImage === $index ? 'true' : 'false' }}"
-                                            aria-label="Foto {{ $index + 1 }}"
-                                        >
-                                            <img src="{{ $item['url'] }}" alt="" loading="lazy" />
-                                        </button>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                            @if(!empty($gallery[$activeImage]['caption']))
-                                <p class="project-detail-caption">{{ $gallery[$activeImage]['caption'] }}</p>
-                            @endif
-                        </div>
-                    @else
-                        <p class="project-detail-caption">Este proyecto aún no tiene fotos en la galería.</p>
-                    @endif
+                        @else
+                            <p class="project-detail-caption">Este proyecto aún no tiene fotos en la galería.</p>
+                        @endif
+                    </div>
                 </div>
             </div>
     @endif

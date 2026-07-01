@@ -1,11 +1,16 @@
 /**
  * Selector de ubicación en el panel admin (Filament).
- * La dirección escrita por el usuario no se modifica al geocodificar.
+ *
+ * Dos gestores que se validan entre sí:
+ *   1) Geocodificador (dirección → coordenadas): Alcaldía Medellín → ArcGIS → Nominatim.
+ *   2) Espacial (coordenadas → comuna): punto-en-polígono en el servidor.
+ * La comuna, el barrio y la zona se autocompletan; el usuario solo ajusta el pin si hace falta.
  */
 window.AdminProjectLocation = {
     map: null,
     marker: null,
     wire: null,
+    candidates: [],
 
     defaultCenter: [6.2442, -75.5812],
     defaultZoom: 12,
@@ -39,13 +44,13 @@ window.AdminProjectLocation = {
         this.marker.on('dragend', () => {
             const pos = this.marker.getLatLng();
             this.writeCoords(pos.lat, pos.lng);
-            this.setStatus('Pin movido. Revisa las coordenadas abajo y guarda el proyecto.', 'success');
+            this.reverseLookup(pos.lat, pos.lng);
         });
 
         this.map.on('click', (e) => {
             this.marker.setLatLng(e.latlng);
             this.writeCoords(e.latlng.lat, e.latlng.lng);
-            this.setStatus('Pin colocado en el mapa. Guarda el proyecto para publicarlo en el sitio.', 'success');
+            this.reverseLookup(e.latlng.lat, e.latlng.lng);
         });
 
         setTimeout(() => {
@@ -86,7 +91,7 @@ window.AdminProjectLocation = {
                 return String(value).trim();
             }
         } catch (_) {
-            // Filament 5 puede no exponer wire.get() en vistas embebidas.
+            // Filament puede no exponer wire.get() en vistas embebidas.
         }
 
         const input = this.findInput(field);
@@ -117,11 +122,11 @@ window.AdminProjectLocation = {
         }
 
         const input = this.findInput(field);
-        if (!input || String(input.value) === String(value)) {
+        if (!input || String(input.value) === String(value ?? '')) {
             return;
         }
 
-        input.value = value;
+        input.value = value ?? '';
         input.dispatchEvent(new Event('input', { bubbles: true }));
         input.dispatchEvent(new Event('change', { bubbles: true }));
     },
@@ -134,18 +139,40 @@ window.AdminProjectLocation = {
         this.updateCoordPreview(roundedLat, roundedLng);
     },
 
+    /** Escribe comuna, barrio y la zona detectada a partir del payload del servidor. */
+    writeZone(payload) {
+        this.writeField('comuna_numero', payload.comuna_numero ?? '');
+        this.writeField('barrio', payload.barrio ?? '');
+        this.writeField('location', this.composeLocation(payload));
+    },
+
+    composeLocation(payload) {
+        if (payload.in_medellin) {
+            if (payload.barrio) {
+                return `${this.titleCase(payload.barrio)}, Medellín`;
+            }
+            if (payload.comuna_nombre) {
+                return `${this.titleCase(payload.comuna_nombre)}, Medellín`;
+            }
+            return 'Medellín';
+        }
+
+        return payload.municipio || '';
+    },
+
+    titleCase(text) {
+        return String(text)
+            .toLocaleLowerCase('es-CO')
+            .replace(/\b\p{L}/gu, (c) => c.toLocaleUpperCase('es-CO'));
+    },
+
     updateCoordPreview(lat, lng) {
         const el = document.getElementById('admin-location-coords-preview');
         if (!el) {
             return;
         }
 
-        if (lat == null || lng == null) {
-            el.textContent = 'Sin ubicación';
-            return;
-        }
-
-        el.textContent = `${lat}, ${lng}`;
+        el.textContent = (lat == null || lng == null) ? 'Sin ubicación' : `${lat}, ${lng}`;
     },
 
     setStatus(message, type = 'info') {
@@ -155,7 +182,7 @@ window.AdminProjectLocation = {
         }
 
         el.hidden = !message;
-        el.textContent = message;
+        el.innerHTML = message;
         el.dataset.status = type;
     },
 
@@ -173,7 +200,7 @@ window.AdminProjectLocation = {
         }
 
         this.setStatus(
-            'Sin pin en el mapa. Ubica por dirección o marca el punto manualmente.',
+            'Sin pin en el mapa. Busca por dirección o marca el punto manualmente.',
             'muted'
         );
     },
@@ -196,6 +223,9 @@ window.AdminProjectLocation = {
     clearLocation() {
         this.writeField('latitude', '');
         this.writeField('longitude', '');
+        this.writeField('comuna_numero', '');
+        this.writeField('barrio', '');
+        this.writeField('location', '');
         this.updateCoordPreview(null, null);
 
         if (this.map && this.marker) {
@@ -203,7 +233,75 @@ window.AdminProjectLocation = {
             this.map.setView(this.defaultCenter, this.defaultZoom);
         }
 
-        this.setStatus('Ubicación quitada del mapa. La dirección escrita arriba no se modificó.', 'warning');
+        this.setStatus('Ubicación quitada. Comuna, barrio y zona se vaciaron.', 'warning');
+    },
+
+    /** Frase de confianza + validación cruzada de comuna. */
+    validationSummary(payload) {
+        const fuente = {
+            alcaldia: 'API Alcaldía de Medellín',
+            arcgis: 'ArcGIS',
+            nominatim: 'OpenStreetMap',
+            photon: 'Photon',
+            polygon: 'mapa de comunas',
+        }[payload.source] || payload.source || 'mapa';
+
+        const conf = {
+            alta: '🟢 Confianza alta',
+            media: '🟡 Confianza media',
+            baja: '🔴 Confianza baja',
+        }[payload.confidence] || '';
+
+        const cc = payload.cross_check || {};
+        let cruce = '';
+        if (cc.match === true) {
+            cruce = ' · ✅ La comuna del geocodificador coincide con el polígono.';
+        } else if (cc.match === false) {
+            cruce = ' · ⚠️ La comuna del geocodificador NO coincide con el polígono; se usó la del mapa. Revisa el pin.';
+        }
+
+        const zona = [];
+        if (payload.comuna_numero) zona.push(`Comuna ${payload.comuna_numero}`);
+        if (payload.barrio) zona.push(this.titleCase(payload.barrio));
+        const zonaStr = zona.length ? ` Zona: ${zona.join(' · ')}.` : '';
+
+        return `Ubicación por <strong>${fuente}</strong> (${conf}).${zonaStr}${cruce}`;
+    },
+
+    /** Aviso cuando la dirección aparece en varios municipios del Valle de Aburrá. */
+    ambiguityMessage(payload) {
+        const munis = (payload.municipios || []).map((m) => this.titleCase(m)).join(' y ');
+        const botones = (this.candidates || [])
+            .map((c, i) => {
+                const nombre = c.municipio ? this.titleCase(c.municipio) : `Opción ${i + 1}`;
+                return `<button type="button" class="admin-loc-cand" onclick="window.AdminProjectLocation.useCandidate(${i})">${nombre}</button>`;
+            })
+            .join(' ');
+
+        return (
+            `⚠️ Esta dirección aparece en varios municipios: <strong>${munis}</strong>. ` +
+            `Elige el correcto o arrastra el pin manualmente.` +
+            (botones ? `<div class="admin-loc-cands">${botones}</div>` : '')
+        );
+    },
+
+    /** Coloca el pin en el candidato elegido y recalcula la zona. */
+    useCandidate(index) {
+        const candidate = (this.candidates || [])[index];
+        if (!candidate) {
+            return;
+        }
+
+        const lat = parseFloat(candidate.lat);
+        const lng = parseFloat(candidate.lng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+            return;
+        }
+
+        this.writeCoords(lat, lng);
+        this.marker?.setLatLng([lat, lng]);
+        this.map?.setView([lat, lng], 16);
+        this.reverseLookup(lat, lng);
     },
 
     async searchAddress() {
@@ -218,24 +316,16 @@ window.AdminProjectLocation = {
             btn.disabled = true;
         }
 
-        this.setStatus('Buscando en OpenStreetMap (Valle de Aburrá)…', 'info');
+        this.setStatus('Buscando dirección…', 'info');
 
         try {
             const base = window.SMARTECH_ADMIN_GEOCODE || '/admin/geocode';
             const url = `${base}?q=${encodeURIComponent(query)}`;
-            const res = await fetch(url, {
-                headers: {
-                    Accept: 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                credentials: 'same-origin',
-            });
+            const payload = await this.fetchJson(url);
 
-            const payload = await res.json().catch(() => ({}));
-
-            if (!res.ok) {
+            if (!payload || !Number.isFinite(parseFloat(payload.lat)) || !Number.isFinite(parseFloat(payload.lng))) {
                 this.setStatus(
-                    payload.message ||
+                    (payload && payload.message) ||
                         'No encontramos esa dirección. Coloca el pin manualmente en el mapa.',
                     'warning'
                 );
@@ -244,20 +334,23 @@ window.AdminProjectLocation = {
 
             const lat = parseFloat(payload.lat);
             const lng = parseFloat(payload.lng);
-            if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-                this.setStatus('Respuesta inválida del geocodificador. Marca el pin a mano.', 'warning');
-                return;
-            }
 
             this.writeCoords(lat, lng);
+            this.writeZone(payload);
             this.marker?.setLatLng([lat, lng]);
-            this.map?.panTo([lat, lng]);
+            this.map?.setView([lat, lng], payload.in_medellin ? 16 : 14);
 
-            const ref = payload.label ? ` Referencia: ${payload.label}.` : '';
-            this.setStatus(
-                `Ubicación aproximada encontrada (${payload.source || 'mapa'}).${ref} Ajusta el pin si no coincide con el sitio real.`,
-                'success'
-            );
+            this.candidates = Array.isArray(payload.candidates) ? payload.candidates : [];
+
+            if (payload.ambiguous) {
+                this.setStatus(this.ambiguityMessage(payload), 'warning');
+            } else {
+                const status = payload.confidence === 'baja' || payload.cross_check?.match === false ? 'warning' : 'success';
+                this.setStatus(
+                    `${this.validationSummary(payload)} Ajusta el pin si no cae en el sitio real.`,
+                    status
+                );
+            }
         } catch {
             this.setStatus('Error al buscar. Marca el punto manualmente en el mapa.', 'warning');
         } finally {
@@ -265,5 +358,52 @@ window.AdminProjectLocation = {
                 btn.disabled = false;
             }
         }
+    },
+
+    /** Recalcula comuna/barrio/zona cuando el pin se mueve a mano. */
+    async reverseLookup(lat, lng) {
+        this.setStatus('Verificando comuna del punto…', 'info');
+
+        try {
+            const base = window.SMARTECH_ADMIN_GEOCODE || '/admin/geocode';
+            const url = `${base}?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`;
+            const payload = await this.fetchJson(url);
+
+            if (!payload) {
+                this.setStatus('Pin movido. No se pudo determinar la comuna automáticamente.', 'warning');
+                return;
+            }
+
+            this.writeZone(payload);
+
+            if (payload.in_medellin) {
+                const zona = [];
+                if (payload.comuna_numero) zona.push(`Comuna ${payload.comuna_numero}`);
+                if (payload.barrio) zona.push(this.titleCase(payload.barrio));
+                this.setStatus(
+                    `Pin colocado en Medellín. ${zona.length ? zona.join(' · ') + '.' : ''} Guarda para publicarlo.`,
+                    'success'
+                );
+            } else {
+                this.setStatus(
+                    'Pin fuera de Medellín: comuna vacía. Escribe la zona manualmente si lo necesitas.',
+                    'warning'
+                );
+            }
+        } catch {
+            this.setStatus('Pin movido. Error al verificar la comuna.', 'warning');
+        }
+    },
+
+    async fetchJson(url) {
+        const res = await fetch(url, {
+            headers: {
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            credentials: 'same-origin',
+        });
+
+        return res.json().catch(() => null);
     },
 };

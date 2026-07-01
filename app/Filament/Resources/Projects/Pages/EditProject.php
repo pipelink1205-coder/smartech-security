@@ -14,6 +14,11 @@ class EditProject extends EditRecord
 
     protected static string $resource = ProjectResource::class;
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        return $this->fillGalleryState($data);
+    }
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $data = $this->stripVirtualProjectFields($data);
@@ -27,7 +32,7 @@ class EditProject extends EditRecord
 
     protected function afterSave(): void
     {
-        $this->syncPendingGallery();
+        $this->syncGallery();
     }
 
     protected function getHeaderActions(): array
