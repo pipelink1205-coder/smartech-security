@@ -44,6 +44,13 @@ function triggerPageReveals(root = document) {
     });
 }
 
+function syncHomeTickerVisibility(pageId) {
+    const show = document.body.classList.contains('page-home')
+        && !isMobileLayout()
+        && pageId === 'inicio';
+    document.body.classList.toggle('ticker-section-inicio', show);
+}
+
 window.showPage = function showPage(pageId, scrollBehavior = 'smooth') {
     const page = document.getElementById(pageId);
     if (!page) {
@@ -61,6 +68,7 @@ window.showPage = function showPage(pageId, scrollBehavior = 'smooth') {
 
     currentPage = pageId;
     setActiveNav(pageId);
+    syncHomeTickerVisibility(pageId);
 
     if (isMobileLayout()) {
         page.scrollIntoView({ behavior: scrollBehavior, block: 'start' });
@@ -84,6 +92,41 @@ function bootFromHash() {
     window.showPage(pageId, 'auto');
 }
 
+function syncLightboxScrollLock() {
+    const open = document.querySelector('.project-lightbox');
+    const locked = Boolean(open);
+
+    document.body.classList.toggle('body-scroll-locked', locked);
+    document.documentElement.classList.toggle('body-scroll-locked', locked);
+
+    if (locked && document.body.style.overflow) {
+        document.body.dataset.prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = '';
+    } else if (!locked && document.body.dataset.prevOverflow !== undefined) {
+        document.body.style.overflow = document.body.dataset.prevOverflow;
+        delete document.body.dataset.prevOverflow;
+    }
+}
+
+function initLightboxScrollLock() {
+    syncLightboxScrollLock();
+
+    const setupLivewireHooks = () => {
+        Livewire.hook('morph.updated', () => syncLightboxScrollLock());
+        Livewire.hook('commit', ({ succeed }) => {
+            succeed(() => syncLightboxScrollLock());
+        });
+    };
+
+    if (typeof Livewire !== 'undefined') {
+        setupLivewireHooks();
+    } else {
+        document.addEventListener('livewire:initialized', setupLivewireHooks, { once: true });
+    }
+
+    document.addEventListener('livewire:navigated', syncLightboxScrollLock);
+}
+
 function cleanupOrphanLightboxes() {
     document.querySelectorAll('body > .project-lightbox').forEach((el) => el.remove());
 }
@@ -97,11 +140,13 @@ function applyPagingMode() {
         window.showPage(active, 'auto');
     } else {
         document.querySelectorAll('.site-page').forEach((p) => p.classList.remove('active'));
+        syncHomeTickerVisibility(null);
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     cleanupOrphanLightboxes();
+    initLightboxScrollLock();
 
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -206,5 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyPagingMode();
     bootFromHash();
+    if (document.body.classList.contains('page-home') && !window.location.hash) {
+        syncHomeTickerVisibility(document.querySelector('.site-page.active')?.id || 'inicio');
+    }
     window.addEventListener('resize', applyPagingMode);
 });

@@ -546,7 +546,7 @@ nav#navbar.is-scrolled { box-shadow: var(--shadow-md); }
     position: fixed; inset: 0; z-index: 10050;
     background: rgba(2, 8, 23, .88); backdrop-filter: blur(8px);
     display: flex; align-items: center; justify-content: center;
-    padding: 24px 16px;
+    padding: 24px 16px; overflow: hidden;
 }
 .project-lightbox-panel {
     position: relative; width: min(1040px, 100%);
@@ -623,7 +623,7 @@ nav#navbar.is-scrolled { box-shadow: var(--shadow-md); }
 .project-lightbox-nav:hover { background: var(--green-600); }
 .project-lightbox-thumbs {
     flex: 0 0 auto; margin-top: 12px;
-    justify-content: center; flex-wrap: nowrap; overflow-x: auto;
+    display: flex; justify-content: center; flex-wrap: nowrap; overflow-x: auto;
     padding-bottom: 4px; scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,.25) transparent;
 }
@@ -639,7 +639,7 @@ nav#navbar.is-scrolled { box-shadow: var(--shadow-md); }
     .project-lightbox { padding: 12px; align-items: stretch; }
     .project-lightbox-panel {
         height: auto; max-height: calc(100dvh - 24px);
-        padding: 18px; overflow: hidden;
+        padding: 18px; overflow-y: auto; overflow-x: hidden;
     }
     .project-lightbox-body,
     .project-lightbox-body.has-aside {
@@ -823,19 +823,18 @@ footer { background: var(--dark-900); padding: 64px 0 0; }
 
 /* ── WhatsApp FAB ── */
 .whatsapp-fab { position: fixed; bottom: 28px; right: 28px; z-index: 9997; width: 52px; height: 52px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,.45); text-decoration: none; transition: transform var(--transition), box-shadow var(--transition); animation: wabounce 2.5s ease-in-out infinite; }
-body.has-clients-ticker .whatsapp-fab { bottom: 88px; }
 .whatsapp-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,.6); animation: none; }
 .whatsapp-fab svg { width: 28px; height: 28px; fill: white; }
 @keyframes wabounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
 
-/* ── Banda de logos clientes (ticker) ── */
+/* ── Banda de logos clientes (ticker) — solo inicio en PC ── */
 .clients-ticker-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 900;
-    display: flex;
+    display: none;
     align-items: center;
     gap: 0;
     background: #fff;
@@ -843,7 +842,16 @@ body.has-clients-ticker .whatsapp-fab { bottom: 88px; }
     box-shadow: 0 -4px 24px rgba(15,23,42,.08);
     min-height: 64px;
 }
-body.has-clients-ticker { padding-bottom: 64px; }
+body.has-clients-ticker { padding-bottom: 0; }
+@media (min-width: 769px) {
+    body.page-home.ticker-section-inicio .clients-ticker-bar { display: flex; }
+    body.page-home.ticker-section-inicio.has-clients-ticker { padding-bottom: 64px; }
+    body.page-home.ticker-section-inicio.has-clients-ticker .whatsapp-fab { bottom: 88px; }
+}
+body.body-scroll-locked,
+html.body-scroll-locked { overflow: hidden !important; }
+body.site-paging.body-scroll-locked .site-page { overflow: hidden !important; }
+body.body-scroll-locked .clients-ticker-bar { display: none !important; }
 .clients-ticker-label {
     flex-shrink: 0;
     padding: 0 20px 0 24px;
@@ -896,12 +904,6 @@ body.has-clients-ticker { padding-bottom: 64px; }
 @keyframes clients-ticker-scroll {
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
-}
-@media (max-width: 768px) {
-    .clients-ticker-label { display: none; }
-    .clients-ticker-track { gap: 40px; padding: 10px 20px; }
-    body.has-clients-ticker { padding-bottom: 56px; }
-    .clients-ticker-bar { min-height: 56px; }
 }
 
 /* ── Scroll animations ── */

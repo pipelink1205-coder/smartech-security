@@ -19,7 +19,7 @@
     @stack('head')
     {{ $head ?? '' }}
 </head>
-<body class="site-body">
+<body class="site-body {{ request()->routeIs('home') ? 'page-home' : 'page-inner' }}">
 
 <x-ambient-bg />
 <x-brand-watermark />
@@ -32,7 +32,9 @@
     {{ $slot }}
 </main>
 
-<x-clients-ticker />
+@if(request()->routeIs('home'))
+    <x-clients-ticker />
+@endif
 
 @include('components.footer')
 

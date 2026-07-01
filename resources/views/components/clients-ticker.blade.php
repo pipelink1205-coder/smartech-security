@@ -1,5 +1,5 @@
 @if(count($logos) > 0)
-    <div class="clients-ticker-bar" aria-label="Empresas con las que hemos trabajado">
+    <div class="clients-ticker-bar" id="clientsTickerBar" aria-label="Empresas con las que hemos trabajado">
         <div class="clients-ticker-label">
             <span>EMPRESAS QUE CONFÍAN EN NOSOTROS:</span>
         </div>
