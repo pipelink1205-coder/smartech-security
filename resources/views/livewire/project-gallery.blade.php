@@ -106,15 +106,6 @@
                     </div>
 
                     <div class="project-lightbox-body {{ $openProject->description ? 'has-aside' : '' }}">
-                        @if($openProject->description)
-                            <aside class="project-lightbox-aside">
-                                <div class="project-desc-bubble">
-                                    <span class="project-desc-bubble-label">Descripción</span>
-                                    <p>{{ $openProject->description }}</p>
-                                </div>
-                            </aside>
-                        @endif
-
                         @if(count($gallery) > 0)
                             <div class="project-lightbox-gallery">
                                 <div class="project-lightbox-stage">
@@ -156,6 +147,18 @@
                             </div>
                         @else
                             <p class="project-detail-caption">Este proyecto aún no tiene fotos en la galería.</p>
+                        @endif
+
+                        @if($openProject->description)
+                            <aside class="project-lightbox-aside">
+                                <div class="project-desc-bubble">
+                                    <span class="project-desc-bubble-label">Descripción</span>
+                                    <p>{{ $openProject->description }}</p>
+                                </div>
+                                <a href="{{ url('/#contacto') }}" class="btn btn-primary project-lightbox-cta" wire:click="closeProject">
+                                    Solicitar cotización
+                                </a>
+                            </aside>
                         @endif
                     </div>
                 </div>
