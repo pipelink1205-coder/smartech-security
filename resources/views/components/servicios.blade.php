@@ -26,7 +26,10 @@
                     @if($service->highlight)
                         <span class="service-highlight">{{ $service->highlight }}</span>
                     @endif
-                    <a href="#contacto" class="service-link">Solicitar cotización →</a>
+                    <div class="service-card-actions">
+                        <a href="{{ route('servicios.show', $service->slug) }}" class="service-link">Ver servicio →</a>
+                        <a href="{{ route('contacto') }}" class="service-link service-link--muted">Cotizar</a>
+                    </div>
                 </div>
             </article>
         @endforeach

@@ -19,6 +19,19 @@ class HomeController extends Controller
         return view('pages.servicios', compact('services'));
     }
 
+    public function servicioShow(Service $service)
+    {
+        abort_unless($service->is_active, 404);
+
+        $projects = $service->projects()
+            ->with(['images' => fn ($q) => $q->orderByDesc('is_cover')->orderBy('sort_order')])
+            ->latest()
+            ->limit(12)
+            ->get();
+
+        return view('pages.servicio-show', compact('service', 'projects'));
+    }
+
     public function proyectos()
     {
         return view('pages.proyectos');

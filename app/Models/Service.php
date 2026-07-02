@@ -8,13 +8,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Service extends Model
 {
     protected $fillable = [
-        'name', 'slug', 'description', 'features', 'highlight', 'icon', 'image',
+        'name', 'slug', 'description', 'long_description', 'features', 'highlight', 'icon', 'image',
+        'includes', 'process_steps', 'brands', 'standards', 'tools', 'faqs',
         'price_from', 'is_active', 'order', 'color',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'features'  => 'array',
+        'is_active'      => 'boolean',
+        'features'       => 'array',
+        'includes'       => 'array',
+        'process_steps'  => 'array',
+        'brands'         => 'array',
+        'standards'      => 'array',
+        'tools'          => 'array',
+        'faqs'           => 'array',
     ];
 
     public function projects(): HasMany

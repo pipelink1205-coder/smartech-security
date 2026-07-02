@@ -85,6 +85,9 @@ window.showPage = function showPage(pageId, scrollBehavior = 'smooth') {
 };
 
 function bootFromHash() {
+    if (!document.body.classList.contains('page-home')) {
+        return;
+    }
     const pageId = window.location.hash.replace(/^#/, '');
     if (!pageId || !document.getElementById(pageId)) {
         return;
@@ -132,7 +135,8 @@ function cleanupOrphanLightboxes() {
 }
 
 function applyPagingMode() {
-    const paging = !isMobileLayout();
+    const isHome = document.body.classList.contains('page-home');
+    const paging = isHome && !isMobileLayout();
     document.body.classList.toggle('site-paging', paging);
 
     if (paging) {

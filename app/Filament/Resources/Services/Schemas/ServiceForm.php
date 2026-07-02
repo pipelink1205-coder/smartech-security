@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Services\Schemas;
 
 use App\Support\Filament\PublicAssetUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -41,17 +42,50 @@ class ServiceForm
                             ->maxLength(10)
                             ->helperText('Ejemplo: 📹 🚨 ☀️'),
                         TextInput::make('highlight')
-                            ->label('Frase destacada')
-                            ->maxLength(80)
+                            ->label('Frase gancho')
+                            ->maxLength(255)
                             ->columnSpanFull(),
                         Textarea::make('description')
-                            ->label('Descripción')
+                            ->label('Descripción corta (tarjeta)')
                             ->required()
-                            ->rows(4)
+                            ->rows(3)
+                            ->columnSpanFull(),
+                        Textarea::make('long_description')
+                            ->label('Descripción ampliada')
+                            ->rows(8)
+                            ->helperText('Párrafos separados por línea en blanco.')
                             ->columnSpanFull(),
                         TagsInput::make('features')
-                            ->label('Características (lista)')
+                            ->label('Características (tarjeta)')
                             ->placeholder('Escribir y Enter')
+                            ->columnSpanFull(),
+                        TagsInput::make('includes')
+                            ->label('Qué incluye')
+                            ->placeholder('Escribir y Enter')
+                            ->columnSpanFull(),
+                        TagsInput::make('process_steps')
+                            ->label('Cómo lo hacemos (pasos)')
+                            ->placeholder('Escribir y Enter')
+                            ->columnSpanFull(),
+                        TagsInput::make('brands')
+                            ->label('Marcas')
+                            ->placeholder('Escribir y Enter')
+                            ->columnSpanFull(),
+                        TagsInput::make('standards')
+                            ->label('Normas y estándares')
+                            ->placeholder('Escribir y Enter')
+                            ->columnSpanFull(),
+                        TagsInput::make('tools')
+                            ->label('Herramientas')
+                            ->placeholder('Escribir y Enter')
+                            ->columnSpanFull(),
+                        Repeater::make('faqs')
+                            ->label('Preguntas frecuentes')
+                            ->schema([
+                                TextInput::make('question')->label('Pregunta')->required()->columnSpanFull(),
+                                Textarea::make('answer')->label('Respuesta')->required()->rows(2)->columnSpanFull(),
+                            ])
+                            ->defaultItems(0)
                             ->columnSpanFull(),
                         PublicAssetUpload::image('image', 'images/services')
                             ->label('Imagen del servicio')

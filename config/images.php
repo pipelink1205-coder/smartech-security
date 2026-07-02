@@ -22,6 +22,11 @@ return [
         'alarmas'        => $local('images/services/alarmas.png', $local('images/services/alarmas.jpg', $u('photo-1563986768609-322da13575f3'))),
         'domotica'       => $local('images/services/domotica.png', $local('images/services/domotica.jpg', $u('photo-1558002038-1055907df827'))),
         'redes-fibra'    => $local('images/services/redes.jpg', $u('photo-1558494949-ef010cbdcc31')),
+        'iptv-hoteles'   => $local('images/iptv-primary.png', $local('images/iptv-primary.jpg', $u('photo-1582719508461-905c673771fd'))),
+        'video-porteros-citofonia-ip' => $local('images/services/acceso.jpg', $u('photo-1573164713714-d95e436ab8d6')),
+        'control-acceso-vehicular'    => $local('images/services/acceso.jpg', $u('photo-1573164713714-d95e436ab8d6')),
+        'enlaces-inalambricos'        => $local('images/services/redes.jpg', $u('photo-1558494949-ef010cbdcc31')),
+        'deteccion-incendios'         => $local('images/services/alarmas.png', $local('images/services/alarmas.jpg', $u('photo-1563986768609-322da13575f3'))),
     ],
 
     'projects' => [
