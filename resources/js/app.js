@@ -134,6 +134,28 @@ function cleanupOrphanLightboxes() {
     document.querySelectorAll('body > .project-lightbox').forEach((el) => el.remove());
 }
 
+window.brandLogoFallback = function brandLogoFallback(img) {
+    if (!img?.dataset) {
+        return;
+    }
+
+    let list = [];
+    try {
+        list = JSON.parse(img.dataset.fallbacks || '[]');
+    } catch {
+        list = [];
+    }
+
+    if (list.length > 0) {
+        img.src = list.shift();
+        img.dataset.fallbacks = JSON.stringify(list);
+        return;
+    }
+
+    img.closest('.sd-brand')?.classList.add('sd-brand--fallback');
+    img.remove();
+};
+
 function applyPagingMode() {
     const isHome = document.body.classList.contains('page-home');
     const paging = isHome && !isMobileLayout();

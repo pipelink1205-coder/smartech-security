@@ -13,7 +13,9 @@
                     <div class="service-card-media-overlay" aria-hidden="true"></div>
                 </div>
                 <div class="service-card-body">
-                    <div class="service-icon">{{ $service->icon }}</div>
+                    <div class="service-icon">
+                        <x-service-icon :slug="$service->slug" :name="$service->name" size="lg" />
+                    </div>
                     <h3>{{ $service->name }}</h3>
                     <p>{{ $service->description }}</p>
                     @if($service->features)

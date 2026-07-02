@@ -36,11 +36,6 @@ class ServiceForm
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
-                        TextInput::make('icon')
-                            ->label('Icono (emoji)')
-                            ->required()
-                            ->maxLength(10)
-                            ->helperText('Ejemplo: 📹 🚨 ☀️'),
                         TextInput::make('highlight')
                             ->label('Frase gancho')
                             ->maxLength(255)

@@ -73,11 +73,12 @@ class ProjectForm
                         })
                         ->columnSpan(1),
                     Select::make('service_id')
-                        ->label('Servicio')
-                        ->relationship('service', 'name')
+                        ->label('Tipo de servicio')
+                        ->relationship('service', 'name', fn ($query) => $query->orderBy('order'))
                         ->searchable()
                         ->preload()
                         ->required()
+                        ->helperText('Clasifica el proyecto bajo un servicio. Aparecerá en la subpágina de ese servicio y en el filtro del portafolio.')
                         ->columnSpan(1),
                     Textarea::make('description')
                         ->label('Descripción en el sitio')

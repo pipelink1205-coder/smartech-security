@@ -17,19 +17,17 @@ class ServicesTable
     {
         return $table
             ->columns([
-                TextColumn::make('icon')
-                    ->label(' ')
-                    ->size('lg'),
+                TextColumn::make('name')
+                    ->label('Servicio')
+                    ->searchable()
+                    ->sortable()
+                    ->description(fn ($record) => $record->slug),
                 ImageColumn::make('image')
                     ->label('Imagen')
                     ->getStateUsing(fn ($record) => $record->image_url)
                     ->checkFileExistence(false)
                     ->square()
                     ->size(40),
-                TextColumn::make('name')
-                    ->label('Servicio')
-                    ->searchable()
-                    ->sortable(),
                 TextColumn::make('price_from')
                     ->label('Desde')
                     ->formatStateUsing(fn ($state) => $state

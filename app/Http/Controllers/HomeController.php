@@ -26,10 +26,15 @@ class HomeController extends Controller
         $projects = $service->projects()
             ->with(['images' => fn ($q) => $q->orderByDesc('is_cover')->orderBy('sort_order')])
             ->latest()
-            ->limit(12)
+            ->limit(6)
             ->get();
 
-        return view('pages.servicio-show', compact('service', 'projects'));
+        $otherServices = Service::active()
+            ->ordered()
+            ->whereKeyNot($service->id)
+            ->get(['id', 'name', 'slug', 'icon']);
+
+        return view('pages.servicio-show', compact('service', 'projects', 'otherServices'));
     }
 
     public function proyectos()

@@ -29,6 +29,15 @@ class Service extends Model
         return $this->hasMany(Project::class);
     }
 
+    protected static function booted(): void
+    {
+        static::creating(function (Service $service) {
+            if (blank($service->icon)) {
+                $service->icon = '·';
+            }
+        });
+    }
+
     public function scopeActive($q)   { return $q->where('is_active', true); }
     public function scopeOrdered($q)  { return $q->orderBy('order'); }
 
@@ -52,5 +61,36 @@ class Service extends Model
         }
 
         return $url;
+    }
+
+    /**
+     * Normaliza brands: separa entradas tipo "Grupo: a, b, c" en grupos con etiqueta.
+     *
+     * @return array<int, array{label: string|null, brands: array<int, string>}>
+     */
+    public function getBrandGroupsAttribute(): array
+    {
+        $general = [];
+        $grouped = [];
+
+        foreach ($this->brands ?? [] as $entry) {
+            $entry = trim((string) $entry);
+            if ($entry === '') {
+                continue;
+            }
+
+            if (preg_match('/^([^:]{2,40}):\s*(.+)$/u', $entry, $m)) {
+                $grouped[] = [
+                    'label'  => trim($m[1]),
+                    'brands' => array_values(array_filter(array_map('trim', explode(',', $m[2])))),
+                ];
+            } else {
+                $general[] = $entry;
+            }
+        }
+
+        $result = $general ? [['label' => null, 'brands' => $general]] : [];
+
+        return array_merge($result, $grouped);
     }
 }
