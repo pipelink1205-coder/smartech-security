@@ -3,7 +3,9 @@
 
 <div class="projects-map-block" wire:ignore>
     <p class="projects-map-hint">
-        Pasa el cursor sobre un <strong>pin</strong> para ver el trabajo y pulsa <strong>Ver</strong> para abrir las fotos. También puedes hacer clic en una <strong>comuna con trabajos</strong> (verde intenso).
+        Trabajos reales en el mapa. Atendemos todo el <strong>Valle de Aburrá</strong> — si tu zona aún no aparece,
+        <a href="{{ route('contacto') }}">solicita cotización</a>.
+        Pasa el cursor sobre un <strong>pin</strong> para ver el trabajo y pulsa <strong>Ver</strong> para abrir las fotos.
     </p>
     <div id="smartech-projects-map" class="projects-map-canvas" aria-label="Mapa de trabajos en Medellín"></div>
 </div>

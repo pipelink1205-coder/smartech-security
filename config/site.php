@@ -4,7 +4,7 @@ return [
     'hero' => [
         'badge' => '+500 Proyectos exitosos',
         'title' => 'Tecnología de punta para hogares, empresas y hoteles en Medellín',
-        'subtitle' => 'Más de 10 años instalando sistemas de seguridad 4K, energía solar, IPTV para hoteles y domótica en Medellín, El Poblado, Laureles, Envigado y todo el Valle de Aburrá. Soluciones integrales con garantía real y soporte técnico especializado.',
+        'subtitle' => 'Más de 10 años instalando seguridad 4K, energía solar, IPTV hotelera y domótica en Medellín y el Valle de Aburrá — Envigado, Itagüí, Sabaneta, Bello y área metropolitana. Garantía real y soporte técnico especializado.',
     ],
 
     'stats' => [
@@ -14,7 +14,14 @@ return [
         ['num' => '24/7', 'label' => 'Soporte técnico'],
     ],
 
-    'strip_zones' => ['Medellín', 'El Poblado', 'Laureles', 'Envigado', 'Itagüí', 'Sabaneta'],
+    /** Banda bajo el hero: beneficios, no lista de ciudades. */
+    'strip_label' => 'Compromiso en cada proyecto',
+    'strip_highlights' => [
+        'Sede en Envigado',
+        'Diagnóstico gratuito en 24 h',
+        'Garantía 1 año en mano de obra',
+        'Soporte técnico 24/7',
+    ],
 
     /** Carpetas bajo public/ con logos de clientes (se leen automáticamente). */
     'client_logos_dirs' => [
@@ -23,7 +30,7 @@ return [
     ],
 
     'why_us' => [
-        ['icon' => '🗺️', 'title' => 'Cobertura Total', 'text' => 'Atendemos Medellín, El Poblado, Laureles, Envigado, Itagüí, Sabaneta, Bello y todos los municipios del área metropolitana con técnicos locales.'],
+        ['icon' => '🗺️', 'title' => 'Cobertura Metropolitana', 'text' => 'Técnicos locales en todo el Valle de Aburrá. Sede en Envigado con visitas y soporte en Medellín y municipios aledaños.'],
         ['icon' => '🎓', 'title' => 'Técnicos Certificados', 'text' => 'Equipo profesional con certificaciones en instalación de sistemas de seguridad, energía solar y redes. Experiencia comprobada.'],
         ['icon' => '⚡', 'title' => 'Respuesta Rápida', 'text' => 'Diagnóstico gratuito en menos de 24 horas. Instalaciones ágiles con mínima interrupción de tus actividades diarias.'],
         ['icon' => '🛡️', 'title' => 'Soporte 24/7', 'text' => 'Asistencia técnica permanente los 365 días del año. Mantenimiento preventivo y correctivo con garantía real.'],
@@ -34,21 +41,6 @@ return [
         ['step' => '2', 'title' => 'Propuesta y Cotización', 'text' => 'Evaluamos tus necesidades específicas. Entregamos propuesta técnica detallada con planos, equipos y presupuesto sin sorpresas.'],
         ['step' => '3', 'title' => 'Instalación Profesional', 'text' => 'Ejecutamos el proyecto con técnicos certificados. Instalación limpia, organizada y en el tiempo acordado.'],
         ['step' => '4', 'title' => 'Capacitación y Soporte', 'text' => 'Te capacitamos en el uso del sistema. Garantía de 1 año en mano de obra y soporte técnico continuo 24/7.'],
-    ],
-
-    'coverage_zones' => [
-        ['name' => 'Medellín Centro', 'areas' => 'Centro, Prado, Aranjuez, Castilla'],
-        ['name' => 'El Poblado', 'areas' => 'Golden Mile, Manila, Astorga, Tesoro'],
-        ['name' => 'Laureles', 'areas' => 'Estadio, Suramericana, Conquistadores'],
-        ['name' => 'Belén', 'areas' => 'Fátima, Rosales, Guayabal'],
-        ['name' => 'Envigado', 'areas' => 'Sede principal, El Salado, Las Antillas'],
-        ['name' => 'Itagüí', 'areas' => 'Zona industrial y residencial'],
-        ['name' => 'Sabaneta', 'areas' => 'Pan de Azúcar, San Joaquín'],
-        ['name' => 'Bello', 'areas' => 'Centro, Niquía, Fontidueño'],
-        ['name' => 'La Estrella', 'areas' => 'Centro y zonas residenciales'],
-        ['name' => 'Caldas', 'areas' => 'Sur del área metropolitana'],
-        ['name' => 'Copacabana', 'areas' => 'Norte del área metropolitana'],
-        ['name' => 'Rionegro & Guarne', 'areas' => 'Oriente antioqueño'],
     ],
 
     'testimonials' => [
@@ -88,7 +80,6 @@ return [
         ['id' => 'proceso', 'label' => 'Proceso'],
         ['id' => 'testimonios', 'label' => 'Testimonios'],
         ['id' => 'faq', 'label' => 'FAQ'],
-        ['id' => 'cobertura', 'label' => 'Cobertura'],
         ['id' => 'contacto', 'label' => 'Contacto'],
     ],
 ];

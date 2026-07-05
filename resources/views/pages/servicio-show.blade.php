@@ -16,7 +16,7 @@
                     <div class="sd-hero-copy">
                         <span class="sd-hero-kicker">
                             <x-service-icon :icon="$service->icon" :name="$service->name" size="sm" class="sd-hero-kicker-icon" />
-                            Servicio especializado
+                            {{ $service->slug === 'iptv-hoteles' ? 'Producto estrella' : 'Servicio especializado' }}
                         </span>
                         <h1 class="sd-hero-title">{{ $service->name }}</h1>
                         @if($service->highlight)
@@ -29,6 +29,9 @@
                         </ul>
                         <div class="sd-hero-actions">
                             <a href="{{ route('contacto') }}" class="btn btn-primary">Solicitar cotización</a>
+                            @if($service->slug === 'iptv-hoteles')
+                                <a href="{{ route('home') }}#iptv" class="btn sd-btn-outline">Ver presentación IPTV</a>
+                            @endif
                             <a href="https://wa.me/{{ config('contact.whatsapp') }}" class="btn sd-btn-outline" target="_blank" rel="noopener">WhatsApp</a>
                         </div>
                     </div>

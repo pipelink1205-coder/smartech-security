@@ -7,7 +7,14 @@
 >
     <div class="services-grid">
         @foreach($services as $service)
-            <article class="service-card glass-card" data-aos="fade-up">
+            @php
+                $isFeatured = $service->slug === 'iptv-hoteles';
+                $iptvLandingUrl = request()->routeIs('home') ? '#iptv' : route('home') . '#iptv';
+            @endphp
+            <article @class(['service-card', 'glass-card', 'service-card--featured' => $isFeatured]) data-aos="fade-up">
+                @if($isFeatured)
+                    <span class="service-card-badge">Producto estrella</span>
+                @endif
                 <div class="service-card-media">
                     <img src="{{ $service->image_url }}" alt="{{ $service->name }}" loading="lazy" width="800" height="480" />
                     <div class="service-card-media-overlay" aria-hidden="true"></div>
@@ -30,6 +37,9 @@
                     @endif
                     <div class="service-card-actions">
                         <a href="{{ route('servicios.show', $service->slug) }}" class="service-link">Ver servicio →</a>
+                        @if($isFeatured)
+                            <a href="{{ $iptvLandingUrl }}" class="service-link service-link--muted" @if(request()->routeIs('home')) data-page-link="iptv" @endif>Presentación IPTV</a>
+                        @endif
                         <a href="{{ route('contacto') }}" class="service-link service-link--muted">Cotizar</a>
                     </div>
                 </div>

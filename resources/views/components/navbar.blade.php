@@ -10,7 +10,6 @@
             <li><a href="{{ route('home') }}#proceso" data-page-link="proceso">Proceso</a></li>
             <li><a href="{{ route('home') }}#testimonios" data-page-link="testimonios">Testimonios</a></li>
             <li><a href="{{ route('home') }}#faq" data-page-link="faq">FAQ</a></li>
-            <li><a href="{{ route('home') }}#cobertura" data-page-link="cobertura">Cobertura</a></li>
             <li><a href="{{ route('home') }}#contacto" data-page-link="contacto">Contacto</a></li>
         </ul>
 

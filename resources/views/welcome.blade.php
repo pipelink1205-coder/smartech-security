@@ -11,7 +11,7 @@
     </x-site-page>
 
     <x-site-page id="iptv">
-        @include('components.iptv-section')
+        @include('components.iptv-section', ['iptvService' => $iptvService ?? null])
     </x-site-page>
 
     <x-site-page id="proyectos">
@@ -31,10 +31,6 @@
 
     <x-site-page id="faq">
         @include('components.faq')
-    </x-site-page>
-
-    <x-site-page id="cobertura">
-        @include('components.cobertura')
     </x-site-page>
 
     <x-site-page id="contacto">
