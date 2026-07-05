@@ -9,6 +9,10 @@ return [
         'Domótica y Casas Inteligentes'=> [3_000_000, 15_000_000],
         'Fibra Óptica y Redes'         => [1_200_000, 6_000_000],
         'IPTV para Hoteles'            => [2_000_000, 12_000_000],
+        'Video Porteros y Citofonía IP' => [1_200_000, 6_000_000],
+        'Control de Acceso Vehicular'  => [2_500_000, 12_000_000],
+        'Enlaces Inalámbricos'         => [1_800_000, 9_000_000],
+        'Sistemas de Detección de Incendios' => [2_000_000, 10_000_000],
         'Varios servicios'             => [2_000_000, 25_000_000],
     ],
 

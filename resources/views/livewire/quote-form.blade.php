@@ -87,7 +87,7 @@
                                 <label for="service">Servicio de interés *</label>
                                 <select id="service" wire:model.live="service">
                                     <option value="">Seleccione…</option>
-                                    @foreach(array_keys(config('quotes.pricing')) as $name)
+                                    @foreach($serviceOptions as $name => $prices)
                                         <option value="{{ $name }}">{{ $name }}</option>
                                     @endforeach
                                 </select>

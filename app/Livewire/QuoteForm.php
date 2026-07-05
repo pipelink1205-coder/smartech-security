@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Quote;
+use App\Models\Service;
 use App\Mail\QuoteGenerated;
 use App\Mail\NewLeadAlert;
 use Livewire\Component;
@@ -65,7 +66,7 @@ class QuoteForm extends Component
             return;
         }
 
-        $pricing = config('quotes.pricing');
+        $pricing = $this->serviceOptions();
         [$min, $max] = $pricing[$this->service] ?? [0, 0];
 
         // Aplicar recargo por zona
@@ -102,8 +103,40 @@ class QuoteForm extends Component
         $this->reset(['name', 'phone', 'email', 'service', 'zone', 'message']);
     }
 
+    /**
+     * Servicios activos de la BD + rangos de precio (config override o price_from).
+     *
+     * @return array<string, array{0: int, 1: int}>
+     */
+    private function serviceOptions(): array
+    {
+        $overrides = config('quotes.pricing', []);
+        $options = [];
+
+        foreach (Service::active()->ordered()->get() as $service) {
+            $name = $service->name;
+
+            if (isset($overrides[$name])) {
+                $options[$name] = $overrides[$name];
+            } elseif ($service->price_from) {
+                $min = (int) $service->price_from;
+                $options[$name] = [$min, (int) round($min * 5)];
+            } else {
+                $options[$name] = [0, 0];
+            }
+        }
+
+        if (isset($overrides['Varios servicios'])) {
+            $options['Varios servicios'] = $overrides['Varios servicios'];
+        }
+
+        return $options;
+    }
+
     public function render()
     {
-        return view('livewire.quote-form');
+        return view('livewire.quote-form', [
+            'serviceOptions' => $this->serviceOptions(),
+        ]);
     }
 }

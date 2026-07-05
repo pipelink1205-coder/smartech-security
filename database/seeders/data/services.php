@@ -215,7 +215,6 @@ El objetivo es detectar intrusiones reales, avisar al instante y permitir respue
             'DSC',
             'Paradox',
             'Hikvision AX Pro',
-            'Barreras inalámbricas perimetrales',
         ],
         'standards' => [
             'Equipos con certificaciones de grado de seguridad EN 50131 (según fabricante)',
@@ -370,7 +369,7 @@ Entregamos redes organizadas, documentadas y con rendimiento medible, no "cables
             'Integración PMS',
             'WiFi por habitación',
         ],
-        'long_description' => 'Somos especialistas en IPTV hotelero para hoteles, hostales y apartahoteles en Medellín, El Poblado, Laureles, Envigado y el Valle de Aburrá. Reemplazamos o complementamos la TV por cable tradicional con señal IP de alta calidad, interfaz personalizada del hotel y servicios interactivos.
+        'long_description' => 'Somos especialistas en televisión IP para hoteles, hostales y apartahoteles en Medellín y el Valle de Aburrá. Reemplazamos o complementamos la TV por cable con señal IP de alta calidad, interfaz personalizada del hotel y servicios interactivos.
 
 El huésped disfruta más de 200 canales HD, Video On Demand, información del hotel, room service digital y WiFi de alta velocidad por habitación. El hotel gana nuevas fuentes de ingreso (VOD, publicidad interna) y reduce costos de cableado coaxial.',
         'includes' => [
