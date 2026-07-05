@@ -5,17 +5,28 @@ namespace App\Support;
 class ServiceIcon
 {
     /**
-     * Icono en el sitio: automático según slug (servicios base) o monograma del nombre.
+     * Clave SVG a partir de lo que guardaste en admin (emoji o clave).
+     * null = mostrar el emoji tal cual con estilo plano, o monograma si está vacío.
      */
-    public static function resolve(?string $slug, ?string $name): string
+    public static function svgKey(?string $icon): ?string
     {
-        $slugKey = config("service-icons.slugs.{$slug}");
-
-        if (is_string($slugKey) && self::isValidKey($slugKey)) {
-            return $slugKey;
+        if (blank($icon)) {
+            return null;
         }
 
-        return 'monogram';
+        $icon = trim($icon);
+
+        if (self::isValidKey($icon)) {
+            return $icon;
+        }
+
+        $mapped = config("service-icons.emojis.{$icon}");
+
+        if (is_string($mapped) && self::isValidKey($mapped)) {
+            return $mapped;
+        }
+
+        return null;
     }
 
     public static function monogramLetter(?string $name): string

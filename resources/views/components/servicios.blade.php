@@ -14,7 +14,7 @@
                 </div>
                 <div class="service-card-body">
                     <div class="service-icon">
-                        <x-service-icon :slug="$service->slug" :name="$service->name" size="lg" />
+                        <x-service-icon :icon="$service->icon" :name="$service->name" size="lg" />
                     </div>
                     <h3>{{ $service->name }}</h3>
                     <p>{{ $service->description }}</p>

@@ -484,6 +484,13 @@ nav#navbar.is-scrolled { box-shadow: var(--shadow-md); }
     background: rgba(46, 196, 160, 0.12);
     border-radius: 8px;
 }
+.service-icon-emoji {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%;
+    font-size: 1.15em;
+    line-height: 1;
+    filter: grayscale(0.15) saturate(0.85);
+}
 .service-icon-flat--sm { width: 18px; height: 18px; }
 .service-icon-flat--md { width: 24px; height: 24px; }
 .service-icon-flat--lg { width: 28px; height: 28px; }

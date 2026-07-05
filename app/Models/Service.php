@@ -29,15 +29,6 @@ class Service extends Model
         return $this->hasMany(Project::class);
     }
 
-    protected static function booted(): void
-    {
-        static::creating(function (Service $service) {
-            if (blank($service->icon)) {
-                $service->icon = '·';
-            }
-        });
-    }
-
     public function scopeActive($q)   { return $q->where('is_active', true); }
     public function scopeOrdered($q)  { return $q->orderBy('order'); }
 

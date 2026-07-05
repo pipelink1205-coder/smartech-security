@@ -36,6 +36,12 @@ class ServiceForm
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
+                        TextInput::make('icon')
+                            ->label('Icono')
+                            ->required()
+                            ->maxLength(10)
+                            ->helperText('Emoji o símbolo libre (ej. 📞 📹 🔥). En el sitio se muestra en formato plano; los emojis conocidos usan el SVG equivalente.')
+                            ->columnSpanFull(),
                         TextInput::make('highlight')
                             ->label('Frase gancho')
                             ->maxLength(255)

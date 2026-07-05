@@ -17,6 +17,9 @@ class ServicesTable
     {
         return $table
             ->columns([
+                TextColumn::make('icon')
+                    ->label(' ')
+                    ->size('lg'),
                 TextColumn::make('name')
                     ->label('Servicio')
                     ->searchable()

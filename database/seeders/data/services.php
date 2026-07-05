@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Contenido confirmado de borradores-servicios_listo.docx (servicios 1–7)
- * + borradores profesionales para servicios 8–11 (pendientes de revisión en admin).
+ * Servicios del sitio — generado/actualizado desde la BD de desarrollo.
+ * Cargar con: php artisan db:seed --class=ServiceSeeder
+ * Exportar de nuevo tras editar en admin: php artisan services:export-seeder
  */
 return [
     [
@@ -14,8 +15,17 @@ return [
         'highlight' => 'Vigilancia 4K con inteligencia artificial, analíticas de video, monitoreo remoto y garantía real.',
         'image' => config('images.services.camaras-4k'),
         'description' => 'Videovigilancia IP Ultra HD para hogares y empresas en Medellín. Visión nocturna, detección inteligente y acceso remoto desde tu celular.',
-        'features' => ['Cámaras IP 4K y analógicas', 'Visión nocturna color / IR', 'Acceso remoto seguro', 'Garantía 1 año equipos y mano de obra'],
-        'long_description' => "En Smart Tech Security diseñamos e instalamos sistemas de videovigilancia IP de alta resolución adaptados a cada espacio. No vendemos \"cámaras sueltas\": entregamos una solución integral que incluye levantamiento del sitio, diseño del cubrimiento, instalación limpia, configuración de grabación y acceso remoto desde celular o computador.\n\nCon más de 10 años de experiencia y cientos de proyectos en Medellín y el Valle de Aburrá, garantizamos imágenes nítidas de día y de noche, almacenamiento confiable y alertas inteligentes que reducen falsas alarmas.\n\nIdeal para: hogares, apartamentos, oficinas, bodegas, centros comerciales, hoteles, conjuntos residenciales e industria.",
+        'features' => [
+            'Cámaras IP 4K y analógicas',
+            'Visión nocturna color / IR',
+            'Acceso remoto seguro',
+            'Garantía 1 año equipos y mano de obra',
+        ],
+        'long_description' => 'En Smart Tech Security diseñamos e instalamos sistemas de videovigilancia IP de alta resolución adaptados a cada espacio. No vendemos "cámaras sueltas": entregamos una solución integral que incluye levantamiento del sitio, diseño del cubrimiento, instalación limpia, configuración de grabación y acceso remoto desde celular o computador.
+
+Con más de 10 años de experiencia y cientos de proyectos en Medellín y el Valle de Aburrá, garantizamos imágenes nítidas de día y de noche, almacenamiento confiable y alertas inteligentes que reducen falsas alarmas.
+
+Ideal para: hogares, apartamentos, oficinas, bodegas, centros comerciales, hoteles, conjuntos residenciales e industria.',
         'includes' => [
             'Cámaras IP 4K Ultra HD y cámaras analógicas con visión nocturna (color / IR según zona)',
             'Grabador NVR y DVR con almacenamiento dimensionado para 24/7',
@@ -31,7 +41,16 @@ return [
             'Configuración y pruebas — grabación, detección, acceso remoto, notificaciones',
             'Entrega y capacitación — manual de uso y canal de soporte',
         ],
-        'brands' => ['Hikvision', 'HiLook', 'Dahua', 'Axis', 'Hanwha', 'Vivotek', 'Ezviz', 'Imou'],
+        'brands' => [
+            'Hikvision',
+            'HiLook',
+            'Dahua',
+            'Axis',
+            'Hanwha',
+            'Vivotek',
+            'Ezviz',
+            'Imou',
+        ],
         'standards' => [
             'Compatibilidad ONVIF para integración entre equipos',
             'Cableado según buenas prácticas ANSI/TIA-568 (Cat6 / PoE)',
@@ -58,8 +77,15 @@ return [
         'highlight' => 'Reduce tu factura de energía hasta un 90% con paneles de alta eficiencia e instalación certificada.',
         'image' => config('images.services.energia-solar'),
         'description' => 'Sistemas conectados a la red, híbridos con baterías o off-grid. Estudio de consumo, instalación segura y acompañamiento en trámites.',
-        'features' => ['Paneles de alta eficiencia', 'Inversores y baterías de litio', 'Estudio de consumo gratuito', 'Garantía 1 año equipos y mano de obra'],
-        'long_description' => "Implementamos sistemas fotovoltaicos conectados a la red (on-grid), híbridos con baterías o off-grid según el perfil de consumo del cliente. Realizamos estudio de consumo, dimensionamiento del sistema, instalación eléctrica segura y acompañamiento en trámites con la red de distribución.\n\nIdeal para hogares, edificios, conjuntos, comercios e industria en Medellín y el Valle de Aburrá que buscan ahorro sostenible y valorización de su propiedad.",
+        'features' => [
+            'Paneles de alta eficiencia',
+            'Inversores y baterías de litio',
+            'Estudio de consumo gratuito',
+            'Garantía 1 año equipos y mano de obra',
+        ],
+        'long_description' => 'Implementamos sistemas fotovoltaicos conectados a la red (on-grid), híbridos con baterías o off-grid según el perfil de consumo del cliente. Realizamos estudio de consumo, dimensionamiento del sistema, instalación eléctrica segura y acompañamiento en trámites con la red de distribución.
+
+Ideal para hogares, edificios, conjuntos, comercios e industria en Medellín y el Valle de Aburrá que buscan ahorro sostenible y valorización de su propiedad.',
         'includes' => [
             'Estudio de consumo y dimensionamiento del sistema',
             'Paneles solares de alta eficiencia',
@@ -106,8 +132,15 @@ return [
         'highlight' => 'Controla quién entra y cuándo, sin llaves ni tarjetas perdidas.',
         'image' => config('images.services.control-acceso'),
         'description' => 'Lectores de huella, reconocimiento facial 3D, tarjetas, torniquetes y cerraduras inteligentes con reportes de asistencia.',
-        'features' => ['Biometría y reconocimiento facial', 'Torniquetes y barreras', 'Reportes PDF/Excel', 'Integración con nómina'],
-        'long_description' => "Instalamos sistemas de control de acceso con lectores de huella, reconocimiento facial 3D, tarjetas de proximidad, torniquetes y cerraduras inteligentes. Integramos control horario, reportes de asistencia y, cuando el cliente lo requiere, conexión con sistemas de nómina o CCTV.\n\nSolución ideal para empresas, centros comerciales, conjuntos residenciales, clínicas, colegios e industria en el área metropolitana.",
+        'features' => [
+            'Biometría y reconocimiento facial',
+            'Torniquetes y barreras',
+            'Reportes PDF/Excel',
+            'Integración con nómina',
+        ],
+        'long_description' => 'Instalamos sistemas de control de acceso con lectores de huella, reconocimiento facial 3D, tarjetas de proximidad, torniquetes y cerraduras inteligentes. Integramos control horario, reportes de asistencia y, cuando el cliente lo requiere, conexión con sistemas de nómina o CCTV.
+
+Solución ideal para empresas, centros comerciales, conjuntos residenciales, clínicas, colegios e industria en el área metropolitana.',
         'includes' => [
             'Lectores biométricos / faciales / tarjeta según necesidad',
             'Controladora central y software de administración',
@@ -123,7 +156,10 @@ return [
             'Entrega — capacitación y soporte técnico',
         ],
         'brands' => [
-            'ZKTeco', 'Hikvision', 'Suprema', 'Anviz',
+            'ZKTeco',
+            'Hikvision',
+            'Suprema',
+            'Anviz',
             'Torniquetes / barreras: ZKTeco, Hikvision, Armatura, BFT, CAME, Accespro',
         ],
         'standards' => [
@@ -151,8 +187,15 @@ return [
         'highlight' => 'Detección temprana, notificación instantánea y monitoreo 24/7.',
         'image' => config('images.services.alarmas'),
         'description' => 'Sistemas contra intrusión con sensores PIR, barreras perimetrales, contactos magnéticos e integración con cámaras.',
-        'features' => ['Sensores inalámbricos y cableados', 'Notificaciones push', 'Activación por zonas', 'Botón de pánico'],
-        'long_description' => "Diseñamos e instalamos sistemas de alarma contra intrusión para hogares, comercios e industria. Combinamos sensores perimetrales, detectores de movimiento, contactos magnéticos, sirenas y, opcionalmente, integración con cámaras y monitoreo remoto.\n\nEl objetivo es detectar intrusiones reales, avisar al instante y permitir respuesta rápida, con zonas configurables para evitar falsas alarmas.",
+        'features' => [
+            'Sensores inalámbricos y cableados',
+            'Notificaciones push',
+            'Activación por zonas',
+            'Botón de pánico',
+        ],
+        'long_description' => 'Diseñamos e instalamos sistemas de alarma contra intrusión para hogares, comercios e industria. Combinamos sensores perimetrales, detectores de movimiento, contactos magnéticos, sirenas y, opcionalmente, integración con cámaras y monitoreo remoto.
+
+El objetivo es detectar intrusiones reales, avisar al instante y permitir respuesta rápida, con zonas configurables para evitar falsas alarmas.',
         'includes' => [
             'Central de alarma (inalámbrica o cableada)',
             'Sensores PIR, contactos magnéticos, barreras perimetrales según diseño',
@@ -167,7 +210,13 @@ return [
             'Programación — códigos, usuarios, horarios y notificaciones',
             'Pruebas y capacitación — simulación de eventos y uso del sistema',
         ],
-        'brands' => ['Ajax', 'DSC', 'Paradox', 'Hikvision AX Pro', 'Barreras inalámbricas perimetrales'],
+        'brands' => [
+            'Ajax',
+            'DSC',
+            'Paradox',
+            'Hikvision AX Pro',
+            'Barreras inalámbricas perimetrales',
+        ],
         'standards' => [
             'Equipos con certificaciones de grado de seguridad EN 50131 (según fabricante)',
             'Instalación siguiendo manual del fabricante y buenas prácticas de cableado',
@@ -193,8 +242,15 @@ return [
         'highlight' => 'Controla iluminación, clima, cortinas y seguridad desde tu celular o con tu voz.',
         'image' => config('images.services.domotica'),
         'description' => 'Automatización de iluminación, clima, cortinas y riego. Control por voz con Alexa y Google Home.',
-        'features' => ['Control por voz y app', 'Escenas personalizables', 'Ahorro energético 30–40%', 'Integración con asistentes'],
-        'long_description' => "Automatizamos hogares y apartamentos con soluciones que integran iluminación, climatización, cortinas, riego, cerraduras y escenas personalizadas. Control por app móvil, paneles táctiles y asistentes de voz (Alexa, Google Home).\n\nMás confort, mayor eficiencia energética y una experiencia \"casa inteligente\" sin complicaciones para el usuario final.",
+        'features' => [
+            'Control por voz y app',
+            'Escenas personalizables',
+            'Ahorro energético 30–40%',
+            'Integración con asistentes',
+        ],
+        'long_description' => 'Automatizamos hogares y apartamentos con soluciones que integran iluminación, climatización, cortinas, riego, cerraduras y escenas personalizadas. Control por app móvil, paneles táctiles y asistentes de voz (Alexa, Google Home).
+
+Más confort, mayor eficiencia energética y una experiencia "casa inteligente" sin complicaciones para el usuario final.',
         'includes' => [
             'Diseño de escenas (llegada, salida, noche, vacaciones, etc.)',
             'Actuadores para luces, cortinas, aire acondicionado, riego según alcance',
@@ -209,7 +265,17 @@ return [
             'Integración — voz, app, sensores y seguridad',
             'Entrega — prueba de escenas y soporte',
         ],
-        'brands' => ['Shelly', 'Sonoff', 'KNX', 'Control4', 'Philips Hue', 'Horus', 'Tuya', 'Amazon Alexa', 'Google Home'],
+        'brands' => [
+            'Shelly',
+            'Sonoff',
+            'KNX',
+            'Control4',
+            'Philips Hue',
+            'Horus',
+            'Tuya',
+            'Amazon Alexa',
+            'Google Home',
+        ],
         'standards' => [
             'Protocolos abiertos: Zigbee, Matter, Wi-Fi, KNX según proyecto',
             'Instalación eléctrica conforme a RETIE en puntos de potencia',
@@ -235,8 +301,15 @@ return [
         'highlight' => 'Conectividad empresarial estable, certificada y lista para crecer.',
         'image' => config('images.services.redes-fibra'),
         'description' => 'Cableado Cat6/6A, fibra óptica, WiFi empresarial mesh y certificación de puntos de red.',
-        'features' => ['Cableado estructurado', 'Fibra óptica', 'WiFi empresarial mesh', 'Documentación as built'],
-        'long_description' => "Diseñamos e instalamos infraestructura de red para empresas, hoteles, conjuntos e industria: cableado estructurado Cat6/6A, fibra óptica monomodo/multimodo, racks, patch panels, WiFi empresarial mesh y certificación de puntos.\n\nEntregamos redes organizadas, documentadas y con rendimiento medible, no \"cables sueltos detrás del rack\".",
+        'features' => [
+            'Cableado estructurado',
+            'Fibra óptica',
+            'WiFi empresarial mesh',
+            'Documentación as built',
+        ],
+        'long_description' => 'Diseñamos e instalamos infraestructura de red para empresas, hoteles, conjuntos e industria: cableado estructurado Cat6/6A, fibra óptica monomodo/multimodo, racks, patch panels, WiFi empresarial mesh y certificación de puntos.
+
+Entregamos redes organizadas, documentadas y con rendimiento medible, no "cables sueltos detrás del rack".',
         'includes' => [
             'Levantamiento y diseño lógico/físico de red',
             'Cableado Cat6 / Cat6A / fibra óptica',
@@ -253,7 +326,16 @@ return [
             'Puesta en marcha — configuración, pruebas de velocidad y handover',
         ],
         'brands' => [
-            'Ubiquiti', 'MikroTik', 'Cisco', 'TP-Link Omada', 'Panduit', 'Furukawa', 'Amp', 'Siemon', 'Lanpro', 'Linkedpro',
+            'Ubiquiti',
+            'MikroTik',
+            'Cisco',
+            'TP-Link Omada',
+            'Panduit',
+            'Furukawa',
+            'Amp',
+            'Siemon',
+            'Lanpro',
+            'Linkedpro',
             'Fibra / conectores: Corning, CommScope, Lanpro, Linkedpro',
         ],
         'standards' => [
@@ -282,8 +364,15 @@ return [
         'highlight' => 'Televisión HD por internet para hoteles: más canales, más ingresos, mejor experiencia del huésped.',
         'image' => config('images.iptv.primary'),
         'description' => 'Televisión IP para hoteles y apartahoteles: +200 canales HD, VOD, integración PMS y WiFi por habitación.',
-        'features' => ['+200 canales HD', 'Video On Demand', 'Integración PMS', 'WiFi por habitación'],
-        'long_description' => "Somos especialistas en IPTV hotelero para hoteles, hostales y apartahoteles en Medellín, El Poblado, Laureles, Envigado y el Valle de Aburrá. Reemplazamos o complementamos la TV por cable tradicional con señal IP de alta calidad, interfaz personalizada del hotel y servicios interactivos.\n\nEl huésped disfruta más de 200 canales HD, Video On Demand, información del hotel, room service digital y WiFi de alta velocidad por habitación. El hotel gana nuevas fuentes de ingreso (VOD, publicidad interna) y reduce costos de cableado coaxial.",
+        'features' => [
+            '+200 canales HD',
+            'Video On Demand',
+            'Integración PMS',
+            'WiFi por habitación',
+        ],
+        'long_description' => 'Somos especialistas en IPTV hotelero para hoteles, hostales y apartahoteles en Medellín, El Poblado, Laureles, Envigado y el Valle de Aburrá. Reemplazamos o complementamos la TV por cable tradicional con señal IP de alta calidad, interfaz personalizada del hotel y servicios interactivos.
+
+El huésped disfruta más de 200 canales HD, Video On Demand, información del hotel, room service digital y WiFi de alta velocidad por habitación. El hotel gana nuevas fuentes de ingreso (VOD, publicidad interna) y reduce costos de cableado coaxial.',
         'includes' => [
             'Headend IPTV (codificadores / decodificadores / middleware)',
             'Señal a cada habitación vía red IP (STB o Smart TV compatible)',
@@ -301,7 +390,15 @@ return [
             'Personalización — interfaz con marca del hotel, canales y VOD',
             'Capacitación y soporte — recepción, mantenimiento y monitoreo remoto',
         ],
-        'brands' => ['Souka', 'FMuser', 'Ubiquiti', 'Cisco', 'MikroTik', 'Ubiquiti UniFi', 'Cambium'],
+        'brands' => [
+            'Souka',
+            'FMuser',
+            'Ubiquiti',
+            'Cisco',
+            'MikroTik',
+            'Ubiquiti UniFi',
+            'Cambium',
+        ],
         'standards' => [
             'Distribución de señal sobre red IP (Multicast / Unicast según diseño)',
             'Cableado Cat6 mínimo por habitación; fibra backbone en hoteles grandes',
@@ -328,10 +425,17 @@ return [
         'order' => 8,
         'price_from' => 1200000,
         'highlight' => 'Atiende visitas y abre puertas desde el celular, con video HD y registro de accesos.',
-        'image' => config('images.services.control-acceso'),
+        'image' => config('images.services.video-porteros-citofonia-ip'),
         'description' => 'Porteros IP con video, audio bidireccional e integración con cerraduras y conjuntos residenciales.',
-        'features' => ['Video HD en portería', 'Apertura remota', 'App móvil', 'Integración con cerraduras'],
-        'long_description' => "Instalamos sistemas de video portería y citofonía IP para apartamentos, casas, oficinas y conjuntos residenciales. El residente ve y habla con el visitante desde el celular o monitor interior, abre la puerta con un toque y mantiene registro de accesos.\n\nIntegramos con cerraduras eléctricas, control de acceso vehicular y plataformas de administración para conjuntos.",
+        'features' => [
+            'Video HD en portería',
+            'Apertura remota',
+            'App móvil',
+            'Integración con cerraduras',
+        ],
+        'long_description' => 'Instalamos sistemas de video portería y citofonía IP para apartamentos, casas, oficinas y conjuntos residenciales. El residente ve y habla con el visitante desde el celular o monitor interior, abre la puerta con un toque y mantiene registro de accesos.
+
+Integramos con cerraduras eléctricas, control de acceso vehicular y plataformas de administración para conjuntos.',
         'includes' => [
             'Placa exterior con cámara HD, micrófono y lector de tarjetas (opcional)',
             'Monitor interior o app móvil para atención de visitas',
@@ -346,7 +450,14 @@ return [
             'Configuración — usuarios, apartamentos y apertura remota',
             'Entrega — capacitación y canal de soporte',
         ],
-        'brands' => ['Hikvision', 'Dahua', 'Akuvox', 'Fanvil', 'Grandstream', 'ZKTeco'],
+        'brands' => [
+            'Hikvision',
+            'Dahua',
+            'Akuvox',
+            'Fanvil',
+            'Grandstream',
+            'ZKTeco',
+        ],
         'standards' => [
             'Señal sobre red IP (SIP / protocolo del fabricante)',
             'Cableado Cat6 para enlaces IP estables',
@@ -370,10 +481,17 @@ return [
         'order' => 9,
         'price_from' => 2500000,
         'highlight' => 'Talanqueras, barreras y reconocimiento de placas para entradas vehiculares seguras.',
-        'image' => config('images.services.control-acceso'),
+        'image' => config('images.services.control-acceso-vehicular'),
         'description' => 'Automatización de entradas vehiculares con talanqueras, barreras, RFID, lectura de placas y control remoto.',
-        'features' => ['Talanqueras y barreras', 'Lectura de placas LPR', 'Control remoto', 'Integración con CCTV'],
-        'long_description' => "Diseñamos e instalamos soluciones de control de acceso vehicular para conjuntos residenciales, empresas, parqueaderos e industria. Combinamos talanqueras, barreras automáticas, lectores RFID, reconocimiento de placas (LPR) e integración con portería y videovigilancia.\n\nEl objetivo es agilizar el ingreso autorizado, bloquear accesos no permitidos y mantener registro auditable de vehículos.",
+        'features' => [
+            'Talanqueras y barreras',
+            'Lectura de placas LPR',
+            'Control remoto',
+            'Integración con CCTV',
+        ],
+        'long_description' => 'Diseñamos e instalamos soluciones de control de acceso vehicular para conjuntos residenciales, empresas, parqueaderos e industria. Combinamos talanqueras, barreras automáticas, lectores RFID, reconocimiento de placas (LPR) e integración con portería y videovigilancia.
+
+El objetivo es agilizar el ingreso autorizado, bloquear accesos no permitidos y mantener registro auditable de vehículos.',
         'includes' => [
             'Barrera o talanquera según aforo y nivel de seguridad',
             'Controlador, loop detector o sensor de massa',
@@ -388,7 +506,16 @@ return [
             'Programación — usuarios, horarios, listas blancas y LPR',
             'Entrega — pruebas en operación real y soporte',
         ],
-        'brands' => ['CAME', 'BFT', 'Nice', 'Faac', 'ZKTeco', 'Hikvision', 'Accespro', 'Armatura'],
+        'brands' => [
+            'CAME',
+            'BFT',
+            'Nice',
+            'Faac',
+            'ZKTeco',
+            'Hikvision',
+            'Accespro',
+            'Armatura',
+        ],
         'standards' => [
             'Instalación eléctrica con protecciones y puesta a tierra',
             'Señalización y seguridad en zona de barrera',
@@ -412,10 +539,17 @@ return [
         'order' => 10,
         'price_from' => 1800000,
         'highlight' => 'Conecta sedes, fincas o torres sin tendido de fibra con enlaces punto a punto de alta capacidad.',
-        'image' => config('images.services.redes-fibra'),
+        'image' => config('images.services.enlaces-inalambricos'),
         'description' => 'Enlaces punto a punto y multipunto en 5 GHz / 60 GHz para empresas, conjuntos, cámaras remotas e ISP.',
-        'features' => ['Alta capacidad', 'Instalación en torres', 'Monitoreo remoto', 'Redundancia opcional'],
-        'long_description' => "Implementamos enlaces inalámbricos profesionales para conectar sedes, bodegas, cámaras remotas, hoteles satélite o zonas donde no es viable tender fibra. Diseñamos la línea de vista, seleccionamos equipos según distancia y ancho de banda, e instalamos con alineación precisa y monitoreo.\n\nSolución ideal para empresas, conjuntos, sector agroindustrial y proyectos de videovigilancia distribuida en el Valle de Aburrá.",
+        'features' => [
+            'Alta capacidad',
+            'Instalación en torres',
+            'Monitoreo remoto',
+            'Redundancia opcional',
+        ],
+        'long_description' => 'Implementamos enlaces inalámbricos profesionales para conectar sedes, bodegas, cámaras remotas, hoteles satélite o zonas donde no es viable tender fibra. Diseñamos la línea de vista, seleccionamos equipos según distancia y ancho de banda, e instalamos con alineación precisa y monitoreo.
+
+Solución ideal para empresas, conjuntos, sector agroindustrial y proyectos de videovigilancia distribuida en el Valle de Aburrá.',
         'includes' => [
             'Estudio de línea de vista y path analysis',
             'Equipos punto a punto o multipunto según distancia y capacidad',
@@ -430,7 +564,13 @@ return [
             'Pruebas — throughput, latencia y estabilidad',
             'Monitoreo — entrega de credenciales y soporte remoto',
         ],
-        'brands' => ['Ubiquiti airFiber / airMAX', 'MikroTik', 'Cambium', 'Mimosa', 'Siklu'],
+        'brands' => [
+            'Ubiquiti airFiber / airMAX',
+            'MikroTik',
+            'Cambium',
+            'Mimosa',
+            'Siklu',
+        ],
         'standards' => [
             'Cumplimiento de regulación de espectro radioeléctrico en Colombia',
             'Protección contra rayos y puesta a tierra en torres',
@@ -454,10 +594,17 @@ return [
         'order' => 11,
         'price_from' => 2000000,
         'highlight' => 'Detección temprana, alarmas audibles y notificación para proteger vidas y cumplir normativa.',
-        'image' => config('images.services.alarmas'),
+        'image' => config('images.services.deteccion-incendios'),
         'description' => 'Sistemas convencionales y direccionables con detectores de humo, calor, estaciones manuales y sirenas.',
-        'features' => ['Detectores de humo y calor', 'Panel direccionable', 'Estaciones manuales', 'Integración con emergencia'],
-        'long_description' => "Diseñamos e instalamos sistemas de detección y alarma de incendios para comercios, industria, conjuntos y edificaciones que requieren cumplimiento normativo. Incluimos detectores de humo y calor, estaciones manuales, sirenas, panel de control y señalización.\n\nTrabajamos con marcas reconocidas y entregamos documentación para inspecciones de bomberos y aseguradoras cuando aplique.",
+        'features' => [
+            'Detectores de humo y calor',
+            'Panel direccionable',
+            'Estaciones manuales',
+            'Integración con emergencia',
+        ],
+        'long_description' => 'Diseñamos e instalamos sistemas de detección y alarma de incendios para comercios, industria, conjuntos y edificaciones que requieren cumplimiento normativo. Incluimos detectores de humo y calor, estaciones manuales, sirenas, panel de control y señalización.
+
+Trabajamos con marcas reconocidas y entregamos documentación para inspecciones de bomberos y aseguradoras cuando aplique.',
         'includes' => [
             'Panel de control convencional o direccionable',
             'Detectores de humo, calor y estaciones manuales según diseño',
@@ -472,7 +619,14 @@ return [
             'Programación y pruebas — simulación de alarmas y verificación de zonas',
             'Entrega — actas de prueba y soporte de mantenimiento',
         ],
-        'brands' => ['Notifier', 'Honeywell', 'Edwards', 'Bosch', 'Hochiki', 'GST'],
+        'brands' => [
+            'Notifier',
+            'Honeywell',
+            'Edwards',
+            'Bosch',
+            'Hochiki',
+            'GST',
+        ],
         'standards' => [
             'Diseño alineado con NFPA 72 y normativa NSR colombiana según tipo de edificación',
             'Cableado resistente al fuego en rutas críticas',
@@ -488,5 +642,5 @@ return [
             ['question' => '¿Hacen mantenimiento?', 'answer' => 'Sí, ofrecemos contratos de mantenimiento preventivo según normativa.'],
             ['question' => '¿Se integra con alarmas de intrusión?', 'answer' => 'Puede integrarse con supervisión central; evaluamos compatibilidad en el diseño.'],
         ],
-    ],
+    ]
 ];

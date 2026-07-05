@@ -15,7 +15,7 @@
                 <div class="sd-hero-grid">
                     <div class="sd-hero-copy">
                         <span class="sd-hero-kicker">
-                            <x-service-icon :slug="$service->slug" :name="$service->name" size="sm" class="sd-hero-kicker-icon" />
+                            <x-service-icon :icon="$service->icon" :name="$service->name" size="sm" class="sd-hero-kicker-icon" />
                             Servicio especializado
                         </span>
                         <h1 class="sd-hero-title">{{ $service->name }}</h1>
@@ -227,7 +227,7 @@
                             @foreach($otherServices as $other)
                                 <li>
                                     <a href="{{ route('servicios.show', $other->slug) }}">
-                                        <x-service-icon :slug="$other->slug" :name="$other->name" size="sm" class="sd-others__icon" />
+                                        <x-service-icon :icon="$other->icon" :name="$other->name" size="sm" class="sd-others__icon" />
                                         {{ $other->name }}
                                     </a>
                                 </li>
