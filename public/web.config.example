@@ -22,5 +22,11 @@
                 <add value="index.php" />
             </files>
         </defaultDocument>
+        <!-- Subidas Filament/Livewire: límite IIS (50 MB) -->
+        <security>
+            <requestFiltering>
+                <requestLimits maxAllowedContentLength="52428800" />
+            </requestFiltering>
+        </security>
   </system.webServer>
 </configuration>

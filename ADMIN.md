@@ -196,6 +196,17 @@ images/services/nombre-archivo.png
 
 No hace falta ejecutar `php artisan storage:link` para esas carpetas.
 
+### Producción (IIS + Cloudflare): error 401 al subir
+
+Si en el navegador la petición `livewire/.../upload-file` devuelve **401 Unauthorized**:
+
+1. En `.env` de producción: `APP_URL=https://smarttechsecurity.com.co` (mismo dominio con/sin `www` que uses en el navegador).
+2. Tras `git pull`, limpiar caché: `php artisan config:clear`.
+3. Permisos de escritura para IIS en `storage/` y `public/images/projects/`.
+4. En `public/web.config`: `maxAllowedContentLength` (ver `web.config.example`).
+
+El proyecto incluye `trustProxies` en `bootstrap/app.php` para que PHP detecte HTTPS detrás de Cloudflare/IIS (sin eso Livewire invalida la firma del upload).
+
 ---
 
 ## Comandos útiles
