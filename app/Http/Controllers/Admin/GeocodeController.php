@@ -53,7 +53,33 @@ class GeocodeController extends Controller
             return response()->json(['message' => 'Indica una dirección para buscar.'], 422);
         }
 
-        return $this->forward($query);
+        return $this->forward($this->sanitizeAddressQuery($query));
+    }
+
+    /**
+     * Normaliza direcciones colombianas para APIs (Alcaldía no acepta bien "#" en la URL).
+     */
+    private function sanitizeAddressQuery(string $query): string
+    {
+        $q = trim(preg_replace('/\s+/', ' ', $query) ?? $query);
+        $q = str_replace(['#', ','], ' ', $q);
+        $q = preg_replace('/(\d)\s*-\s*(\d)/', '$1 $2', $q) ?? $q;
+
+        return trim(preg_replace('/\s+/', ' ', $q) ?? $q);
+    }
+
+    /** Cliente HTTP con timeout; en Windows sin CA bundle evita fallos SSL silenciosos. */
+    private function httpClient(int $timeout = 12): \Illuminate\Http\Client\PendingRequest
+    {
+        $pending = Http::timeout($timeout);
+
+        if (PHP_OS_FAMILY === 'Windows'
+            && ! ini_get('curl.cainfo')
+            && ! ini_get('openssl.cafile')) {
+            $pending = $pending->withOptions(['verify' => false]);
+        }
+
+        return $pending;
     }
 
     /**
@@ -87,9 +113,13 @@ class GeocodeController extends Controller
             ?? $this->photonSearch($query);
 
         if ($hit === null) {
-            return response()->json([
-                'message' => 'No se encontró una ubicación fiable. Coloca el pin manualmente en el mapa.',
-            ], 404);
+            $message = 'No se encontró una ubicación fiable. Coloca el pin manualmente en el mapa.';
+
+            if (! extension_loaded('curl')) {
+                $message .= ' En el servidor IIS active extension=curl en C:\\PHP\\php.ini y ejecute iisreset.';
+            }
+
+            return response()->json(['message' => $message], 404);
         }
 
         $payload = $this->withZoneValidation($hit);
@@ -235,7 +265,7 @@ class GeocodeController extends Controller
     private function alcaldiaSearchOnce(string $query): ?array
     {
         try {
-            $response = Http::timeout(12)
+            $response = $this->httpClient()
                 ->withHeaders(['Accept' => 'application/json', 'User-Agent' => 'SmartTechSecurity/1.0'])
                 ->get(self::ALCALDIA_API . rawurlencode($query));
 
@@ -279,7 +309,7 @@ class GeocodeController extends Controller
     /** @return list<string> */
     private function buildAlcaldiaQueries(string $query): array
     {
-        $normalized = trim(preg_replace('/\s+/', ' ', $query) ?? $query);
+        $normalized = $this->sanitizeAddressQuery($query);
         $queries = [$normalized];
 
         $cra = preg_replace('/\bcarrera\b/ui', 'CRA', $normalized);
@@ -315,7 +345,7 @@ class GeocodeController extends Controller
     private function arcgisSearch(string $query): ?array
     {
         try {
-            $response = Http::timeout(12)
+            $response = $this->httpClient()
                 ->withHeaders(['Accept' => 'application/json'])
                 ->get('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates', [
                     'f'            => 'json',
@@ -376,7 +406,7 @@ class GeocodeController extends Controller
     private function nominatimSearch(string $query): ?array
     {
         try {
-            $response = Http::timeout(12)
+            $response = $this->httpClient()
                 ->withHeaders($this->geocoderHeaders())
                 ->get('https://nominatim.openstreetmap.org/search', [
                     'format'         => 'jsonv2',
@@ -424,7 +454,7 @@ class GeocodeController extends Controller
     private function nominatimValleList(string $query): array
     {
         try {
-            $response = Http::timeout(12)
+            $response = $this->httpClient()
                 ->withHeaders($this->geocoderHeaders())
                 ->get('https://nominatim.openstreetmap.org/search', [
                     'format'         => 'jsonv2',
@@ -489,7 +519,7 @@ class GeocodeController extends Controller
     private function photonSearch(string $query): ?array
     {
         try {
-            $response = Http::timeout(12)
+            $response = $this->httpClient()
                 ->withHeaders(['Accept' => 'application/json'])
                 ->get('https://photon.komoot.io/api/', [
                     'q'     => $query,
@@ -663,7 +693,7 @@ class GeocodeController extends Controller
     private function nominatimBarrio(float $lat, float $lng): ?string
     {
         try {
-            $response = Http::timeout(10)
+            $response = $this->httpClient(10)
                 ->withHeaders($this->geocoderHeaders())
                 ->get('https://nominatim.openstreetmap.org/reverse', [
                     'format'         => 'jsonv2',
