@@ -10,6 +10,8 @@ window.AdminProjectLocation = {
     map: null,
     marker: null,
     wire: null,
+    mapEl: null,
+    resizeObserver: null,
     candidates: [],
 
     defaultCenter: [6.2442, -75.5812],
@@ -22,10 +24,15 @@ window.AdminProjectLocation = {
             return;
         }
 
+        this.mapEl = el;
+        this.bindMapResize(el);
+
         if (this.map) {
-            this.map.remove();
-            this.map = null;
-            this.marker = null;
+            this.invalidateMapSize();
+            this.refreshStatus(
+                this.readNumber('latitude') != null && this.readNumber('longitude') != null ? 'success' : 'muted'
+            );
+            return;
         }
 
         const lat = this.readNumber('latitude') ?? this.defaultCenter[0];
@@ -53,10 +60,61 @@ window.AdminProjectLocation = {
             this.reverseLookup(e.latlng.lat, e.latlng.lng);
         });
 
-        setTimeout(() => {
-            this.map.invalidateSize();
-            this.refreshStatus(hasCoords ? 'success' : 'muted');
-        }, 200);
+        this.invalidateMapSize();
+        this.refreshStatus(hasCoords ? 'success' : 'muted');
+    },
+
+  /** Filament monta el mapa en pestaña oculta: recalcula tiles al mostrarse o redimensionarse. */
+    bindMapResize(el) {
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
+
+        if (typeof ResizeObserver !== 'undefined') {
+            this.resizeObserver = new ResizeObserver(() => this.invalidateMapSize());
+            this.resizeObserver.observe(el);
+        }
+
+        if (typeof IntersectionObserver !== 'undefined') {
+            const visible = new IntersectionObserver((entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    this.invalidateMapSize();
+                }
+            }, { threshold: 0.05 });
+            visible.observe(el);
+        }
+
+        if (!this._tabClickBound) {
+            this._tabClickBound = true;
+            document.addEventListener('click', (event) => {
+                const tab = event.target.closest('[role="tab"]');
+                if (!tab) {
+                    return;
+                }
+                const label = (tab.textContent || '').toLowerCase();
+                if (label.includes('mapa')) {
+                    setTimeout(() => this.invalidateMapSize(), 50);
+                    setTimeout(() => this.invalidateMapSize(), 300);
+                }
+            });
+        }
+    },
+
+    invalidateMapSize() {
+        if (!this.map) {
+            return;
+        }
+
+        const run = () => {
+            try {
+                this.map.invalidateSize({ pan: false });
+            } catch (_) {
+                // mapa aún no listo
+            }
+        };
+
+        run();
+        [100, 350, 800].forEach((ms) => setTimeout(run, ms));
     },
 
     wirePath(field) {
@@ -339,6 +397,7 @@ window.AdminProjectLocation = {
             this.writeZone(payload);
             this.marker?.setLatLng([lat, lng]);
             this.map?.setView([lat, lng], payload.in_medellin ? 16 : 14);
+            this.invalidateMapSize();
 
             this.candidates = Array.isArray(payload.candidates) ? payload.candidates : [];
 
@@ -404,6 +463,20 @@ window.AdminProjectLocation = {
             credentials: 'same-origin',
         });
 
-        return res.json().catch(() => null);
+        const payload = await res.json().catch(() => null);
+
+        if (res.status === 404 && payload?.message) {
+            return payload;
+        }
+
+        if (!res.ok) {
+            return {
+                message: res.status === 401 || res.status === 419
+                    ? 'Sesión expirada. Recarga la página e inicia sesión de nuevo.'
+                    : `Error del servidor (${res.status}). Revisa curl/openssl en PHP o coloca el pin manualmente.`,
+            };
+        }
+
+        return payload;
     },
 };

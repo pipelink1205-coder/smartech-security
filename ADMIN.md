@@ -207,6 +207,44 @@ Si en el navegador la petición `livewire/.../upload-file` devuelve **401 Unauth
 
 El proyecto incluye `trustProxies` en `bootstrap/app.php` para que PHP detecte HTTPS detrás de Cloudflare/IIS (sin eso Livewire invalida la firma del upload).
 
+### Producción (IIS): error 500 `Path cannot be empty` al subir
+
+PHP no recibió el archivo en su carpeta temporal (`upload_tmp_dir`). Livewire falla en `fopen()` porque `getRealPath()` viene vacío.
+
+1. Crear carpeta y permisos (CMD como Administrador, ajusta el pool si no es `smartech`):
+
+```bat
+cd C:\inetpub\wwwroot\smartech
+mkdir storage\app\upload-tmp 2>nul
+mkdir storage\app\private\livewire-tmp 2>nul
+icacls storage\app\upload-tmp /grant "IIS AppPool\smartech:(OI)(CI)M" /T
+```
+
+2. En el `php.ini` que usa IIS (`php --ini` en el servidor), configurar:
+
+```ini
+file_uploads = On
+upload_tmp_dir = "C:\inetpub\wwwroot\smartech\storage\app\upload-tmp"
+upload_max_filesize = 20M
+post_max_size = 25M
+extension=fileinfo
+```
+
+3. `iisreset` y volver a probar el upload en `/admin`.
+
+### Mapa recortado en la pestaña Mapa
+
+Leaflet se monta en una pestaña oculta de Filament. Tras desplegar `admin-project-location.js?v=9`, cambia a otra pestaña y vuelve a **Mapa**, o pulsa **Centrar mapa**. El script recalcula el tamaño automáticamente.
+
+### Geocodificador: 404 / "No se encontró ubicación"
+
+El **404 en Network** suele ser la respuesta de la app (no encontró la dirección), no una ruta rota. Si en producción falla siempre:
+
+1. En `C:\PHP\php.ini`: `extension=curl` y `extension=openssl`, luego `iisreset`.
+2. En el servidor: `curl -I https://www.medellin.gov.co`
+3. Usa formato claro: `Carrera 72 # 11-11` o `CRA 72 11 11`.
+4. Siempre puedes **clic en el mapa** para colocar el pin manualmente.
+
 ---
 
 ## Comandos útiles

@@ -27,8 +27,14 @@
     .admin-location-meta strong { color: rgb(17 24 39); font-weight: 600; }
     .dark .admin-location-meta strong { color: rgb(229 231 235); }
     .admin-location-map {
-        height: 280px; width: 100%; border-radius: 0.65rem;
+        height: 280px; width: 100%; min-width: 0; border-radius: 0.65rem;
         border: 1px solid rgb(229 231 235); z-index: 0;
+        overflow: hidden;
+    }
+    .admin-location-map .leaflet-container {
+        width: 100% !important;
+        height: 100% !important;
+        font: inherit;
     }
     .dark .admin-location-map { border-color: rgb(55 65 81); }
     .admin-loc-cands { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.5rem; }

@@ -219,6 +219,21 @@ class GeocodeController extends Controller
             return null;
         }
 
+        foreach ($this->buildAlcaldiaQueries($query) as $attempt) {
+            $hit = $this->alcaldiaSearchOnce($attempt);
+            if ($hit !== null) {
+                return $hit;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function alcaldiaSearchOnce(string $query): ?array
+    {
         try {
             $response = Http::timeout(12)
                 ->withHeaders(['Accept' => 'application/json', 'User-Agent' => 'SmartTechSecurity/1.0'])
@@ -259,6 +274,37 @@ class GeocodeController extends Controller
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    /** @return list<string> */
+    private function buildAlcaldiaQueries(string $query): array
+    {
+        $normalized = trim(preg_replace('/\s+/', ' ', $query) ?? $query);
+        $queries = [$normalized];
+
+        $cra = preg_replace('/\bcarrera\b/ui', 'CRA', $normalized);
+        if (is_string($cra) && $cra !== $normalized) {
+            $queries[] = $cra;
+        }
+
+        $cl = preg_replace('/\bcalle\b/ui', 'CL', $normalized);
+        if (is_string($cl) && $cl !== $normalized) {
+            $queries[] = $cl;
+        }
+
+        if (preg_match('/^(CRA|CL|CARRERA|CALLE)\s+(\d+)\s+(\d+)\s+(\d+)$/ui', $normalized, $m)) {
+            $via = mb_strtoupper($m[1]);
+            if ($via === 'CARRERA') {
+                $via = 'CRA';
+            }
+            if ($via === 'CALLE') {
+                $via = 'CL';
+            }
+            $queries[] = "{$via} {$m[2]} # {$m[3]}-{$m[4]}";
+            $queries[] = "{$via} {$m[2]} {$m[3]} {$m[4]}";
+        }
+
+        return array_values(array_unique(array_filter($queries)));
     }
 
     /**

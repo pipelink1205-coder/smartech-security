@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
     public function boot(): void
     {
         FilamentAsset::register([
-            Js::make('admin-project-location', asset('js/admin-project-location.js?v=8')),
+            Js::make('admin-project-location', asset('js/admin-project-location.js?v=9')),
         ]);
     }
 
