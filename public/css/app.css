@@ -1070,7 +1070,7 @@ nav#navbar.is-scrolled { box-shadow: var(--shadow-md); }
 }
 .project-lightbox-thumbs::-webkit-scrollbar { height: 5px; }
 .project-lightbox-thumbs::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,.25); border-radius: 999px;
+    background: rgba(23,143,130,.35); border-radius: 999px;
 }
 .project-lightbox-thumbs .project-detail-thumb { flex: 0 0 auto; }
 .project-lightbox-gallery .project-detail-caption {
@@ -1093,9 +1093,13 @@ nav#navbar.is-scrolled { box-shadow: var(--shadow-md); }
     .project-lightbox-stage { flex: 0 0 auto; aspect-ratio: 4 / 3; }
     .project-desc-bubble {
         flex: 0 0 auto; overflow-y: visible; max-height: none;
-        border-radius: 4px 18px 18px 18px;
+        border-radius: 12px;
     }
-    .project-lightbox-thumbs { flex-wrap: wrap; overflow-x: visible; justify-content: center; }
+    /* Una sola fila con scroll; no apilar la última miniatura abajo */
+    .project-lightbox-thumbs {
+        flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 
 /* Mapa de proyectos (Leaflet, desde Mapas_oferta) */
