@@ -44,8 +44,12 @@ php artisan migrate --force --no-interaction
 echo [5/8] servicios (updateOrCreate por slug, no duplica)...
 php artisan db:seed --class=ServiceSeeder --no-interaction --force
 
-echo [6/8] storage link...
+echo [6/8] storage link y carpetas de upload (IIS)...
 php artisan storage:link 2>nul
+mkdir storage\app\upload-tmp 2>nul
+mkdir storage\app\private\livewire-tmp 2>nul
+icacls storage\app\upload-tmp /grant "IIS AppPool\smartech:(OI)(CI)M" /T 2>nul
+icacls storage /grant "IIS AppPool\smartech:(OI)(CI)M" /T 2>nul
 
 echo [7/8] limpiar cache...
 php artisan config:clear

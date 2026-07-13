@@ -108,7 +108,10 @@ class ProjectGallery extends Component
             $q->where('service_id', $this->selectedService);
         }
 
-        return $q->latest('year')->latest('id');
+        return $q
+            ->orderByDesc('is_featured')
+            ->orderByDesc('year')
+            ->orderByDesc('id');
     }
 
     protected function resolvedOpenProject(): ?Project
@@ -168,13 +171,49 @@ class ProjectGallery extends Component
             ->when($this->featuredOnly, fn ($q) => $q->featured())
             ->count();
 
+        $currentYear = (int) date('Y');
+
+        $projectBlocks = [
+            [
+                'key'   => 'destacados',
+                'label' => 'Destacados',
+                'hint'  => 'Proyectos principales en el sitio',
+                'items' => $projects->where('is_featured', true)->values(),
+            ],
+            [
+                'key'   => 'recientes',
+                'label' => 'Recientes',
+                'hint'  => 'Trabajos de los últimos años',
+                'items' => $projects
+                    ->where('is_featured', false)
+                    ->filter(fn (Project $p) => (int) ($p->year ?? 0) >= $currentYear - 1)
+                    ->values(),
+            ],
+            [
+                'key'   => 'realizados',
+                'label' => 'Más proyectos realizados',
+                'hint'  => 'Historos anteriores',
+                'items' => $projects
+                    ->where('is_featured', false)
+                    ->filter(fn (Project $p) => (int) ($p->year ?? 0) < $currentYear - 1)
+                    ->values(),
+            ],
+        ];
+
+        // Si un solo bloque tiene todo (p. ej. solo destacados en inicio), no repetir títulos vacíos.
+        $projectBlocks = array_values(array_filter(
+            $projectBlocks,
+            static fn (array $block): bool => $block['items']->isNotEmpty()
+        ));
+
         return view('livewire.project-gallery', [
             'projects'           => $projects,
+            'projectBlocks'      => $projectBlocks,
             'services'           => $services,
             'totalProjectsCount' => $totalProjectsCount,
-            'openProject' => $openProject,
-            'gallery'     => $gallery,
-            'mapProjects' => $projects
+            'openProject'        => $openProject,
+            'gallery'            => $gallery,
+            'mapProjects'        => $projects
                 ->filter(fn ($p) => $p->latitude !== null && $p->longitude !== null)
                 ->map->toMapPayload()
                 ->values(),

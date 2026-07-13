@@ -49,32 +49,45 @@
         @if($projects->isEmpty())
             <p class="project-portfolio-empty">No hay proyectos para este filtro.</p>
         @else
-            <div class="project-portfolio-grid" role="list">
-                @foreach($projects as $project)
-                    <button
-                        type="button"
-                        role="listitem"
-                        wire:click="openProject({{ $project->id }})"
-                        wire:key="project-card-{{ $project->id }}"
-                        class="project-card project-card-selectable has-image"
-                        aria-label="Ver fotos de {{ $project->title }}"
-                    >
-                        <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy" />
-                        <div class="project-overlay">
-                            <span class="project-tag">{{ $project->service_name }}</span>
-                            <h3>{{ $project->title }}</h3>
-                            @if($project->location)
-                                <p class="project-card-location">{{ $project->location }}</p>
+            @foreach($projectBlocks as $block)
+                <section class="project-portfolio-block" wire:key="project-block-{{ $block['key'] }}-{{ $selectedService ?? 'all' }}">
+                    @if(count($projectBlocks) > 1)
+                        <header class="project-portfolio-block-head">
+                            <h3 class="project-portfolio-block-title">{{ $block['label'] }}</h3>
+                            @if(!empty($block['hint']))
+                                <p class="project-portfolio-block-hint">{{ $block['hint'] }}</p>
                             @endif
-                        </div>
-                    </button>
-                @endforeach
-            </div>
+                        </header>
+                    @endif
+
+                    <div class="project-portfolio-grid" role="list">
+                        @foreach($block['items'] as $project)
+                            <button
+                                type="button"
+                                role="listitem"
+                                wire:click="openProject({{ $project->id }})"
+                                wire:key="project-card-{{ $project->id }}"
+                                class="project-card project-card-selectable has-image"
+                                aria-label="Ver fotos de {{ $project->title }}"
+                            >
+                                <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy" />
+                                <div class="project-overlay">
+                                    <span class="project-tag">{{ $project->service_name }}</span>
+                                    <h3>{{ $project->title }}</h3>
+                                    @if($project->location)
+                                        <p class="project-card-location">{{ $project->location }}</p>
+                                    @endif
+                                </div>
+                            </button>
+                        @endforeach
+                    </div>
+                </section>
+            @endforeach
         @endif
 
         @if($featuredOnly)
             <div class="projects-cta-row">
-                <button type="button" class="btn btn-outline-white" data-scroll-to="smartech-projects-map">
+                <button type="button" class="btn btn-ghost" data-scroll-to="smartech-projects-map">
                     Volver al mapa
                 </button>
             </div>

@@ -15,7 +15,7 @@
     </x-site-page>
 
     <x-site-page id="proyectos">
-        <x-section tone="dark" class="proyectos-block" :contained="false">
+        <x-section tone="muted" class="proyectos-block" :contained="false">
             @livewire('project-gallery', ['featuredOnly' => true])
         </x-section>
     </x-site-page>
