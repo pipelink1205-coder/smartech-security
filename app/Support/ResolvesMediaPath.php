@@ -28,7 +28,7 @@ trait ResolvesMediaPath
             }
         }
 
-        return $this->publicAssetUrl($path);
+        return null;
     }
 
     /** Ruta relativa al dominio (evita mixed-content si APP_URL usa http en un sitio https). */

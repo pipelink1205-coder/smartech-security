@@ -20,8 +20,8 @@ trait HandlesProjectGallery
     {
         $data['gallery'] = $this->record
             ->images()
-            ->orderByDesc('is_cover')
             ->orderBy('sort_order')
+            ->orderByDesc('is_cover')
             ->pluck('path')
             ->all();
 
@@ -29,9 +29,8 @@ trait HandlesProjectGallery
     }
 
     /**
-     * Reconcilia la galería del formulario con las filas de ProjectImage:
-     * conserva el orden, marca la primera como portada y elimina las quitadas.
-     * (No borra archivos físicos por si están referenciados en otro proyecto.)
+     * Reconcilia la galería del formulario con las filas de ProjectImage.
+     * Las fotos nuevas que FilePond antepone se mueven al final para no romper la portada.
      */
     protected function syncGallery(): void
     {
@@ -42,6 +41,16 @@ trait HandlesProjectGallery
 
         $project = $this->record;
         $existing = $project->images()->get()->keyBy('path');
+        $existingPaths = $existing->keys()->all();
+        $existingLookup = array_flip($existingPaths);
+
+        // Si FilePond metió fotos nuevas al inicio, pásalas al final.
+        $leadingNew = [];
+        while ($paths !== [] && ! isset($existingLookup[$paths[0]])) {
+            $leadingNew[] = array_shift($paths);
+        }
+        $paths = array_values(array_merge($paths, $leadingNew));
+
         $keepIds = [];
 
         foreach ($paths as $index => $path) {
@@ -52,9 +61,9 @@ trait HandlesProjectGallery
                 $keepIds[] = $row->id;
             } else {
                 $keepIds[] = $project->images()->create([
-                    'path'       => $path,
+                    'path' => $path,
                     'sort_order' => $index,
-                    'is_cover'   => $index === 0,
+                    'is_cover' => $index === 0,
                 ])->id;
             }
         }

@@ -231,6 +231,10 @@ body {
     body.site-paging .site-page.active {
         display: block;
     }
+    /* Evita que el footer oscuro deje una "raya" de 1px bajo el ticker. */
+    body.site-paging > footer {
+        display: none;
+    }
 }
 @media (max-width: 768px) {
     .site-page {
@@ -1321,8 +1325,8 @@ footer { background: var(--dark-900); padding: 64px 0 0; }
     align-items: center;
     gap: 0;
     background: #fff;
-    border-top: 1px solid var(--gray-200);
-    box-shadow: 0 -4px 24px rgba(15,23,42,.08);
+    border-top: 1px solid rgba(23, 143, 130, 0.10);
+    box-shadow: 0 -6px 20px rgba(15, 23, 42, 0.05);
     min-height: 64px;
 }
 body.has-clients-ticker { padding-bottom: 0; }

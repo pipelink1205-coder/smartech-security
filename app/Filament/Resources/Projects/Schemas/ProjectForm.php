@@ -94,6 +94,21 @@ class ProjectForm
                         ->label('Mostrar en la página de inicio')
                         ->inline(false)
                         ->columnSpanFull(),
+
+                    Section::make('Logo del cliente')
+                        ->description('Opcional. Se puede mostrar en la banda “Empresas que confían” del inicio.')
+                        ->schema([
+                            PublicAssetUpload::image('client_logo', 'images/clients/from-projects', watermark: false)
+                                ->label('Logo')
+                                ->imageEditor(false)
+                                ->helperText('PNG o JPG preferible con fondo transparente o blanco. Sin marca de agua.')
+                                ->columnSpanFull(),
+                            Toggle::make('show_in_clients_ticker')
+                                ->label('Mostrar en “Empresas que confían” del inicio')
+                                ->helperText('Solo aplica si hay logo cargado.')
+                                ->inline(false),
+                        ])
+                        ->columnSpanFull(),
                 ]),
 
             Section::make('Avanzado')
@@ -116,8 +131,8 @@ class ProjectForm
                 ->label('')
                 ->content(new HtmlString(
                     '<p class="text-sm text-gray-600 dark:text-gray-400">'
-                    . '<strong>La primera foto es la portada.</strong> Arrastra las imágenes para cambiar el orden; '
-                    . 'se guardan al guardar el proyecto.'
+                    . '<strong>La primera foto es la portada.</strong> Las fotos nuevas se agregan al final; '
+                    . 'arrastra para cambiar el orden o la portada. Se guardan al guardar el proyecto.'
                     . '</p>'
                 ))
                 ->columnSpanFull(),
@@ -125,9 +140,10 @@ class ProjectForm
                 ->label('Fotos del proyecto')
                 ->multiple()
                 ->reorderable()
+                ->appendFiles()
                 ->panelLayout('grid')
                 ->maxFiles(12)
-                ->helperText('JPG, PNG o WebP · hasta 12 fotos · la primera es la portada · al guardar se aplica la marca de agua.')
+                ->helperText('JPG, PNG o WebP · hasta 12 fotos · nuevas van al final · la primera es la portada · al guardar se aplica la marca de agua.')
                 ->columnSpanFull(),
         ];
     }

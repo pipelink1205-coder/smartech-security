@@ -15,14 +15,15 @@ class Project extends Model
     protected $fillable = [
         'service_id', 'title', 'slug', 'category', 'description',
         'location', 'address', 'latitude', 'longitude', 'comuna_numero', 'barrio',
-        'image', 'is_featured', 'year',
+        'image', 'client_logo', 'show_in_clients_ticker', 'is_featured', 'year',
     ];
 
     protected $casts = [
-        'is_featured'     => 'boolean',
-        'latitude'        => 'float',
-        'longitude'       => 'float',
-        'comuna_numero'   => 'integer',
+        'is_featured' => 'boolean',
+        'show_in_clients_ticker' => 'boolean',
+        'latitude' => 'float',
+        'longitude' => 'float',
+        'comuna_numero' => 'integer',
     ];
 
     protected static function booted(): void
@@ -82,26 +83,59 @@ class Project extends Model
     public function getImageUrlAttribute(): string
     {
         if ($this->relationLoaded('images')) {
-            $cover = $this->images->firstWhere('is_cover', true)
-                ?? $this->images->sortBy('sort_order')->first();
+            $candidates = $this->images
+                ->sortBy([
+                    ['is_cover', 'desc'],
+                    ['sort_order', 'asc'],
+                ])
+                ->values();
         } else {
-            $cover = $this->images()->where('is_cover', true)->first()
-                ?? $this->images()->orderBy('sort_order')->first();
+            $candidates = $this->images()
+                ->orderByDesc('is_cover')
+                ->orderBy('sort_order')
+                ->get();
         }
 
-        if ($cover) {
-            return $cover->url;
+        foreach ($candidates as $cover) {
+            $relative = ltrim(str_replace('\\', '/', (string) $cover->path), '/');
+            if ($relative !== '' && is_file(public_path($relative))) {
+                return $cover->url;
+            }
         }
 
         $url = $this->resolveMediaUrl($this->image);
 
-        $url ??= config("images.projects.{$this->slug}");
-
-        if (is_string($url) && ! str_starts_with($url, 'http') && ! str_starts_with($url, '/')) {
-            $url = '/' . ltrim($url, '/');
+        if ($url) {
+            $relative = ltrim(str_replace('\\', '/', parse_url($url, PHP_URL_PATH) ?: $url), '/');
+            if (str_starts_with($url, 'http') || is_file(public_path($relative))) {
+                return $url;
+            }
         }
 
-        return $url ?? '/images/projects/placeholder.svg';
+        $fromConfig = config("images.projects.{$this->slug}");
+        if (is_string($fromConfig) && $fromConfig !== '') {
+            if (str_starts_with($fromConfig, 'http://') || str_starts_with($fromConfig, 'https://')) {
+                return $fromConfig;
+            }
+            $relative = ltrim($fromConfig, '/');
+            if (is_file(public_path($relative))) {
+                return '/' . $relative;
+            }
+        }
+
+        return '/images/projects/placeholder.svg';
+    }
+
+    public function getClientLogoUrlAttribute(): ?string
+    {
+        return $this->resolveMediaUrl($this->client_logo);
+    }
+
+    public function scopeInClientsTicker($q)
+    {
+        return $q->where('show_in_clients_ticker', true)
+            ->whereNotNull('client_logo')
+            ->where('client_logo', '!=', '');
     }
 
     public function getCategoryColorAttribute(): string

@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Models\Project;
 use Illuminate\Support\Facades\File;
 use Illuminate\View\Component;
 
@@ -42,10 +43,28 @@ class ClientsTicker extends Component
 
                 $seen[$filename] = true;
                 $logos[] = [
-                    'url'  => asset($relativeDir.'/'.$filename),
+                    'url' => asset($relativeDir . '/' . $filename),
                     'name' => str_replace(['-', '_'], ' ', pathinfo($filename, PATHINFO_FILENAME)),
                 ];
             }
+        }
+
+        foreach (Project::query()->inClientsTicker()->orderBy('title')->get() as $project) {
+            $url = $project->client_logo_url;
+            if (! $url) {
+                continue;
+            }
+
+            $key = 'project-' . $project->id;
+            if (isset($seen[$key])) {
+                continue;
+            }
+            $seen[$key] = true;
+
+            $logos[] = [
+                'url' => $url,
+                'name' => $project->title,
+            ];
         }
 
         usort($logos, fn ($a, $b) => strcasecmp($a['name'], $b['name']));
