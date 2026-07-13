@@ -19,8 +19,8 @@ final class ImageWatermark
             return false;
         }
 
-        $image = self::createImage($imagePath);
-        $logo = self::createImage($logoPath);
+        $image = self::createImage($imagePath, applyExifOrientation: true);
+        $logo = self::createImage($logoPath, applyExifOrientation: false);
 
         if ($image === null || $logo === null) {
             return false;
@@ -258,20 +258,78 @@ final class ImageWatermark
         return self::isKnockoutCandidate($r, $g, $b);
     }
 
-    private static function createImage(string $path): ?\GdImage
+    private static function createImage(string $path, bool $applyExifOrientation = false): ?\GdImage
     {
         $info = @getimagesize($path);
         if ($info === false) {
             return null;
         }
 
-        return match ($info[2] ?? null) {
+        $image = match ($info[2] ?? null) {
             IMAGETYPE_JPEG => @imagecreatefromjpeg($path) ?: null,
             IMAGETYPE_PNG => @imagecreatefrompng($path) ?: null,
             IMAGETYPE_WEBP => function_exists('imagecreatefromwebp') ? (@imagecreatefromwebp($path) ?: null) : null,
             IMAGETYPE_GIF => @imagecreatefromgif($path) ?: null,
             default => null,
         };
+
+        if ($image === null) {
+            return null;
+        }
+
+        // GD ignora Orientation: si no la aplicamos antes de guardar, el JPEG
+        // pierde el tag EXIF y fotos de celular se ven giradas 90°.
+        if ($applyExifOrientation && ($info[2] ?? null) === IMAGETYPE_JPEG) {
+            $image = self::applyExifOrientation($image, $path);
+        }
+
+        return $image;
+    }
+
+    /**
+     * Corrige la orientación de píxeles según EXIF (Orientation 1–8).
+     * imagerotate() en GD gira en sentido antihorario.
+     */
+    private static function applyExifOrientation(\GdImage $image, string $path): \GdImage
+    {
+        if (! function_exists('exif_read_data')) {
+            return $image;
+        }
+
+        $exif = @exif_read_data($path);
+        $orientation = (int) ($exif['Orientation'] ?? 1);
+
+        if ($orientation <= 1) {
+            return $image;
+        }
+
+        $rotated = match ($orientation) {
+            2 => self::flipImage($image, IMG_FLIP_HORIZONTAL),
+            3 => imagerotate($image, 180, 0) ?: $image,
+            4 => self::flipImage($image, IMG_FLIP_VERTICAL),
+            5 => self::flipImage(imagerotate($image, 270, 0) ?: $image, IMG_FLIP_HORIZONTAL),
+            6 => imagerotate($image, 270, 0) ?: $image, // 90° CW
+            7 => self::flipImage(imagerotate($image, 90, 0) ?: $image, IMG_FLIP_HORIZONTAL),
+            8 => imagerotate($image, 90, 0) ?: $image, // 270° CW
+            default => $image,
+        };
+
+        if ($rotated !== $image) {
+            imagedestroy($image);
+        }
+
+        return $rotated;
+    }
+
+    private static function flipImage(\GdImage $image, int $mode): \GdImage
+    {
+        if (function_exists('imageflip')) {
+            imageflip($image, $mode);
+
+            return $image;
+        }
+
+        return $image;
     }
 
     private static function saveImage(\GdImage $image, string $path): bool

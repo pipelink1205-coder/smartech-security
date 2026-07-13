@@ -14,7 +14,8 @@ class WatermarkProjectImagesCommand extends Command
     protected $signature = 'images:watermark
                             {--force : Volver a marcar aunque ya se haya procesado}
                             {--dry-run : Solo listar, no modificar}
-                            {--all-files : Incluir todos los jpg/png/webp de public/images/projects (no solo BD)}';
+                            {--all-files : Incluir todos los jpg/png/webp de public/images/projects (no solo BD)}
+                            {--restore : Restaurar desde *.pre-watermark (corrige fotos giradas) y volver a marcar}';
 
     protected $description = 'Aplica marca de agua (escudo) a fotos de proyectos ya subidas';
 
@@ -30,15 +31,21 @@ class WatermarkProjectImagesCommand extends Command
         $registry = $this->loadRegistry();
         $dry = (bool) $this->option('dry-run');
         $force = (bool) $this->option('force');
+        $restore = (bool) $this->option('restore');
+
+        if ($restore) {
+            $force = true;
+        }
 
         $ok = 0;
         $skip = 0;
         $fail = 0;
+        $restored = 0;
 
         foreach ($paths as $relative) {
             $absolute = public_path($relative);
 
-            if (! is_readable($absolute)) {
+            if (! is_readable($absolute) && ! ($restore && is_readable($absolute . '.pre-watermark'))) {
                 $this->warn("  ✗ no existe: {$relative}");
                 $fail++;
                 continue;
@@ -50,20 +57,36 @@ class WatermarkProjectImagesCommand extends Command
             }
 
             if ($dry) {
-                $this->line("  · {$relative}");
+                $backup = $absolute . '.pre-watermark';
+                $note = ($restore && is_file($backup)) ? ' [restore]' : '';
+                $this->line("  · {$relative}{$note}");
                 $ok++;
                 continue;
             }
 
-            // Copia de seguridad ligera por si hay que revertir
             $backup = $absolute . '.pre-watermark';
-            if (! is_file($backup)) {
+
+            if ($restore) {
+                if (! is_file($backup)) {
+                    $this->warn("  ✗ sin backup: {$relative}");
+                    $fail++;
+                    continue;
+                }
+                if (! @copy($backup, $absolute)) {
+                    $this->warn("  ✗ no se pudo restaurar: {$relative}");
+                    $fail++;
+                    continue;
+                }
+                $restored++;
+                unset($registry[$relative]);
+            } elseif (! is_file($backup)) {
+                // Copia de seguridad ligera por si hay que revertir
                 @copy($absolute, $backup);
             }
 
             if (ImageWatermark::apply($absolute)) {
                 $registry[$relative] = now()->toIso8601String();
-                $this->line("  ✓ {$relative}");
+                $this->line("  ✓ {$relative}" . ($restore ? ' (restaurada + marcada)' : ''));
                 $ok++;
             } else {
                 $this->warn("  ✗ no se pudo marcar: {$relative}");
@@ -78,11 +101,16 @@ class WatermarkProjectImagesCommand extends Command
         $this->newLine();
         $this->info($dry
             ? "Dry-run: {$ok} archivos candidatos, {$skip} ya marcados (usa --force para incluirlos)."
-            : "Listo: {$ok} marcadas, {$skip} omitidas (ya procesadas), {$fail} fallidas."
+            : "Listo: {$ok} marcadas, {$skip} omitidas (ya procesadas), {$fail} fallidas"
+                . ($restore ? ", {$restored} restauradas desde backup" : '') . '.'
         );
 
         if ($skip > 0 && ! $force) {
             $this->line('Para remarcar todas: php artisan images:watermark --force');
+        }
+
+        if (! $restore) {
+            $this->line('Si las fotos quedaron giradas: php artisan images:watermark --restore --all-files');
         }
 
         return self::SUCCESS;
