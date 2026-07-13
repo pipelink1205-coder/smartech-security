@@ -1040,29 +1040,33 @@ nav#navbar.is-scrolled { box-shadow: var(--shadow-md); }
 .project-lightbox-cta { flex: 0 0 auto; width: 100%; text-align: center; }
 .project-lightbox-gallery {
     min-width: 0; min-height: 0;
-    display: flex; flex-direction: column;
+    display: flex; flex-direction: column; align-items: stretch;
 }
 .project-lightbox-stage {
     position: relative; flex: 1; min-height: 0;
     border-radius: var(--radius-md); overflow: hidden; background: var(--dark-900);
+    display: flex; align-items: center; justify-content: center;
 }
 .project-lightbox-main-image {
-    width: 100%; height: 100%; object-fit: contain; display: block;
-    margin: 0; background: #0f172a;
+    width: 100%; height: 100%; max-width: 100%; max-height: 100%;
+    object-fit: contain; object-position: center center;
+    display: block; margin: 0 auto; background: #0f172a;
 }
 .project-lightbox-nav {
     position: absolute; top: 50%; transform: translateY(-50%);
     width: 42px; height: 42px; border-radius: 999px; border: none;
     background: rgba(15,23,42,.72); color: #fff; font-size: 1.6rem; cursor: pointer;
+    z-index: 2;
 }
 .project-lightbox-nav.prev { left: 12px; }
 .project-lightbox-nav.next { right: 12px; }
 .project-lightbox-nav:hover { background: var(--green-600); }
 .project-lightbox-thumbs {
-    flex: 0 0 auto; margin-top: 12px;
-    display: flex; justify-content: center; flex-wrap: nowrap; overflow-x: auto;
+    flex: 0 0 auto; margin-top: 12px; width: 100%;
+    display: flex; justify-content: center; align-items: center;
+    flex-wrap: nowrap; overflow-x: auto; gap: 8px;
     padding-bottom: 4px; scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,.25) transparent;
+    scrollbar-color: rgba(23,143,130,.35) transparent;
 }
 .project-lightbox-thumbs::-webkit-scrollbar { height: 5px; }
 .project-lightbox-thumbs::-webkit-scrollbar-thumb {
