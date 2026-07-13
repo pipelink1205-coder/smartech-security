@@ -127,7 +127,7 @@ class ProjectForm
                 ->reorderable()
                 ->panelLayout('grid')
                 ->maxFiles(12)
-                ->helperText('JPG, PNG o WebP · hasta 12 fotos · la primera es la portada.')
+                ->helperText('JPG, PNG o WebP · hasta 12 fotos · la primera es la portada · al guardar se aplica la marca de agua.')
                 ->columnSpanFull(),
         ];
     }

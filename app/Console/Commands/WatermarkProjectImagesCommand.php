@@ -153,8 +153,11 @@ class WatermarkProjectImagesCommand extends Command
 
                     $relative = 'images/projects/' . str_replace('\\', '/', $file->getRelativePathname());
 
-                    // Evitar logos de clientes y backups
+                    // Evitar logos, originales (sin marca) y backups
                     if (str_contains(strtolower($relative), 'logos empresas')) {
+                        continue;
+                    }
+                    if (str_contains($relative, '/originals/')) {
                         continue;
                     }
                     if (str_ends_with($relative, '.pre-watermark')) {

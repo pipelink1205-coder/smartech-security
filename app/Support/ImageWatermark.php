@@ -3,12 +3,44 @@
 namespace App\Support;
 
 /**
- * Marca de agua tenue (escudo centrado) sobre fotos de proyectos/servicios.
+ * Marca de agua tenue (escudo) sobre fotos de proyectos/servicios.
  * Usa GD; elimina el fondo blanco del logo y deja solo la silueta del escudo.
+ *
+ * Tamaños: sm / md / lg / xl (fracción del lado menor).
+ * Posiciones: center | top-left | top-right | bottom-left | bottom-right.
  */
 final class ImageWatermark
 {
-    public static function apply(string $imagePath, ?string $logoPath = null, float $opacity = 0.22): bool
+    public const DEFAULT_OPACITY = 0.22;
+
+    public const DEFAULT_SIZE = 'md';
+
+    public const DEFAULT_POSITION = 'center';
+
+    /** @var array<string, float> */
+    public const SIZE_SCALES = [
+        'sm' => 0.16,
+        'md' => 0.28,
+        'lg' => 0.40,
+        'xl' => 0.55,
+    ];
+
+    /** @var list<string> */
+    public const POSITIONS = [
+        'center',
+        'top-left',
+        'top-right',
+        'bottom-left',
+        'bottom-right',
+        'custom',
+    ];
+
+    /**
+     * Aplica marca de agua sobre $imagePath (muta el archivo).
+     *
+     * @param  array{opacity?: float, size?: string, position?: string, x?: float, y?: float}  $options
+     */
+    public static function apply(string $imagePath, ?string $logoPath = null, array $options = []): bool
     {
         if (! is_readable($imagePath) || ! extension_loaded('gd')) {
             return false;
@@ -19,6 +51,12 @@ final class ImageWatermark
             return false;
         }
 
+        $opacity = (float) ($options['opacity'] ?? self::DEFAULT_OPACITY);
+        $size = (string) ($options['size'] ?? self::DEFAULT_SIZE);
+        $position = (string) ($options['position'] ?? self::DEFAULT_POSITION);
+        $xPercent = array_key_exists('x', $options) ? (float) $options['x'] : null;
+        $yPercent = array_key_exists('y', $options) ? (float) $options['y'] : null;
+
         $image = self::createImage($imagePath, applyExifOrientation: true);
         $logo = self::createImage($logoPath, applyExifOrientation: false);
 
@@ -26,7 +64,6 @@ final class ImageWatermark
             return false;
         }
 
-        // Quitar el marco/fondo blanco: solo queda el escudo verde + águila.
         $logo = self::knockoutWhiteBackground($logo);
 
         $imgW = imagesx($image);
@@ -41,8 +78,8 @@ final class ImageWatermark
             return false;
         }
 
-        // Escudo ~28% del lado menor, centrado.
-        $target = (int) max(48, min($imgW, $imgH) * 0.28);
+        $scaleFactor = self::SIZE_SCALES[$size] ?? self::SIZE_SCALES[self::DEFAULT_SIZE];
+        $target = (int) max(48, min($imgW, $imgH) * $scaleFactor);
         $scale = $target / max($logoW, $logoH);
         $dstW = max(1, (int) round($logoW * $scale));
         $dstH = max(1, (int) round($logoH * $scale));
@@ -55,8 +92,7 @@ final class ImageWatermark
         imagecopyresampled($resized, $logo, 0, 0, 0, 0, $dstW, $dstH, $logoW, $logoH);
         self::keepShieldSilhouetteOnly($resized);
 
-        $x = (int) round(($imgW - $dstW) / 2);
-        $y = (int) round(($imgH - $dstH) / 2);
+        [$x, $y] = self::resolvePosition($position, $imgW, $imgH, $dstW, $dstH, $xPercent, $yPercent);
 
         imagealphablending($image, true);
         self::mergeWithOpacity($image, $resized, $x, $y, $opacity);
@@ -68,6 +104,67 @@ final class ImageWatermark
         imagedestroy($image);
 
         return $ok;
+    }
+
+    /**
+     * Copia el original hacia $destPath y aplica marca (no modifica el original).
+     *
+     * @param  array{opacity?: float, size?: string, position?: string, x?: float, y?: float}  $options
+     */
+    public static function bakeFromOriginal(string $originalPath, string $destPath, array $options = []): bool
+    {
+        if (! is_readable($originalPath) || ! extension_loaded('gd')) {
+            return false;
+        }
+
+        $destDir = dirname($destPath);
+        if (! is_dir($destDir) && ! @mkdir($destDir, 0755, true) && ! is_dir($destDir)) {
+            return false;
+        }
+
+        if (! @copy($originalPath, $destPath)) {
+            return false;
+        }
+
+        return self::apply($destPath, null, $options);
+    }
+
+    /**
+     * @return array{0: int, 1: int} x, y (esquina superior izquierda del logo)
+     */
+    private static function resolvePosition(
+        string $position,
+        int $imgW,
+        int $imgH,
+        int $dstW,
+        int $dstH,
+        ?float $xPercent = null,
+        ?float $yPercent = null,
+    ): array {
+        if ($xPercent !== null && $yPercent !== null) {
+            $cx = $imgW * (max(0.0, min(100.0, $xPercent)) / 100);
+            $cy = $imgH * (max(0.0, min(100.0, $yPercent)) / 100);
+            $x = (int) round($cx - ($dstW / 2));
+            $y = (int) round($cy - ($dstH / 2));
+
+            return [
+                max(0, min($imgW - $dstW, $x)),
+                max(0, min($imgH - $dstH, $y)),
+            ];
+        }
+
+        $pad = (int) max(8, min($imgW, $imgH) * 0.03);
+
+        return match ($position) {
+            'top-left' => [$pad, $pad],
+            'top-right' => [$imgW - $dstW - $pad, $pad],
+            'bottom-left' => [$pad, $imgH - $dstH - $pad],
+            'bottom-right' => [$imgW - $dstW - $pad, $imgH - $dstH - $pad],
+            default => [
+                (int) round(($imgW - $dstW) / 2),
+                (int) round(($imgH - $dstH) / 2),
+            ],
+        };
     }
 
     /**
@@ -116,7 +213,6 @@ final class ImageWatermark
             $g = ($rgba >> 8) & 0xFF;
             $b = $rgba & 0xFF;
 
-            // Ya transparente o no es “fondo/halo” claro
             if ($a >= 120 || ! self::isKnockoutCandidate($r, $g, $b)) {
                 continue;
             }
@@ -129,7 +225,6 @@ final class ImageWatermark
             $push($x, $y - 1);
         }
 
-        // Segunda pasada: halo anti-alias claro pegado a zona ya transparente.
         self::clearLightFringe($logo);
 
         return $logo;
@@ -141,12 +236,10 @@ final class ImageWatermark
         $max = max($r, $g, $b);
         $luma = (0.299 * $r) + (0.587 * $g) + (0.114 * $b);
 
-        // Blanco / casi blanco / gris claro del marco.
         if ($min >= 210 && ($max - $min) <= 28) {
             return true;
         }
 
-        // Halo anti-alias muy claro (no es el verde del escudo).
         if ($luma >= 200 && ($max - $min) <= 40 && $g < 200) {
             return true;
         }
@@ -154,10 +247,6 @@ final class ImageWatermark
         return false;
     }
 
-    /**
-     * Conserva solo el verde del escudo y el blanco del águila;
-     * elimina halos / marco claro residual.
-     */
     private static function keepShieldSilhouetteOnly(\GdImage $img): void
     {
         $w = imagesx($img);
@@ -187,12 +276,10 @@ final class ImageWatermark
 
     private static function isShieldOrEaglePixel(int $r, int $g, int $b): bool
     {
-        // Cuerpo verde/teal del escudo (marca).
         if ($g >= 85 && $g >= $r + 8 && $g >= $b - 8) {
             return true;
         }
 
-        // Cabeza del águila (blanco interior, ya sin el marco externo).
         $min = min($r, $g, $b);
         $max = max($r, $g, $b);
 
@@ -221,7 +308,6 @@ final class ImageWatermark
                     $b = $rgba & 0xFF;
                     $luma = (0.299 * $r) + (0.587 * $g) + (0.114 * $b);
 
-                    // Solo franja clara (no el verde del escudo).
                     if ($luma < 175 || $g > ($r + 25)) {
                         continue;
                     }
@@ -253,11 +339,6 @@ final class ImageWatermark
         }
     }
 
-    private static function isBackgroundWhite(int $r, int $g, int $b): bool
-    {
-        return self::isKnockoutCandidate($r, $g, $b);
-    }
-
     private static function createImage(string $path, bool $applyExifOrientation = false): ?\GdImage
     {
         $info = @getimagesize($path);
@@ -277,8 +358,6 @@ final class ImageWatermark
             return null;
         }
 
-        // GD ignora Orientation: si no la aplicamos antes de guardar, el JPEG
-        // pierde el tag EXIF y fotos de celular se ven giradas 90°.
         if ($applyExifOrientation && ($info[2] ?? null) === IMAGETYPE_JPEG) {
             $image = self::applyExifOrientation($image, $path);
         }
@@ -286,10 +365,6 @@ final class ImageWatermark
         return $image;
     }
 
-    /**
-     * Corrige la orientación de píxeles según EXIF (Orientation 1–8).
-     * imagerotate() en GD gira en sentido antihorario.
-     */
     private static function applyExifOrientation(\GdImage $image, string $path): \GdImage
     {
         if (! function_exists('exif_read_data')) {
@@ -308,9 +383,9 @@ final class ImageWatermark
             3 => imagerotate($image, 180, 0) ?: $image,
             4 => self::flipImage($image, IMG_FLIP_VERTICAL),
             5 => self::flipImage(imagerotate($image, 270, 0) ?: $image, IMG_FLIP_HORIZONTAL),
-            6 => imagerotate($image, 270, 0) ?: $image, // 90° CW
+            6 => imagerotate($image, 270, 0) ?: $image,
             7 => self::flipImage(imagerotate($image, 90, 0) ?: $image, IMG_FLIP_HORIZONTAL),
-            8 => imagerotate($image, 90, 0) ?: $image, // 270° CW
+            8 => imagerotate($image, 90, 0) ?: $image,
             default => $image,
         };
 
@@ -359,7 +434,6 @@ final class ImageWatermark
                 $sg = ($rgba >> 8) & 0xFF;
                 $sb = $rgba & 0xFF;
 
-                // GD alpha: 0 = opaco, 127 = transparente
                 $srcAlpha = (127 - $sa) / 127;
                 $a = $srcAlpha * $opacity;
                 if ($a <= 0.01) {
