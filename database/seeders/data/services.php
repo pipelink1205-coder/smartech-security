@@ -10,7 +10,7 @@ return [
         'name' => 'Outsourcing de TI',
         'slug' => 'outsourcing-ti',
         'icon' => '💻',
-        'order' => 0,
+        'order' => 12,
         'price_from' => 900000,
         'highlight' => 'Un departamento de tecnología completo por una fracción del costo de un empleado de planta.',
         'image' => config('images.services.outsourcing-ti'),
