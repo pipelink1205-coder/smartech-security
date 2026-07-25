@@ -10,8 +10,8 @@ class Quote extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'phone', 'email', 'service',
-        'zone', 'message', 'price_min', 'price_max',
+        'name', 'phone', 'email', 'company', 'employees_range', 'current_it',
+        'service', 'zone', 'message', 'price_min', 'price_max',
         'status', 'notes', 'pdf_path',
     ];
 

@@ -17,6 +17,63 @@ return [
         'Varios servicios'             => [2_000_000, 25_000_000],
     ],
 
+    /*
+     * Outsourcing de TI — planes y supuestos del comparador de ahorro.
+     * Los precios son "desde" en COP. El factor prestacional (~1.53) cubre
+     * salud, pensión, ARL, cesantías e intereses, prima, vacaciones y parafiscales.
+     */
+    'it' => [
+        'payroll_factor' => 1.53,
+
+        'salary_profiles' => [
+            'Auxiliar de sistemas'   => 2_000_000,
+            'Técnico de soporte'     => 3_000_000,
+            'Ingeniero de sistemas'  => 4_500_000,
+        ],
+
+        'plans' => [
+            'horas' => [
+                'name'      => 'Por horas',
+                'tagline'   => 'Respaldo puntual cuando lo necesites',
+                'price'     => 120_000,
+                'unit'      => 'hora',
+                'monthly'   => 960_000, // referencia: bolsa mínima de 8 horas
+                'features'  => [
+                    'Soporte remoto y en sitio por demanda',
+                    'Sin permanencia ni cargos fijos',
+                    'Ciberseguridad básica incluida',
+                    'Respuesta en horario laboral',
+                ],
+            ],
+            'demanda' => [
+                'name'      => 'Por demanda',
+                'tagline'   => 'Bolsa mensual de horas con prioridad',
+                'price'     => 1_500_000,
+                'unit'      => 'mes',
+                'monthly'   => 1_500_000,
+                'features'  => [
+                    'Bolsa mensual de horas con SLA prioritario',
+                    'Mesa de ayuda y monitoreo de equipos',
+                    'Ciberseguridad y copias de seguridad incluidas',
+                    'Informe mensual de gestión',
+                ],
+            ],
+            'dedicado' => [
+                'name'      => 'Dedicado',
+                'tagline'   => 'Un ingeniero asignado a tu operación',
+                'price'     => 6_500_000,
+                'unit'      => 'mes',
+                'monthly'   => 6_500_000,
+                'features'  => [
+                    'Ingeniero asignado + equipo de respaldo',
+                    'SLA de respuesta más exigente del portafolio',
+                    'Ciberseguridad gestionada y auditorías periódicas',
+                    'Consultoría y hoja de ruta tecnológica',
+                ],
+            ],
+        ],
+    ],
+
     'zone_surcharge' => [
         'Medellín - Centro'      => 0,
         'Medellín - El Poblado'  => 0,

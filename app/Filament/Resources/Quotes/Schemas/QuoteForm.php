@@ -26,6 +26,18 @@ class QuoteForm
                         TextInput::make('email')
                             ->label('Correo')
                             ->disabled(),
+                        TextInput::make('company')
+                            ->label('Empresa')
+                            ->disabled()
+                            ->visible(fn ($record) => filled($record?->company)),
+                        TextInput::make('employees_range')
+                            ->label('Número de empleados')
+                            ->disabled()
+                            ->visible(fn ($record) => filled($record?->employees_range)),
+                        TextInput::make('current_it')
+                            ->label('Situación actual de TI')
+                            ->disabled()
+                            ->visible(fn ($record) => filled($record?->current_it)),
                         TextInput::make('service')
                             ->label('Servicio solicitado')
                             ->disabled(),
