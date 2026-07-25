@@ -8,8 +8,6 @@
             <li><a href="{{ route('servicios.show', 'outsourcing-ti') }}">Outsourcing TI</a></li>
             <li><a href="{{ route('home') }}#iptv" data-page-link="iptv">IPTV Hoteles</a></li>
             <li><a href="{{ route('home') }}#proyectos" data-page-link="proyectos">Proyectos</a></li>
-            <li><a href="{{ route('home') }}#proceso" data-page-link="proceso">Proceso</a></li>
-            <li><a href="{{ route('home') }}#testimonios" data-page-link="testimonios">Testimonios</a></li>
             <li><a href="{{ route('home') }}#faq" data-page-link="faq">FAQ</a></li>
             <li><a href="{{ route('home') }}#contacto" data-page-link="contacto">Contacto</a></li>
         </ul>

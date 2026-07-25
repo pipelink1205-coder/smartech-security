@@ -31,6 +31,7 @@ Route::get('/servicios', [HomeController::class, 'servicios'])->name('servicios'
 Route::get('/servicios/{service:slug}', [HomeController::class, 'servicioShow'])->name('servicios.show');
 Route::get('/proyectos', [HomeController::class, 'proyectos'])->name('proyectos');
 Route::get('/contacto', [HomeController::class, 'contacto'])->name('contacto');
+Route::view('/privacidad', 'pages.privacidad')->name('privacidad');
 
 // Geocodificación para el mapa del panel admin (requiere sesión)
 Route::middleware(['web', 'auth'])

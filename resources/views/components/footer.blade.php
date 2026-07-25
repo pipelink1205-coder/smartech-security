@@ -2,23 +2,29 @@
     <div class="container footer-grid">
         <div class="footer-brand-col">
             <x-logo href="{{ route('home') }}" variant="footer" class="footer-brand" />
-            <p class="footer-desc">Instalación profesional de CCTV, alarmas, domótica, energía solar y redes en Medellín y el área metropolitana.</p>
+            <p class="footer-desc">Tecnología para hogares y empresas: CCTV, alarmas, domótica, energía solar, redes y outsourcing de TI en Medellín y el Valle de Aburrá.</p>
+            <p class="footer-desc footer-hours">{{ config('contact.hours') }}<br>{{ config('contact.support_note') }}</p>
         </div>
         <div class="footer-col">
-            <h4>Enlaces</h4>
+            <h4>Empresa</h4>
             <ul>
                 <li><a href="{{ route('home') }}">Inicio</a></li>
-                <li><a href="{{ route('servicios') }}">Servicios</a></li>
                 <li><a href="{{ route('proyectos') }}">Proyectos</a></li>
+                <li><a href="{{ route('home') }}#proceso">Nuestro proceso</a></li>
+                <li><a href="{{ route('home') }}#testimonios">Testimonios</a></li>
+                <li><a href="{{ route('home') }}#faq">Preguntas frecuentes</a></li>
                 <li><a href="{{ route('contacto') }}">Contacto</a></li>
             </ul>
         </div>
         <div class="footer-col">
             <h4>Servicios</h4>
             <ul>
-                <li><a href="{{ route('home') }}#servicios">Cámaras de seguridad</a></li>
-                <li><a href="{{ route('home') }}#servicios">Energía solar</a></li>
-                <li><a href="{{ route('home') }}#servicios">Domótica</a></li>
+                <li><a href="{{ route('servicios.show', 'outsourcing-ti') }}">Outsourcing de TI</a></li>
+                <li><a href="{{ route('servicios.show', 'camaras-4k') }}">Cámaras de seguridad</a></li>
+                <li><a href="{{ route('servicios.show', 'alarmas') }}">Alarmas</a></li>
+                <li><a href="{{ route('servicios.show', 'domotica') }}">Domótica</a></li>
+                <li><a href="{{ route('servicios.show', 'energia-solar') }}">Energía solar</a></li>
+                <li><a href="{{ route('servicios') }}">Ver todos los servicios</a></li>
             </ul>
         </div>
         <div class="footer-col">
@@ -38,11 +44,16 @@
                     </a>
                 </li>
                 @endif
-                <li><a href="{{ route('home') }}#contacto">Envigado, Antioquia</a></li>
+                <li><a href="{{ route('contacto') }}">Envigado, Antioquia</a></li>
             </ul>
         </div>
     </div>
     <div class="container footer-bottom">
         <p>© {{ date('Y') }} Smart Tech Security. Todos los derechos reservados.</p>
+        <nav class="footer-legal" aria-label="Enlaces legales">
+            <a href="{{ route('privacidad') }}">Política de privacidad y tratamiento de datos</a>
+            <span aria-hidden="true">·</span>
+            <a href="{{ route('home') }}#contacto">Medellín y Valle de Aburrá, Colombia</a>
+        </nav>
     </div>
 </footer>
