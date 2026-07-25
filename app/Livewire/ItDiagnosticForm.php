@@ -23,7 +23,7 @@ class ItDiagnosticForm extends Component
         'No tenemos soporte de TI',
         'Tenemos una persona de TI de planta',
         'Tenemos un proveedor externo',
-        'Lo resolvemos informalmente (un conocido, un técnico ocasional)',
+        'Lo resolvemos informalmente (técnico ocasional)',
         'Otro',
     ];
 
