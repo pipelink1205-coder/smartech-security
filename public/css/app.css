@@ -1452,3 +1452,137 @@ body.body-scroll-locked .clients-ticker-bar { display: none !important; }
     .form-card  { padding: 24px; }
     .project-service-filters { grid-template-columns: 1fr; }
 }
+
+/* ═════════════ Landing Outsourcing de TI ═════════════ */
+.ot-main { display: grid; gap: 64px; padding: 56px 0 72px; }
+
+/* ── Comparador de costos ── */
+.itc { display: grid; gap: 24px; }
+.itc-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.itc-compare {
+    display: grid; grid-template-columns: 1fr 48px 1fr;
+    gap: 12px; align-items: stretch;
+}
+.itc-col {
+    display: flex; flex-direction: column; gap: 6px;
+    border-radius: var(--radius-md); padding: 20px;
+    border: 1px solid var(--gray-200); background: var(--gray-100);
+}
+.itc-col--smart {
+    border-color: var(--green-200); background: var(--green-50);
+}
+.itc-col-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--gray-600); }
+.itc-col--smart .itc-col-label { color: var(--green-700); }
+.itc-col-value {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 1.7rem; font-weight: 800; color: var(--dark-900); letter-spacing: -.5px;
+}
+.itc-col--smart .itc-col-value { color: var(--green-700); }
+.itc-col-note { font-size: .78rem; color: var(--gray-400); }
+.itc-col-list { list-style: none; margin: 10px 0 0; padding: 10px 0 0; border-top: 1px dashed var(--gray-200); }
+.itc-col-list li {
+    position: relative; padding-left: 16px; margin-bottom: 6px;
+    font-size: .83rem; color: var(--gray-600); line-height: 1.5;
+}
+.itc-col-list li::before { content: '•'; position: absolute; left: 2px; color: var(--green-500); }
+.itc-vs {
+    align-self: center; justify-self: center;
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--dark-900); color: #fff;
+    font-size: .78rem; font-weight: 800; text-transform: uppercase;
+}
+.itc-result {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px;
+    border-radius: var(--radius-md); padding: 18px 22px;
+    background: var(--brand-gradient); color: #fff;
+}
+.itc-result-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; opacity: .9; }
+.itc-result-value { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; font-size: 1.25rem; font-weight: 800; }
+.itc-result-value em { display: block; font-style: normal; font-size: .82rem; font-weight: 600; opacity: .92; }
+.itc-result .btn { margin-left: auto; background: #fff; color: var(--green-700); }
+.itc-result .btn:hover { background: var(--green-50); }
+.itc-disclaimer { font-size: .76rem; color: var(--gray-400); margin: 0; }
+
+/* ── Planes ── */
+.ot-plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: stretch; }
+.ot-plan {
+    position: relative; display: flex; flex-direction: column; gap: 8px;
+    padding: 26px 24px; border-radius: var(--radius-lg);
+}
+.ot-plan--featured { border: 2px solid var(--green-500) !important; box-shadow: var(--shadow-md) !important; }
+.ot-plan-badge {
+    position: absolute; top: -12px; left: 24px;
+    background: var(--brand-gradient); color: #fff;
+    font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .6px;
+    padding: 4px 12px; border-radius: 999px;
+}
+.ot-plan-name {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 1.15rem; font-weight: 800; color: var(--dark-900); margin: 0;
+}
+.ot-plan-tagline { font-size: .85rem; color: var(--gray-600); margin: 0; }
+.ot-plan-price { font-size: .9rem; color: var(--gray-600); margin: 8px 0; }
+.ot-plan-price strong {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 1.55rem; font-weight: 800; color: var(--green-700); letter-spacing: -.5px;
+}
+.ot-plan-price span { font-size: .78rem; color: var(--gray-400); }
+.ot-plan-features { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 10px; flex: 1; }
+.ot-plan-features li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: .85rem; color: var(--gray-600); line-height: 1.5;
+}
+.ot-plan-cta { justify-content: center; text-align: center; }
+
+/* ── Casos por perfil + garantía ── */
+.ot-cases, .ot-guarantee { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.ot-case h3, .ot-guarantee-item h3 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 1rem; font-weight: 800; color: var(--dark-900); margin: 0 0 10px;
+}
+.ot-case-before, .ot-case-after, .ot-guarantee-item p {
+    font-size: .85rem; color: var(--gray-600); line-height: 1.65; margin: 0 0 10px;
+}
+.ot-case-after {
+    background: var(--green-50); border-left: 3px solid var(--green-500);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 10px 12px; margin-bottom: 0;
+}
+.ot-case-before strong { color: var(--gray-600); }
+.ot-case-after strong { color: var(--green-700); }
+
+/* ── Métricas de confianza ── */
+.ot-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.ot-metric {
+    text-align: center; padding: 24px 18px;
+    background: #fff; border: 1px solid rgba(23,143,130,.16);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+}
+.ot-metric-value {
+    display: block;
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 2rem; font-weight: 800; color: var(--green-700); letter-spacing: -.5px;
+}
+.ot-metric-label { font-size: .82rem; color: var(--gray-600); line-height: 1.5; }
+.ot-proof-more { margin: 18px 0 0; font-size: .9rem; }
+
+/* ── CTA final + formulario ── */
+.ot-final-grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+    gap: 40px; align-items: start;
+}
+.ot-final-copy p { font-size: .95rem; color: var(--gray-600); line-height: 1.75; margin: 14px 0 18px; }
+.ot-final-copy .sd-block-title { border-bottom: none; padding-bottom: 0; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .ot-main { gap: 48px; padding: 40px 0 56px; }
+    .itc-controls { grid-template-columns: 1fr; }
+    .itc-compare { grid-template-columns: 1fr; }
+    .itc-vs { margin: -4px auto; }
+    .itc-result .btn { margin-left: 0; }
+    .ot-plans, .ot-cases, .ot-guarantee, .ot-metrics { grid-template-columns: 1fr; }
+    .ot-plan--featured { transform: none; }
+    .ot-final-grid { grid-template-columns: 1fr; }
+}

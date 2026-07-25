@@ -36,6 +36,12 @@ class HomeController extends Controller
             ->whereKeyNot($service->id)
             ->get(['id', 'name', 'slug', 'icon']);
 
+        // Landing dedicada si existe una vista con el slug (ej. outsourcing-ti)
+        $customView = "pages.servicios.{$service->slug}";
+        if (view()->exists($customView)) {
+            return view($customView, compact('service', 'projects', 'otherServices'));
+        }
+
         return view('pages.servicio-show', compact('service', 'projects', 'otherServices'));
     }
 
