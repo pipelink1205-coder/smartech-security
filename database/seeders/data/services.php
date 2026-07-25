@@ -7,6 +7,64 @@
  */
 return [
     [
+        'name' => 'Outsourcing de TI',
+        'slug' => 'outsourcing-ti',
+        'icon' => '💻',
+        'order' => 0,
+        'price_from' => 900000,
+        'highlight' => 'Un departamento de tecnología completo por una fracción del costo de un empleado de planta.',
+        'image' => config('images.services.outsourcing-ti'),
+        'description' => 'Soporte técnico, redes, ciberseguridad y consultoría TI tercerizados para pymes. Sin salarios fijos, sin prestaciones ni cargas laborales, con SLA garantizado.',
+        'features' => [
+            'Mesa de ayuda y soporte con SLA',
+            'Ciberseguridad incluida en todos los planes',
+            'Planes por horas, por demanda o dedicado',
+            'Sin cargas laborales de un cargo de TI',
+        ],
+        'long_description' => 'Deja de pagar un salario fijo de TI. Con nuestro modelo de outsourcing tu empresa tiene un departamento de tecnología completo — soporte técnico, infraestructura, redes, ciberseguridad, cloud y consultoría — pagando solo por lo que necesita, sin contratar personal de planta ni asumir prestaciones, capacitación o rotación del cargo.
+
+Trabajamos con planes flexibles: respaldo puntual por horas, bolsa mensual de horas por demanda o ingeniero dedicado asignado a tu operación. Todos los planes incluyen ciberseguridad básica y tiempos de respuesta con SLA definidos por contrato.
+
+Ideal para: pymes sin área de TI, empresas multi-sede en expansión y startups que necesitan escalar su tecnología sin inflar la nómina.',
+        'includes' => [
+            'Diagnóstico gratuito de la situación actual de TI',
+            'Mesa de ayuda con tickets, soporte remoto y en sitio',
+            'Administración de redes, servidores y equipos de cómputo',
+            'Ciberseguridad: antivirus gestionado, copias de seguridad y buenas prácticas',
+            'Gestión de correo corporativo, cloud y licenciamiento',
+            'Informes mensuales de gestión y recomendaciones de mejora',
+        ],
+        'process_steps' => [
+            'Diagnóstico gratuito — levantamos el estado real de tu tecnología y sus riesgos',
+            'Asignación del plan — por horas, por demanda o ingeniero dedicado según tu operación',
+            'Soporte continuo con SLA — mesa de ayuda, mantenimiento preventivo e informes mensuales',
+        ],
+        'brands' => [
+            'Ofimática: Microsoft 365, Google Workspace',
+            'Cloud: AWS, Microsoft Azure, Google Cloud',
+            'Redes: MikroTik, Ubiquiti, Cisco, TP-Link Omada',
+            'Seguridad: Fortinet, ESET, Kaspersky, Acronis',
+            'Virtualización y servidores: Proxmox, VMware, Windows Server, Linux',
+        ],
+        'standards' => [
+            'Gestión de servicios alineada con buenas prácticas ITIL',
+            'Tratamiento de datos conforme a Ley 1581 de 2012 (Habeas Data)',
+            'Controles de seguridad basados en ISO/IEC 27001',
+            'Acuerdos de nivel de servicio (SLA) con tiempos de respuesta por contrato',
+        ],
+        'tools' => [
+            'Plataforma de mesa de ayuda con tickets y seguimiento',
+            'Monitoreo remoto de equipos, servidores y redes',
+            'Inventario y documentación de la infraestructura del cliente',
+        ],
+        'faqs' => [
+            ['question' => '¿Cuánto me ahorro frente a un empleado de TI?', 'answer' => 'Un ingeniero de planta cuesta salario más prestaciones y carga laboral (≈1,5 veces el salario). Con un plan mensual pagas una fracción de eso y tienes un equipo completo, no una sola persona.'],
+            ['question' => '¿Qué pasa si necesito soporte urgente?', 'answer' => 'Cada plan tiene SLA con tiempos de respuesta definidos; las urgencias se atienden de forma remota de inmediato y en sitio según el plan contratado.'],
+            ['question' => '¿Tengo que firmar permanencia?', 'answer' => 'No. Iniciamos con un periodo de prueba y el servicio se renueva mes a mes si estás satisfecho.'],
+            ['question' => '¿Atienden empresas con varias sedes?', 'answer' => 'Sí, administramos redes y soporte multi-sede con monitoreo centralizado y visitas programadas por sede.'],
+        ],
+    ],
+    [
         'name' => 'Cámaras de Seguridad 4K',
         'slug' => 'camaras-4k',
         'icon' => '📹',

@@ -19,6 +19,7 @@ return [
         'phone'    => 'Teléfono',
         'fire'     => 'Incendios',
         'shield'   => 'Seguridad',
+        'support'  => 'Soporte TI',
     ],
 
     'emojis' => [
@@ -40,5 +41,8 @@ return [
         '🔥' => 'fire',
         '🛡️' => 'shield',
         '⚡' => 'solar',
+        '💻' => 'support',
+        '🖥️' => 'support',
+        '🧑‍💻' => 'support',
     ],
 ];

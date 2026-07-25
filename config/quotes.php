@@ -13,6 +13,7 @@ return [
         'Control de Acceso Vehicular'  => [2_500_000, 12_000_000],
         'Enlaces Inalámbricos'         => [1_800_000, 9_000_000],
         'Sistemas de Detección de Incendios' => [2_000_000, 10_000_000],
+        'Outsourcing de TI'            => [900_000,   6_500_000],
         'Varios servicios'             => [2_000_000, 25_000_000],
     ],
 
