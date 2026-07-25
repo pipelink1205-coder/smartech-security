@@ -3,8 +3,8 @@
     <x-logo href="{{ route('home') }}#inicio" class="mobile-menu-brand" :show-text="true" data-page-link="inicio" />
     <a href="{{ route('home') }}#inicio" data-page-link="inicio">Inicio</a>
     <a href="{{ route('home') }}#servicios" data-page-link="servicios">Servicios</a>
-    <a href="{{ route('servicios.show', 'outsourcing-ti') }}">Outsourcing TI</a>
     <a href="{{ route('home') }}#iptv" data-page-link="iptv">IPTV Hoteles</a>
+    <a href="{{ route('servicios.show', 'outsourcing-ti') }}">Outsourcing TI</a>
     <a href="{{ route('home') }}#proyectos" data-page-link="proyectos">Proyectos</a>
     <a href="{{ route('home') }}#faq" data-page-link="faq">FAQ</a>
     <a href="{{ route('home') }}#contacto" data-page-link="contacto">Contacto</a>
