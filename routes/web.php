@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\GeocodeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\SitemapController;
 
 // GeoJSON del mapa de comunas (sirve el archivo con headers correctos en producción)
 Route::get('/mapa/comunas.geojson', function () {
@@ -16,6 +17,9 @@ Route::get('/mapa/comunas.geojson', function () {
         'Cache-Control' => 'public, max-age=86400',
     ]);
 })->name('map.comunas-geojson');
+
+// Sitemap para Google Search Console
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 
 // Página principal
 Route::get('/', [HomeController::class, 'index'])->name('home');

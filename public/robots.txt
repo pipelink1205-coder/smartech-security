@@ -1,2 +1,8 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Panel de administración — no indexar
+Disallow: /admin
+Disallow: /livewire
+
+Sitemap: https://smarttechsecurity.com.co/sitemap.xml
