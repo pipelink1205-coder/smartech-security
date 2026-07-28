@@ -36,6 +36,45 @@ final class ImageWatermark
     ];
 
     /**
+     * Corrige la orientación EXIF en el archivo (p. ej. fotos de celular).
+     * Reescribe los píxeles ya “derechos” y quita el metadato Orientation,
+     * para que lo que se ve en el admin coincida con lo guardado y la marca de agua
+     * no vuelva a girar la imagen.
+     */
+    public static function normalizeOrientation(string $imagePath): bool
+    {
+        if (! is_readable($imagePath) || ! extension_loaded('gd')) {
+            return false;
+        }
+
+        $info = @getimagesize($imagePath);
+        if ($info === false || ($info[2] ?? null) !== IMAGETYPE_JPEG) {
+            return false;
+        }
+
+        if (! function_exists('exif_read_data')) {
+            return false;
+        }
+
+        $exif = @exif_read_data($imagePath);
+        $orientation = (int) ($exif['Orientation'] ?? 1);
+
+        if ($orientation <= 1) {
+            return false;
+        }
+
+        $image = self::createImage($imagePath, applyExifOrientation: true);
+        if ($image === null) {
+            return false;
+        }
+
+        $ok = self::saveImage($image, $imagePath);
+        imagedestroy($image);
+
+        return $ok;
+    }
+
+    /**
      * Aplica marca de agua sobre $imagePath (muta el archivo).
      *
      * @param  array{opacity?: float, size?: string, position?: string, x?: float, y?: float}  $options
@@ -45,6 +84,9 @@ final class ImageWatermark
         if (! is_readable($imagePath) || ! extension_loaded('gd')) {
             return false;
         }
+
+        // Por si el archivo aún trae EXIF (p. ej. subido fuera del FileUpload).
+        self::normalizeOrientation($imagePath);
 
         $logoPath ??= public_path('images/logo.png');
         if (! is_readable($logoPath)) {

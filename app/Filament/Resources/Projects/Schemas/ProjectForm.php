@@ -143,7 +143,7 @@ class ProjectForm
                 ->appendFiles()
                 ->panelLayout('grid')
                 ->maxFiles(12)
-                ->helperText('JPG, PNG o WebP · hasta 12 fotos · nuevas van al final · la primera es la portada · al guardar se aplica la marca de agua.')
+                ->helperText('JPG, PNG o WebP · hasta 12 · nuevas al final · la 1ª es portada · orientación del celular se corrige sola · marca de agua al guardar. Recorta en el teléfono si lo necesitas (el editor interno está desactivado para no deformar).')
                 ->columnSpanFull(),
         ];
     }
