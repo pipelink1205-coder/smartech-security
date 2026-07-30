@@ -65,6 +65,65 @@ Ideal para: pymes sin área de TI, empresas multi-sede en expansión y startups 
         ],
     ],
     [
+        'name' => 'Ciberseguridad Empresarial',
+        'slug' => 'ciberseguridad-empresas',
+        'icon' => '🛡️',
+        'order' => 13,
+        'show_on_home' => false,
+        'price_from' => 1200000,
+        'highlight' => 'Firewall, endpoints, backup y monitoreo para que un incidente no detenga tu operación.',
+        'image' => config('images.services.ciberseguridad-empresas'),
+        'description' => 'Protección perimetral, antivirus/EDR gestionado, copias de seguridad anti-ransomware y endurecimiento de servidores para pymes en Medellín y el Valle de Aburrá.',
+        'features' => [
+            'Firewall NGFW y VPN multi-sede',
+            'Protección de endpoints (EDR/MDR)',
+            'Backup y recuperación ante ransomware',
+            'Diagnóstico y endurecimiento de redes',
+        ],
+        'long_description' => 'La ciberseguridad no es un antivirus suelto: es un conjunto de controles que protegen tu red, tus equipos y tus datos antes de que un ataque o un error humano frene el negocio.
+
+En Smart Tech Security diseñamos e implementamos protección perimetral con firewalls de próxima generación, seguridad de endpoints, copias de seguridad con ciberprotección y buenas prácticas de hardening alineadas a marcos como CIS Controls e ISO 27001. Integramos esto con nuestro outsourcing de TI cuando la empresa necesita operación continua, no solo instalación.
+
+Ideal para: pymes con datos sensibles, oficinas multi-sede, clínicas, comercios y empresas que ya tienen cámaras o redes y necesitan cerrar la puerta digital.',
+        'includes' => [
+            'Diagnóstico de superficie de ataque y riesgos prioritarios',
+            'Firewall empresarial (Fortinet, OPNsense o MikroTik según el caso)',
+            'Protección de endpoints con Kaspersky o Bitdefender',
+            'Políticas de VPN, filtrado web y segmentación básica',
+            'Backup gestionado (Acronis) con pruebas de restauración',
+            'Informe de hallazgos y plan de mejoras priorizado',
+        ],
+        'process_steps' => [
+            'Diagnóstico — inventariamos activos, firewalls, endpoints y backups actuales',
+            'Diseño — definimos controles prioritarios según riesgo y presupuesto',
+            'Implementación — desplegamos agentes, políticas y respaldos',
+            'Operación — monitoreo, actualizaciones y respuesta ante incidentes según el plan',
+        ],
+        'brands' => [
+            'Firewall: Fortinet, OPNsense, MikroTik',
+            'Endpoint: Kaspersky, Bitdefender',
+            'Backup: Acronis',
+            'Virtualización: Proxmox, Windows Server',
+        ],
+        'standards' => [
+            'Controles alineados a CIS Controls e ISO/IEC 27001',
+            'Tratamiento de datos conforme a Ley 1581 de 2012',
+            'Buenas prácticas NIST para respuesta ante incidentes',
+            'Acuerdos de nivel de servicio (SLA) cuando se opera como servicio gestionado',
+        ],
+        'tools' => [
+            'Consolas de administración de endpoints y firewall',
+            'Inventario de activos y seguimiento de tickets',
+            'Pruebas de restauración de backup',
+        ],
+        'faqs' => [
+            ['question' => '¿Es lo mismo que el Outsourcing de TI?', 'answer' => 'No. El outsourcing cubre soporte, redes y operación diaria. La ciberseguridad se enfoca en proteger: firewall, endpoints, backups y controles. Muchas empresas contratan ambos juntos.'],
+            ['question' => '¿Necesito un firewall caro para empezar?', 'answer' => 'No siempre. En el diagnóstico evaluamos si conviene Fortinet, OPNsense o reforzar lo que ya tienes. Lo importante es cerrar puertos expuestos y tener políticas claras.'],
+            ['question' => '¿Qué pasa si ya tengo antivirus?', 'answer' => 'Revisamos si está gestionado, actualizado y con respuesta ante amenazas. Un antivirus casero no es lo mismo que EDR/MDR empresarial con consola central.'],
+            ['question' => '¿Atienden solo Medellín?', 'answer' => 'Implementamos y damos soporte en Medellín y el Valle de Aburrá; parte del monitoreo y la administración remota también sirve para sedes en otras ciudades.'],
+        ],
+    ],
+    [
         'name' => 'Cámaras de Seguridad 4K',
         'slug' => 'camaras-4k',
         'icon' => '📹',

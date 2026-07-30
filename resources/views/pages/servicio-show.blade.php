@@ -196,6 +196,15 @@
                     </section>
                 @endif
 
+                @if($service->slug === 'ciberseguridad-empresas')
+                    <section class="sd-block" aria-label="Partners de ciberseguridad">
+                        <x-partners
+                            title="Partners con los que protegemos tu empresa"
+                            subtitle="Firewall, endpoint, backup y virtualización: las mismas plataformas que usamos en implementaciones reales."
+                        />
+                    </section>
+                @endif
+
             </div>
 
             {{-- ═══ SIDEBAR STICKY ═══ --}}

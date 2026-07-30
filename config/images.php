@@ -28,6 +28,7 @@ return [
         'enlaces-inalambricos'        => $local('images/services/redes.jpg', $u('photo-1558494949-ef010cbdcc31')),
         'deteccion-incendios'         => $local('images/services/alarmas.png', $local('images/services/alarmas.jpg', $u('photo-1563986768609-322da13575f3'))),
         'outsourcing-ti'              => $local('images/services/outsourcing-ti.jpg', $u('photo-1531482615713-2afd69097998')),
+        'ciberseguridad-empresas'     => $local('images/services/ciberseguridad.jpg', $u('photo-1550751827-4bd374c3f58b')),
     ],
 
     'projects' => [

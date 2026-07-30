@@ -10,11 +10,12 @@ class Service extends Model
     protected $fillable = [
         'name', 'slug', 'description', 'long_description', 'features', 'highlight', 'icon', 'image',
         'includes', 'process_steps', 'brands', 'standards', 'tools', 'faqs',
-        'price_from', 'is_active', 'order', 'color',
+        'price_from', 'is_active', 'show_on_home', 'order', 'color',
     ];
 
     protected $casts = [
         'is_active'      => 'boolean',
+        'show_on_home'   => 'boolean',
         'features'       => 'array',
         'includes'       => 'array',
         'process_steps'  => 'array',
@@ -30,6 +31,7 @@ class Service extends Model
     }
 
     public function scopeActive($q)   { return $q->where('is_active', true); }
+    public function scopeOnHome($q)   { return $q->where('show_on_home', true); }
     public function scopeOrdered($q)  { return $q->orderBy('order'); }
 
     public function getImageUrlAttribute(): string

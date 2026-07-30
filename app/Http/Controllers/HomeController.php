@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $services = Service::active()->ordered()->get();
+        $services = Service::active()->onHome()->ordered()->get();
         $iptvService = Service::active()->where('slug', 'iptv-hoteles')->first();
 
         return view('welcome', compact('services', 'iptvService'));
@@ -18,6 +18,7 @@ class HomeController extends Controller
     public function servicios()
     {
         $services = Service::active()->ordered()->get();
+
         return view('pages.servicios', compact('services'));
     }
 

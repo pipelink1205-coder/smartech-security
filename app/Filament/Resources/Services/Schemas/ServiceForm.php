@@ -91,7 +91,7 @@ class ServiceForm
                         PublicAssetUpload::image('image', 'images/services')
                             ->label('Imagen del servicio')
                             ->columnSpanFull(),
-                        Grid::make(3)
+                        Grid::make(2)
                             ->schema([
                                 TextInput::make('price_from')
                                     ->label('Precio desde (COP)')
@@ -104,6 +104,10 @@ class ServiceForm
                                     ->required(),
                                 Toggle::make('is_active')
                                     ->label('Visible en el sitio')
+                                    ->default(true),
+                                Toggle::make('show_on_home')
+                                    ->label('Mostrar en el inicio')
+                                    ->helperText('Si está apagado, solo aparece en /servicios y en cotizaciones.')
                                     ->default(true),
                             ]),
                     ])

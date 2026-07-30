@@ -14,6 +14,7 @@ return [
         'Enlaces Inalámbricos'         => [1_800_000, 9_000_000],
         'Sistemas de Detección de Incendios' => [2_000_000, 10_000_000],
         'Outsourcing de TI'            => [900_000,   6_500_000],
+        'Ciberseguridad Empresarial'   => [1_200_000, 8_000_000],
         'Varios servicios'             => [2_000_000, 25_000_000],
     ],
 
