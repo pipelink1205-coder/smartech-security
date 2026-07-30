@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'company' => [
+        'legal_name' => env('QUOTE_COMPANY_NAME', 'SMART TECH SECURITY S.A.S.'),
+        'tax_id' => env('QUOTE_COMPANY_NIT'),
+        'address' => env('QUOTE_COMPANY_ADDRESS', config('contact.address')),
+        'city' => env('QUOTE_COMPANY_CITY', 'Envigado, Antioquia'),
+        'website' => env('QUOTE_COMPANY_WEBSITE', 'smarttechsecurity.com.co'),
+    ],
+
     'pricing' => [
         'Cámaras de Seguridad 4K'      => [800_000,   3_500_000],
         'Energía Solar Fotovoltaica'   => [4_000_000, 20_000_000],
@@ -74,6 +82,21 @@ return [
             ],
         ],
     ],
+
+    /*
+     * Condiciones por defecto de la cotización formal (PDF / Word estilo).
+     */
+    'default_terms' => "Validez: 15 días calendario.\n"
+        ."Precios en pesos colombianos (COP).\n"
+        ."El IVA se discrimina por concepto cuando corresponda.\n"
+        ."La instalación se agenda tras aprobación escrita o por WhatsApp.\n"
+        ."Garantía de 1 año en mano de obra; equipos según garantía de fábrica.",
+
+    'default_payment_terms' => "50% de anticipo para iniciar.\n"
+        ."50% contra entrega, instalación o puesta en funcionamiento.",
+
+    'default_warranty_terms' => "Mano de obra: 12 meses desde la entrega.\n"
+        ."Equipos: según las condiciones y el tiempo de garantía del fabricante.",
 
     'zone_surcharge' => [
         'Medellín - Centro'      => 0,

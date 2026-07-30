@@ -2,10 +2,10 @@
     <x-section
         tone="contact"
         tag="Contacto"
-        subtitle="Estamos en Envigado pero llegamos a todo Medellín y el Valle de Aburrá. Respuesta garantizada en menos de 2 horas en horario laboral."
+        subtitle="Estamos en Envigado y cubrimos Medellín y el Valle de Aburrá. La visita técnica es gratuita; la cotización detallada se entrega después del diagnóstico."
     >
         <x-slot:heading>
-            <h2 class="section-title">Solicita tu <span class="accent">cotización gratis</span> hoy</h2>
+            <h2 class="section-title">Solicita <span class="accent">información</span> o agenda tu visita</h2>
         </x-slot:heading>
 
         <div class="contacto-grid">
@@ -48,19 +48,52 @@
                 </div>
             </div>
 
-            <div class="form-card glass-card">
+            <div class="form-card glass-card" id="quote-form-card">
                 @if($submitted)
                     <div class="form-success">
                         <div class="form-success-icon">✅</div>
-                        <h3>¡Solicitud enviada!</h3>
-                        <p>Le contactaremos en menos de 2 horas. Revise su correo si dejó uno.</p>
+                        <h3>{{ $intent === 'visit' ? '¡Preferencia de visita recibida!' : '¡Solicitud recibida!' }}</h3>
+                        <p>
+                            @if($intent === 'visit')
+                                Le confirmaremos la visita por WhatsApp o llamada según disponibilidad en su zona (normalmente en menos de 2 horas hábiles).
+                            @else
+                                Le contactaremos en menos de 2 horas hábiles para ampliar información o agendar la visita técnica gratuita.
+                            @endif
+                        </p>
                         <button wire:click="$set('submitted', false)" class="btn btn-primary" style="margin-top:16px;width:100%;justify-content:center;">
-                            Nueva cotización
+                            Nueva solicitud
                         </button>
                     </div>
                 @else
-                    <h3>Solicitar Cotización Gratis</h3>
-                    <p class="form-sub">Le respondemos en menos de 2 horas</p>
+                    <div class="form-tabs" role="tablist" aria-label="Tipo de solicitud">
+                        <button
+                            type="button"
+                            role="tab"
+                            class="form-tab {{ $intent === 'info' ? 'is-active' : '' }}"
+                            aria-selected="{{ $intent === 'info' ? 'true' : 'false' }}"
+                            wire:click="setIntent('info')"
+                        >
+                            Solicitar información
+                        </button>
+                        <button
+                            type="button"
+                            role="tab"
+                            class="form-tab {{ $intent === 'visit' ? 'is-active' : '' }}"
+                            aria-selected="{{ $intent === 'visit' ? 'true' : 'false' }}"
+                            wire:click="setIntent('visit')"
+                        >
+                            Agendar visita
+                        </button>
+                    </div>
+
+                    <h3>{{ $intent === 'visit' ? 'Preferencia de visita' : 'Solicitar información' }}</h3>
+                    <p class="form-sub">
+                        @if($intent === 'visit')
+                            Indique fecha y franja. Confirmamos disponibilidad por WhatsApp · Cotización tras el diagnóstico
+                        @else
+                            Visita técnica gratuita · Cotización tras el diagnóstico
+                        @endif
+                    </p>
 
                     <form wire:submit="submit">
                         <div class="form-row">
@@ -85,9 +118,9 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="service">Servicio de interés *</label>
-                                <select id="service" wire:model.live="service">
+                                <select id="service" wire:model="service">
                                     <option value="">Seleccione…</option>
-                                    @foreach($serviceOptions as $name => $prices)
+                                    @foreach($serviceOptions as $name)
                                         <option value="{{ $name }}">{{ $name }}</option>
                                     @endforeach
                                 </select>
@@ -95,7 +128,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="zone">Zona / Municipio</label>
-                                <select id="zone" wire:model.live="zone">
+                                <select id="zone" wire:model="zone">
                                     <option value="">Seleccione…</option>
                                     @foreach(config('site.form_zones') as $z)
                                         <option value="{{ $z }}">{{ $z }}</option>
@@ -104,24 +137,36 @@
                             </div>
                         </div>
 
-                        @if($showPreview)
-                            <div class="price-preview">
-                                <span class="price-preview-label">💰 Estimado preliminar:</span>
-                                <span class="price-preview-range">
-                                    ${{ number_format($priceMin, 0, ',', '.') }}
-                                    – ${{ number_format($priceMax, 0, ',', '.') }} COP
-                                </span>
-                                <span class="price-preview-note">*Precio final tras visita técnica gratuita</span>
+                        @if($intent === 'visit')
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="preferred_visit_date">Fecha preferida *</label>
+                                    <input type="date" id="preferred_visit_date" wire:model="preferred_visit_date" min="{{ now()->toDateString() }}" />
+                                    @error('preferred_visit_date') <span class="form-error">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="preferred_visit_slot">Franja horaria *</label>
+                                    <select id="preferred_visit_slot" wire:model="preferred_visit_slot">
+                                        <option value="">Seleccione…</option>
+                                        @foreach($visitSlots as $value => $label)
+                                            <option value="{{ $value }}">{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('preferred_visit_slot') <span class="form-error">{{ $message }}</span> @enderror
+                                </div>
                             </div>
+                            <p class="form-hint">No es una cita confirmada: un asesor valida disponibilidad y le confirma el horario.</p>
                         @endif
 
                         <div class="form-group">
-                            <label for="message">Cuéntenos su proyecto</label>
-                            <textarea id="message" wire:model="message" placeholder="Describa brevemente lo que necesita…"></textarea>
+                            <label for="message">Cuéntenos qué necesita</label>
+                            <textarea id="message" wire:model="message" placeholder="Ej.: redes en una oficina, cámaras en casa, soporte TI…"></textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary form-submit" wire:loading.attr="disabled">
-                            <span wire:loading.remove>Enviar Solicitud ✓</span>
+                            <span wire:loading.remove>
+                                {{ $intent === 'visit' ? 'Solicitar visita ✓' : 'Enviar solicitud ✓' }}
+                            </span>
                             <span wire:loading>Enviando…</span>
                         </button>
                     </form>

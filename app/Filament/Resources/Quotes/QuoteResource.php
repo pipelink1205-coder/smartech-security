@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Quotes;
 
+use App\Filament\Resources\Quotes\Pages\CreateQuote;
 use App\Filament\Resources\Quotes\Pages\EditQuote;
 use App\Filament\Resources\Quotes\Pages\ListQuotes;
 use App\Filament\Resources\Quotes\Schemas\QuoteForm;
@@ -12,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class QuoteResource extends Resource
 {
@@ -51,9 +53,9 @@ class QuoteResource extends Resource
         return QuotesTable::configure($table);
     }
 
-    public static function canCreate(): bool
+    public static function getEloquentQuery(): Builder
     {
-        return false;
+        return parent::getEloquentQuery()->with('items');
     }
 
     public static function getRelations(): array
@@ -65,6 +67,7 @@ class QuoteResource extends Resource
     {
         return [
             'index' => ListQuotes::route('/'),
+            'create' => CreateQuote::route('/create'),
             'edit' => EditQuote::route('/{record}/edit'),
         ];
     }

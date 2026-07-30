@@ -44,6 +44,8 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.25rem')
             ->favicon(asset('favicon.png'))
             ->font('Inter')
+            ->sidebarWidth('14rem')
+            ->collapsedSidebarWidth('4.5rem')
             ->sidebarCollapsibleOnDesktop()
             ->maxContentWidth(Width::Full)
             ->navigationGroups([

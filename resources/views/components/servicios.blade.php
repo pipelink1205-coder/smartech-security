@@ -40,7 +40,7 @@
                         @if($isFeatured)
                             <a href="{{ $iptvLandingUrl }}" class="service-link service-link--muted" @if(request()->routeIs('home')) data-page-link="iptv" @endif>Presentación IPTV</a>
                         @endif
-                        <a href="{{ route('contacto') }}" class="service-link service-link--muted">Cotizar</a>
+                        <a href="{{ route('contacto') }}" class="service-link service-link--muted">Solicitar info</a>
                     </div>
                 </div>
             </article>

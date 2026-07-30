@@ -28,7 +28,7 @@
                             <li>Medellín y Valle de Aburrá</li>
                         </ul>
                         <div class="sd-hero-actions">
-                            <a href="{{ route('contacto') }}" class="btn btn-primary">Solicitar cotización</a>
+                            <a href="{{ route('contacto', ['intent' => 'visit']) }}" class="btn btn-primary">Agendar visita gratuita</a>
                             @if($service->slug === 'iptv-hoteles')
                                 <a href="{{ route('home') }}#iptv" class="btn sd-btn-outline">Ver presentación IPTV</a>
                             @endif
@@ -219,12 +219,13 @@
                     @endif
 
                     <div class="sd-quote-actions">
-                        <a href="{{ route('contacto') }}" class="btn btn-primary sd-btn-block">Solicitar cotización</a>
+                        <a href="{{ route('contacto') }}" class="btn btn-primary sd-btn-block">Solicitar información</a>
                         <a href="https://wa.me/{{ config('contact.whatsapp') }}" class="btn btn-ghost sd-btn-block" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
                     </div>
 
                     <ul class="sd-quote-trust">
                         <li>Visita técnica y diagnóstico gratuitos</li>
+                        <li>Cotización detallada tras la visita</li>
                         <li>Garantía de 1 año en equipos y mano de obra</li>
                         <li>{{ config('contact.support_note') }}</li>
                     </ul>
@@ -255,9 +256,9 @@
             <div class="container">
                 <div class="sd-cta-inner">
                     <h2>¿Listo para empezar?</h2>
-                    <p>Agenda tu diagnóstico gratuito y recibe una propuesta a la medida en Medellín y el Valle de Aburrá.</p>
+                    <p>Agenda tu visita técnica gratuita. Tras el diagnóstico te entregamos la cotización a la medida en Medellín y el Valle de Aburrá.</p>
                     <div class="sd-hero-actions">
-                        <a href="{{ route('contacto') }}" class="btn btn-primary">Solicitar cotización</a>
+                        <a href="{{ route('contacto', ['intent' => 'visit']) }}" class="btn btn-primary">Agendar visita gratuita</a>
                         <a href="https://wa.me/{{ config('contact.whatsapp') }}" class="btn sd-btn-outline" target="_blank" rel="noopener">WhatsApp</a>
                     </div>
                 </div>

@@ -8,7 +8,6 @@ use App\Mail\NewLeadAlert;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\URL;
 
 class QuoteController extends Controller
 {
@@ -23,30 +22,39 @@ class QuoteController extends Controller
             'message' => 'nullable|string|max:1000',
         ]);
 
-        // Calcular precio estimado automáticamente
-        $pricing = config('quotes.pricing');
-        [$min, $max] = $pricing[$data['service']] ?? [0, 0];
-
         $quote = Quote::create([
             ...$data,
-            'price_min' => $min,
-            'price_max' => $max,
+            'status' => 'new',
         ]);
 
-        // Enviar emails
         if ($quote->email) {
             Mail::to($quote->email)->send(new QuoteGenerated($quote));
         }
         Mail::to(config('contact.admin_email'))->send(new NewLeadAlert($quote));
 
-        return back()->with('success', '¡Cotización enviada! Le responderemos pronto.');
+        return back()->with('success', '¡Solicitud recibida! Le contactaremos pronto.');
     }
 
     public function pdf(Quote $quote)
     {
+        $quote->load('items');
+
         $pdf = Pdf::loadView('pdf.quote', compact('quote'))
             ->setPaper('a4', 'portrait');
 
-        return $pdf->download("Cotizacion-STS-{$quote->id}.pdf");
+        $filename = ($quote->quote_number ?: 'COT-'.$quote->id).'.pdf';
+
+        return $pdf->download($filename);
+    }
+
+    public function preview(Quote $quote)
+    {
+        $quote->load('items');
+
+        $filename = ($quote->quote_number ?: 'COT-'.$quote->id).'.pdf';
+
+        return Pdf::loadView('pdf.quote', compact('quote'))
+            ->setPaper('a4', 'portrait')
+            ->stream($filename);
     }
 }

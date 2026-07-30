@@ -8,5 +8,5 @@
     <a href="{{ route('home') }}#proyectos" data-page-link="proyectos">Proyectos</a>
     <a href="{{ route('home') }}#faq" data-page-link="faq">FAQ</a>
     <a href="{{ route('home') }}#contacto" data-page-link="contacto">Contacto</a>
-    <a href="{{ route('home') }}#contacto" class="btn btn-primary" data-page-link="contacto" style="margin-top:24px;justify-content:center;">Cotizar Gratis</a>
+    <a href="{{ route('home') }}?intent=visit#contacto" class="btn btn-primary" data-page-link="contacto" data-quote-intent="visit" style="margin-top:24px;justify-content:center;">Agendar visita</a>
 </div>

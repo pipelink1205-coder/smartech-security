@@ -16,7 +16,7 @@ td:first-child{color:#6b7280;font-weight:600;width:40%;}
 <body>
 <div class="card">
   <div class="top">
-    <h1>🔔 Nuevo lead recibido</h1>
+    <h1>Nueva solicitud / lead</h1>
   </div>
   <div class="body">
     <table>
@@ -25,21 +25,26 @@ td:first-child{color:#6b7280;font-weight:600;width:40%;}
       @if($quote->email)
       <tr><td>Email</td><td>{{ $quote->email }}</td></tr>
       @endif
+      @if($quote->company)
+      <tr><td>Empresa</td><td>{{ $quote->company }}</td></tr>
+      @endif
+      <tr><td>Tipo</td><td class="green">{{ $quote->intent_label }}</td></tr>
       <tr><td>Servicio</td><td class="green">{{ $quote->service }}</td></tr>
       @if($quote->zone)
       <tr><td>Zona</td><td>{{ $quote->zone }}</td></tr>
       @endif
-      @if($quote->price_min)
-      <tr><td>Estimado</td><td class="green">{{ $quote->price_range }}</td></tr>
+      @if($quote->preferred_visit_summary)
+      <tr><td>Visita preferida</td><td class="green">{{ $quote->preferred_visit_summary }}</td></tr>
       @endif
       @if($quote->message)
       <tr><td>Mensaje</td><td>{{ $quote->message }}</td></tr>
       @endif
+      <tr><td>Ref.</td><td>{{ $quote->quote_number ?: ('#'.$quote->id) }}</td></tr>
       <tr><td>Hora</td><td>{{ $quote->created_at->format('d/m/Y H:i') }}</td></tr>
     </table>
 
-    <a href="{{ url('/admin/quotes/'.$quote->id) }}" class="btn">Ver en panel de administración →</a>
-    <a href="{{ $quote->whatsapp_link }}" class="btn-wa">Contactar por WhatsApp 💬</a>
+    <a href="{{ url('/admin/quotes/'.$quote->id.'/edit') }}" class="btn">Ver en panel de administración →</a>
+    <a href="{{ $quote->whatsapp_link }}" class="btn-wa">Contactar por WhatsApp</a>
   </div>
 </div>
 </body>

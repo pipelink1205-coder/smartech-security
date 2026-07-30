@@ -169,7 +169,7 @@
                                     <p>{{ $openProject->description }}</p>
                                 </div>
                                 <a href="{{ url('/#contacto') }}" class="btn btn-primary project-lightbox-cta" wire:click="closeProject">
-                                    Solicitar cotización
+                                    Solicitar información
                                 </a>
                             </aside>
                         @endif

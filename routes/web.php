@@ -37,7 +37,13 @@ Route::get('/proyectos', [HomeController::class, 'proyectos'])->name('proyectos'
 Route::get('/contacto', [HomeController::class, 'contacto'])->name('contacto');
 Route::view('/privacidad', 'pages.privacidad')->name('privacidad');
 
-// Geocodificación para el mapa del panel admin (requiere sesión)
-Route::middleware(['web', 'auth'])
-    ->get('/admin/geocode', GeocodeController::class)
-    ->name('admin.geocode');
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('/admin/geocode', GeocodeController::class)
+        ->name('admin.geocode');
+
+    Route::get('/admin/quotes/{quote}/pdf-preview', [QuoteController::class, 'preview'])
+        ->name('admin.quotes.pdf-preview');
+
+    Route::get('/admin/quotes/{quote}/pdf-download', [QuoteController::class, 'pdf'])
+        ->name('admin.quotes.pdf-download');
+});

@@ -12,7 +12,7 @@
             <p class="hero-p">{{ config('site.hero.subtitle') }}</p>
             <div class="hero-btns">
                 <a href="#servicios" class="btn btn-primary" data-page-link="servicios">Ver Servicios</a>
-                <a href="#contacto" class="btn btn-outline" data-page-link="contacto">Diagnóstico Gratis</a>
+                <a href="{{ route('home') }}?intent=visit#contacto" class="btn btn-outline" data-page-link="contacto" data-quote-intent="visit">Agendar visita gratuita</a>
             </div>
             <div class="hero-stats">
                 @foreach(config('site.stats') as $stat)

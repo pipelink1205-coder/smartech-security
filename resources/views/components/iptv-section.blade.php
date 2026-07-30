@@ -56,7 +56,7 @@
             </div>
             <div class="hero-btns iptv-hero-btns">
                 <a href="{{ $detailUrl }}" class="btn btn-primary">Ver servicio completo</a>
-                <a href="#contacto" class="btn btn-outline" data-page-link="contacto">Cotizar IPTV</a>
+                <a href="#contacto" class="btn btn-outline" data-page-link="contacto">Solicitar información IPTV</a>
             </div>
         </div>
     </div>

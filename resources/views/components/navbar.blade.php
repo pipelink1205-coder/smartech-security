@@ -12,7 +12,7 @@
             <li><a href="{{ route('home') }}#contacto" data-page-link="contacto">Contacto</a></li>
         </ul>
 
-        <a href="{{ route('home') }}#contacto" class="btn btn-primary nav-cta" data-page-link="contacto">Cotizar Gratis</a>
+        <a href="{{ route('home') }}?intent=visit#contacto" class="btn btn-primary nav-cta" data-page-link="contacto" data-quote-intent="visit">Agendar visita</a>
 
         <button class="hamburger" id="hamburger" aria-label="Menú">
             <span></span><span></span><span></span>

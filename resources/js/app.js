@@ -207,6 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             e.preventDefault();
             window.showPage(pageId);
+
+            const intent = el.dataset.quoteIntent;
+            if (intent && window.Livewire) {
+                window.Livewire.dispatch('setQuoteIntent', { intent });
+            }
         });
     });
 

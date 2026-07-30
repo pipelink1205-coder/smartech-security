@@ -18,7 +18,7 @@ return [
     'strip_label' => 'Compromiso en cada proyecto',
     'strip_highlights' => [
         'Sede en Envigado',
-        'Diagnóstico gratuito en 24 h',
+        'Visita técnica gratuita',
         'Garantía 1 año en mano de obra',
         'Soporte técnico 24/7',
     ],
@@ -32,13 +32,13 @@ return [
     'why_us' => [
         ['icon' => '🗺️', 'title' => 'Cobertura Metropolitana', 'text' => 'Técnicos locales en todo el Valle de Aburrá. Sede en Envigado con visitas y soporte en Medellín y municipios aledaños.'],
         ['icon' => '🎓', 'title' => 'Técnicos Certificados', 'text' => 'Equipo profesional con certificaciones en instalación de sistemas de seguridad, energía solar y redes. Experiencia comprobada.'],
-        ['icon' => '⚡', 'title' => 'Respuesta Rápida', 'text' => 'Diagnóstico gratuito en menos de 24 horas. Instalaciones ágiles con mínima interrupción de tus actividades diarias.'],
+        ['icon' => '⚡', 'title' => 'Respuesta Rápida', 'text' => 'Visita técnica gratuita en menos de 24 horas. Instalaciones ágiles con mínima interrupción de tus actividades diarias.'],
         ['icon' => '🛡️', 'title' => 'Soporte 24/7', 'text' => 'Asistencia técnica permanente los 365 días del año. Mantenimiento preventivo y correctivo con garantía real.'],
     ],
 
     'process' => [
-        ['step' => '1', 'title' => 'Contacto y Diagnóstico', 'text' => 'Nos contactas por WhatsApp o formulario. Agendamos visita técnica gratuita en tu ubicación en Medellín o área metropolitana.'],
-        ['step' => '2', 'title' => 'Propuesta y Cotización', 'text' => 'Evaluamos tus necesidades específicas. Entregamos propuesta técnica detallada con planos, equipos y presupuesto sin sorpresas.'],
+        ['step' => '1', 'title' => 'Contacto e información', 'text' => 'Nos escribes por WhatsApp o formulario. Resolvemos dudas y agendamos visita técnica gratuita en Medellín o el área metropolitana.'],
+        ['step' => '2', 'title' => 'Visita y cotización', 'text' => 'Evaluamos en sitio lo que realmente necesita. Después entregamos cotización detallada con materiales, equipos y tiempos.'],
         ['step' => '3', 'title' => 'Instalación Profesional', 'text' => 'Ejecutamos el proyecto con técnicos certificados. Instalación limpia, organizada y en el tiempo acordado.'],
         ['step' => '4', 'title' => 'Capacitación y Soporte', 'text' => 'Te capacitamos en el uso del sistema. Garantía de 1 año en mano de obra y soporte técnico continuo 24/7.'],
     ],
@@ -54,7 +54,7 @@ return [
 
     'faq' => [
         ['q' => '¿Qué zonas de Medellín y el área metropolitana cubren?', 'a' => 'Ofrecemos servicio en todo Medellín, Envigado (sede principal), Itagüí, Sabaneta, Bello, La Estrella, Caldas, Copacabana, Guarne y Rionegro. También visitamos otros municipios con costo de desplazamiento según distancia.'],
-        ['q' => '¿Cuánto cuesta la visita de diagnóstico?', 'a' => 'La visita de diagnóstico es completamente gratuita en el área metropolitana. Un asesor evalúa tu necesidad y entrega cotización detallada sin compromiso. Agendamos en 24-48 horas.'],
+        ['q' => '¿Cuánto cuesta la visita de diagnóstico?', 'a' => 'La visita técnica es completamente gratuita en el área metropolitana. Un asesor evalúa tu necesidad en sitio y, a partir de eso, entrega la cotización detallada sin compromiso. Agendamos en 24-48 horas.'],
         ['q' => '¿Instalan IPTV para hoteles en El Poblado y Laureles?', 'a' => 'Sí, somos especialistas en IPTV para hoteles, hostales y apartahoteles. Incluye +200 canales HD, Video On Demand, integración con PMS y WiFi de alta velocidad por habitación.'],
         ['q' => '¿Qué garantía ofrecen en cámaras de seguridad?', 'a' => '1 año de garantía en mano de obra, garantía de fábrica de 2-3 años en equipos, soporte 24/7 y mantenimiento preventivo opcional. Trabajamos con Hikvision, Dahua, Axis y Hanwha.'],
         ['q' => '¿Trabajan con hoteles y empresas o solo hogares?', 'a' => 'Atendemos hogares, empresas, hoteles, conjuntos, industria, clínicas y colegios. Tenemos experiencia en portería electrónica, CCTV, IPTV, redes y control de acceso masivo.'],
