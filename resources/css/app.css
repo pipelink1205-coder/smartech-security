@@ -1462,6 +1462,11 @@ body.body-scroll-locked .clients-ticker-bar { display: none !important; }
     .project-service-filters { grid-template-columns: 1fr; }
 }
 
+.services-catalog-link {
+    text-align: center;
+    margin: 28px 0 0;
+}
+
 /* ═════════════ Partners tecnológicos ═════════════ */
 .partners-page-wrap { padding: 8px 0 72px; }
 .partners-section { margin: 0; }

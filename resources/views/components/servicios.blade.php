@@ -46,4 +46,10 @@
             </article>
         @endforeach
     </div>
+
+    @if(request()->routeIs('home'))
+        <p class="services-catalog-link">
+            <a href="{{ route('servicios') }}" class="service-link">Ver todos los servicios (incluye Ciberseguridad) →</a>
+        </p>
+    @endif
 </x-section>
