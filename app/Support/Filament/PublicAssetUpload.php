@@ -24,6 +24,8 @@ final class PublicAssetUpload
             ->directory($directory)
             ->visibility('public')
             ->image()
+            // FilePond también corrige EXIF; si lo dejamos ON + corrección en PHP, la foto gira 2 veces.
+            ->orientImagesFromExif(false)
             ->imageEditor($editor)
             ->maxSize(8192)
             ->getUploadedFileNameForStorageUsing(
@@ -40,7 +42,12 @@ final class PublicAssetUpload
                 $relative = ltrim(str_replace('\\', '/', (string) $stored), '/');
                 $absolute = public_path($relative);
 
-                // Fija la orientación del celular en los píxeles antes de preview/marca de agua.
+                // Backup del original (sirve para artisan images:watermark --restore).
+                if (is_readable($absolute) && ! is_file($absolute.'.pre-watermark')) {
+                    @copy($absolute, $absolute.'.pre-watermark');
+                }
+
+                // Una sola corrección de orientación en servidor (píxeles derechos + sin tag EXIF).
                 ImageWatermark::normalizeOrientation($absolute);
 
                 if ($watermark) {
@@ -52,8 +59,8 @@ final class PublicAssetUpload
 
         if (! $editor) {
             $upload->helperText(
-                'La orientación del celular se corrige sola al subir. '
-                . 'Si necesitas recortar, hazlo en el teléfono o en un editor externo antes de cargar.'
+                'La orientación del celular se corrige sola al subir (en el servidor). '
+                .'Si necesitas recortar, hazlo en el teléfono o en un editor externo antes de cargar.'
             );
         }
 

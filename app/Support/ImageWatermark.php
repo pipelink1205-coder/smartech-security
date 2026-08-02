@@ -52,12 +52,7 @@ final class ImageWatermark
             return false;
         }
 
-        if (! function_exists('exif_read_data')) {
-            return false;
-        }
-
-        $exif = @exif_read_data($imagePath);
-        $orientation = (int) ($exif['Orientation'] ?? 1);
+        $orientation = self::readJpegOrientation($imagePath);
 
         if ($orientation <= 1) {
             return false;
@@ -85,7 +80,7 @@ final class ImageWatermark
             return false;
         }
 
-        // Por si el archivo aún trae EXIF (p. ej. subido fuera del FileUpload).
+        // Una sola pasada de EXIF; luego cargamos sin volver a rotar.
         self::normalizeOrientation($imagePath);
 
         $logoPath ??= public_path('images/logo.png');
@@ -99,7 +94,7 @@ final class ImageWatermark
         $xPercent = array_key_exists('x', $options) ? (float) $options['x'] : null;
         $yPercent = array_key_exists('y', $options) ? (float) $options['y'] : null;
 
-        $image = self::createImage($imagePath, applyExifOrientation: true);
+        $image = self::createImage($imagePath, applyExifOrientation: false);
         $logo = self::createImage($logoPath, applyExifOrientation: false);
 
         if ($image === null || $logo === null) {
@@ -409,12 +404,7 @@ final class ImageWatermark
 
     private static function applyExifOrientation(\GdImage $image, string $path): \GdImage
     {
-        if (! function_exists('exif_read_data')) {
-            return $image;
-        }
-
-        $exif = @exif_read_data($path);
-        $orientation = (int) ($exif['Orientation'] ?? 1);
+        $orientation = self::readJpegOrientation($path);
 
         if ($orientation <= 1) {
             return $image;
@@ -436,6 +426,123 @@ final class ImageWatermark
         }
 
         return $rotated;
+    }
+
+    /**
+     * Lee Orientation EXIF (1–8). Usa ext-exif si existe; si no, parsea el JPEG a mano
+     * (importante en IIS/producción donde a veces falta php_exif).
+     */
+    private static function readJpegOrientation(string $path): int
+    {
+        if (function_exists('exif_read_data')) {
+            $exif = @exif_read_data($path);
+            if (is_array($exif) && isset($exif['Orientation'])) {
+                return max(1, min(8, (int) $exif['Orientation']));
+            }
+        }
+
+        return self::readJpegOrientationFromBinary($path);
+    }
+
+    private static function readJpegOrientationFromBinary(string $path): int
+    {
+        $handle = @fopen($path, 'rb');
+        if ($handle === false) {
+            return 1;
+        }
+
+        try {
+            $header = fread($handle, 2);
+            if ($header !== "\xFF\xD8") {
+                return 1;
+            }
+
+            while (! feof($handle)) {
+                $marker = fread($handle, 2);
+                if ($marker === false || strlen($marker) < 2) {
+                    return 1;
+                }
+
+                if ($marker[0] !== "\xFF") {
+                    return 1;
+                }
+
+                $type = ord($marker[1]);
+
+                // SOS / EOI: no hay más metadatos útiles.
+                if ($type === 0xDA || $type === 0xD9) {
+                    return 1;
+                }
+
+                $sizeBytes = fread($handle, 2);
+                if ($sizeBytes === false || strlen($sizeBytes) < 2) {
+                    return 1;
+                }
+
+                $size = (ord($sizeBytes[0]) << 8) | ord($sizeBytes[1]);
+                if ($size < 2) {
+                    return 1;
+                }
+
+                $payloadSize = $size - 2;
+                $payload = $payloadSize > 0 ? fread($handle, $payloadSize) : '';
+
+                // APP1 — EXIF
+                if ($type === 0xE1 && is_string($payload) && str_starts_with($payload, "Exif\0\0")) {
+                    $orientation = self::parseExifOrientationSegment(substr($payload, 6));
+                    if ($orientation !== null) {
+                        return $orientation;
+                    }
+                }
+            }
+        } finally {
+            fclose($handle);
+        }
+
+        return 1;
+    }
+
+    private static function parseExifOrientationSegment(string $tiff): ?int
+    {
+        if (strlen($tiff) < 8) {
+            return null;
+        }
+
+        $endian = substr($tiff, 0, 2);
+        if ($endian === 'II') {
+            $unpackShort = static fn (string $bin): int => unpack('v', $bin)[1];
+            $unpackLong = static fn (string $bin): int => unpack('V', $bin)[1];
+        } elseif ($endian === 'MM') {
+            $unpackShort = static fn (string $bin): int => unpack('n', $bin)[1];
+            $unpackLong = static fn (string $bin): int => unpack('N', $bin)[1];
+        } else {
+            return null;
+        }
+
+        $ifdOffset = $unpackLong(substr($tiff, 4, 4));
+        if ($ifdOffset + 2 > strlen($tiff)) {
+            return null;
+        }
+
+        $entries = $unpackShort(substr($tiff, $ifdOffset, 2));
+        $cursor = $ifdOffset + 2;
+
+        for ($i = 0; $i < $entries; $i++, $cursor += 12) {
+            if ($cursor + 12 > strlen($tiff)) {
+                break;
+            }
+
+            $tag = $unpackShort(substr($tiff, $cursor, 2));
+            if ($tag !== 0x0112) {
+                continue;
+            }
+
+            $value = $unpackShort(substr($tiff, $cursor + 8, 2));
+
+            return max(1, min(8, $value));
+        }
+
+        return null;
     }
 
     private static function flipImage(\GdImage $image, int $mode): \GdImage
