@@ -27,4 +27,15 @@ return [
     'address' => env('CONTACT_ADDRESS', 'Carrera 31 #39 Sur 20, Envigado, Antioquia, Colombia'),
     'hours' => env('CONTACT_HOURS', 'Lun–Vie 8:00 a.m. – 6:00 p.m. · Sáb 9:00 a.m. – 1:00 p.m.'),
     'support_note' => 'Soporte técnico 24/7 los 365 días',
+
+    // Redes sociales: cuando existan las cuentas, agrega la URL completa en el .env
+    // (ej. INSTAGRAM_URL=https://instagram.com/smarttechsecurity) y el icono aparece
+    // automáticamente en el footer. Mientras no haya valor, el icono no se muestra.
+    'social' => [
+        'instagram' => env('INSTAGRAM_URL'),
+        'facebook' => env('FACEBOOK_URL'),
+        'linkedin' => env('LINKEDIN_URL'),
+        'tiktok' => env('TIKTOK_URL'),
+        'youtube' => env('YOUTUBE_URL'),
+    ],
 ];

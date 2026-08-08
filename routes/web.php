@@ -36,6 +36,8 @@ Route::get('/servicios/{service:slug}', [HomeController::class, 'servicioShow'])
 Route::get('/proyectos', [HomeController::class, 'proyectos'])->name('proyectos');
 Route::get('/contacto', [HomeController::class, 'contacto'])->name('contacto');
 Route::view('/privacidad', 'pages.privacidad')->name('privacidad');
+Route::view('/terminos-y-condiciones', 'pages.terminos')->name('terminos');
+Route::view('/politica-de-ventas', 'pages.politica-ventas')->name('politica-ventas');
 
 Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/admin/geocode', GeocodeController::class)

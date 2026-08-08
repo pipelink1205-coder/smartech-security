@@ -23,6 +23,8 @@ class SitemapController extends Controller
             ['loc' => $base.'/proyectos', 'changefreq' => 'weekly', 'priority' => '0.8'],
             ['loc' => $base.'/contacto', 'changefreq' => 'monthly', 'priority' => '0.8'],
             ['loc' => $base.'/privacidad', 'changefreq' => 'yearly', 'priority' => '0.3'],
+            ['loc' => $base.'/terminos-y-condiciones', 'changefreq' => 'yearly', 'priority' => '0.3'],
+            ['loc' => $base.'/politica-de-ventas', 'changefreq' => 'yearly', 'priority' => '0.3'],
         ];
 
         try {
