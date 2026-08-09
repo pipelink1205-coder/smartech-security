@@ -1,6 +1,11 @@
 @php
     $hero = config('images.hero');
-    $heroSrc = str_starts_with($hero, 'http') ? $hero : asset($hero);
+    if (str_starts_with((string) $hero, 'http')) {
+        $heroSrc = $hero;
+    } else {
+        $heroPath = public_path($hero);
+        $heroSrc = asset($hero) . '?v=' . (@filemtime($heroPath) ?: time());
+    }
 @endphp
 
 <x-section tone="hero" class="hero-block">
