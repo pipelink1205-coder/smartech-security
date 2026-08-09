@@ -8,8 +8,8 @@
     <meta name="description" content="Smart Tech Security – Cámaras 4K, energía solar, IPTV para hoteles, alarmas, domótica y redes en Medellín y el Valle de Aburrá." />
     <title>{{ $title ?? 'Smart Tech Security – Medellín' }}</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}" />
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v={{ @filemtime(public_path('favicon.png')) ?: '1' }}" />
+    <link rel="apple-touch-icon" href="{{ asset('images/favicon-shield.png') }}?v={{ @filemtime(public_path('images/favicon-shield.png')) ?: '1' }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
