@@ -1051,17 +1051,26 @@ nav#navbar .container { max-width: 1400px; }
     position: relative; flex: 1; min-height: 0;
     border-radius: var(--radius-md); overflow: hidden; background: var(--dark-900);
     display: flex; align-items: center; justify-content: center;
+    touch-action: pan-y;
 }
 .project-lightbox-main-image {
     width: 100%; height: 100%; max-width: 100%; max-height: 100%;
     object-fit: contain; object-position: center center;
     display: block; margin: 0 auto; background: #0f172a;
+    user-select: none; -webkit-user-drag: none; touch-action: pan-y;
 }
 .project-lightbox-nav {
     position: absolute; top: 50%; transform: translateY(-50%);
     width: 42px; height: 42px; border-radius: 999px; border: none;
     background: rgba(15,23,42,.72); color: #fff; font-size: 1.6rem; cursor: pointer;
     z-index: 2;
+}
+/* En táctil priman el swipe; las flechas se mantienen discretas por si alguien las usa. */
+@media (hover: none) and (pointer: coarse) {
+    .project-lightbox-nav {
+        width: 36px; height: 36px; font-size: 1.35rem;
+        background: rgba(15,23,42,.45);
+    }
 }
 .project-lightbox-nav.prev { left: 12px; }
 .project-lightbox-nav.next { right: 12px; }

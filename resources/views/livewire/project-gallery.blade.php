@@ -121,7 +121,21 @@
                     <div class="project-lightbox-body {{ $openProject->description ? 'has-aside' : '' }}">
                         @if(count($gallery) > 0)
                             <div class="project-lightbox-gallery">
-                                <div class="project-lightbox-stage">
+                                <div
+                                    class="project-lightbox-stage"
+                                    @if(count($gallery) > 1)
+                                        x-data="{ sx: null, sy: null }"
+                                        @touchstart.passive="sx = $event.changedTouches[0].clientX; sy = $event.changedTouches[0].clientY"
+                                        @touchend.passive="
+                                            if (sx === null) return;
+                                            const dx = $event.changedTouches[0].clientX - sx;
+                                            const dy = $event.changedTouches[0].clientY - sy;
+                                            sx = null; sy = null;
+                                            if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.15) return;
+                                            dx < 0 ? $wire.nextImage() : $wire.prevImage();
+                                        "
+                                    @endif
+                                >
                                     @if(count($gallery) > 1)
                                         <button type="button" class="project-lightbox-nav prev" wire:click="prevImage" aria-label="Foto anterior">‹</button>
                                     @endif
@@ -130,6 +144,7 @@
                                         src="{{ $gallery[$activeImage]['url'] }}"
                                         alt="{{ $gallery[$activeImage]['caption'] ?? $openProject->title }}"
                                         class="project-lightbox-main-image"
+                                        draggable="false"
                                     />
 
                                     @if(count($gallery) > 1)
