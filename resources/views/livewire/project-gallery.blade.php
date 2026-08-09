@@ -2,12 +2,16 @@
     <div class="container">
         <x-section-header
             :tag="$featuredOnly ? 'Proyectos Recientes' : 'Portafolio'"
-            :subtitle="'Filtra por servicio y abre cada trabajo para ver las fotos de evidencia.'"
+            :subtitle="$showHub
+                ? 'Elige un servicio para ver las fotos de los trabajos realizados.'
+                : 'Abre cada trabajo para ver las fotos de evidencia.'"
         >
             <x-slot:heading>
                 <h2 class="section-title">
                     @if($featuredOnly)
                         Trabajos realizados en <span>Medellín</span> y el Valle de Aburrá
+                    @elseif($activeService)
+                        {{ $activeService->name }}
                     @else
                         Trabajos en <span>Medellín</span> y el Valle de Aburrá
                     @endif
@@ -17,56 +21,98 @@
 
         @include('components.projects-map', ['mapProjects' => $mapProjects])
 
-        @if($services->isNotEmpty())
-            <div class="project-service-filters" role="tablist" aria-label="Filtrar por servicio">
-                <button
-                    type="button"
-                    role="tab"
-                    wire:click="showAllServices"
-                    class="project-service-pill {{ $selectedService === null ? 'is-active' : '' }}"
-                    aria-selected="{{ $selectedService === null ? 'true' : 'false' }}"
-                    title="Todos los servicios"
-                >
-                    <span class="project-service-pill-icon" aria-hidden="true">✨</span>
-                    <span class="project-service-pill-label">Todos</span>
-                    <span class="project-service-count">{{ $totalProjectsCount }}</span>
-                </button>
-
-                @foreach($services as $service)
-                    <button
-                        type="button"
-                        role="tab"
-                        wire:click="filterService({{ $service->id }})"
-                        wire:key="service-filter-{{ $service->id }}"
-                        class="project-service-pill {{ $selectedService === $service->id ? 'is-active' : '' }}"
-                        aria-selected="{{ $selectedService === $service->id ? 'true' : 'false' }}"
-                        title="{{ $service->name }}"
-                        aria-label="{{ $service->name }} ({{ $service->projects_count }})"
-                    >
-                        <span class="project-service-pill-icon" aria-hidden="true">{{ $service->icon ?: '📁' }}</span>
-                        <span class="project-service-pill-label">{{ $service->name }}</span>
-                        <span class="project-service-count">{{ $service->projects_count }}</span>
-                    </button>
+        @if($showHub)
+            <div class="project-service-hub" role="list">
+                @foreach($hubCards as $card)
+                    @if($card['href'])
+                        @if($featuredOnly)
+                            <a
+                                href="{{ $card['href'] }}"
+                                role="listitem"
+                                class="project-service-hub-card"
+                                wire:key="hub-{{ $card['key'] }}"
+                                aria-label="Ver {{ $card['count'] }} {{ $card['count'] === 1 ? 'proyecto' : 'proyectos' }} de {{ $card['label'] }}"
+                            >
+                                <img src="{{ $card['cover'] }}" alt="" class="project-service-hub-cover" loading="lazy" />
+                                <span class="project-service-hub-shade" aria-hidden="true"></span>
+                                <span class="project-service-hub-icon">
+                                    <x-service-icon :icon="$card['icon']" :name="$card['label']" size="md" />
+                                </span>
+                                <span class="project-service-hub-copy">
+                                    <span class="project-service-hub-title">{{ $card['label'] }}</span>
+                                    <span class="project-service-hub-meta">
+                                        {{ $card['count'] }} {{ $card['count'] === 1 ? 'proyecto' : 'proyectos' }}
+                                    </span>
+                                </span>
+                            </a>
+                        @else
+                            <button
+                                type="button"
+                                role="listitem"
+                                class="project-service-hub-card"
+                                wire:key="hub-{{ $card['key'] }}"
+                                wire:click="selectService('{{ $card['key'] }}')"
+                                aria-label="Ver {{ $card['count'] }} {{ $card['count'] === 1 ? 'proyecto' : 'proyectos' }} de {{ $card['label'] }}"
+                            >
+                                <img src="{{ $card['cover'] }}" alt="" class="project-service-hub-cover" loading="lazy" />
+                                <span class="project-service-hub-shade" aria-hidden="true"></span>
+                                <span class="project-service-hub-icon">
+                                    <x-service-icon :icon="$card['icon']" :name="$card['label']" size="md" />
+                                </span>
+                                <span class="project-service-hub-copy">
+                                    <span class="project-service-hub-title">{{ $card['label'] }}</span>
+                                    <span class="project-service-hub-meta">
+                                        {{ $card['count'] }} {{ $card['count'] === 1 ? 'proyecto' : 'proyectos' }}
+                                    </span>
+                                </span>
+                            </button>
+                        @endif
+                    @else
+                        <div
+                            role="listitem"
+                            class="project-service-hub-card is-soon"
+                            wire:key="hub-{{ $card['key'] }}"
+                            aria-label="{{ $card['label'] }}: próximamente"
+                        >
+                            <img src="{{ $card['cover'] }}" alt="" class="project-service-hub-cover" loading="lazy" />
+                            <span class="project-service-hub-shade" aria-hidden="true"></span>
+                            <span class="project-service-hub-icon">
+                                <x-service-icon :icon="$card['icon']" :name="$card['label']" size="md" />
+                            </span>
+                            <span class="project-service-hub-copy">
+                                <span class="project-service-hub-title">{{ $card['label'] }}</span>
+                                <span class="project-service-hub-meta">Próximamente</span>
+                            </span>
+                        </div>
+                    @endif
                 @endforeach
             </div>
-        @endif
-
-        @if($projects->isEmpty())
-            <p class="project-portfolio-empty">No hay proyectos para este filtro.</p>
         @else
-            @foreach($projectBlocks as $block)
-                <section class="project-portfolio-block" wire:key="project-block-{{ $block['key'] }}-{{ $selectedService ?? 'all' }}">
-                    @if(count($projectBlocks) > 1)
-                        <header class="project-portfolio-block-head">
-                            <h3 class="project-portfolio-block-title">{{ $block['label'] }}</h3>
-                            @if(!empty($block['hint']))
-                                <p class="project-portfolio-block-hint">{{ $block['hint'] }}</p>
-                            @endif
-                        </header>
-                    @endif
+            <div class="project-service-detail">
+                <button type="button" class="project-service-back" wire:click="clearService">
+                    ← Volver a servicios
+                </button>
 
+                <header class="project-service-group-head">
+                    <span class="project-service-group-icon">
+                        <x-service-icon :icon="$activeService->icon" :name="$activeService->name" size="md" />
+                    </span>
+                    <div class="project-service-group-copy">
+                        <h3 class="project-service-group-title">{{ $activeService->name }}</h3>
+                        <span class="project-service-hub-meta">
+                            {{ $projects->count() }} {{ $projects->count() === 1 ? 'proyecto' : 'proyectos' }}
+                        </span>
+                    </div>
+                </header>
+
+                @if($projects->isEmpty())
+                    <div class="project-coming-soon" role="status">
+                        <span class="project-coming-soon-badge">Próximamente</span>
+                        <p>Pronto publicaremos trabajos de {{ $activeService->name }}.</p>
+                    </div>
+                @else
                     <div class="project-portfolio-grid" role="list">
-                        @foreach($block['items'] as $project)
+                        @foreach($projects as $project)
                             <button
                                 type="button"
                                 role="listitem"
@@ -77,10 +123,6 @@
                             >
                                 <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy" />
                                 <div class="project-overlay">
-                                    <span class="project-tag" title="{{ $project->service_name }}">
-                                        <span class="project-tag-icon" aria-hidden="true">{{ $project->service?->icon ?: '📁' }}</span>
-                                        <span class="project-tag-label">{{ $project->service_name }}</span>
-                                    </span>
                                     <h3>{{ $project->title }}</h3>
                                     @if($project->location)
                                         <p class="project-card-location">{{ $project->location }}</p>
@@ -89,12 +131,13 @@
                             </button>
                         @endforeach
                     </div>
-                </section>
-            @endforeach
+                @endif
+            </div>
         @endif
 
         @if($featuredOnly)
             <div class="projects-cta-row">
+                <a href="{{ route('proyectos') }}" class="btn btn-ghost">Ver portafolio completo</a>
                 <button type="button" class="btn btn-ghost" data-scroll-to="smartech-projects-map">
                     Volver al mapa
                 </button>
