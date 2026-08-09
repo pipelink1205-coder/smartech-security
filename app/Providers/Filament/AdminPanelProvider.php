@@ -42,7 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('Smart Tech Security')
             ->brandLogo(asset('images/logo.png'))
             ->brandLogoHeight('2.25rem')
-            ->favicon(asset('favicon.png'))
+            ->favicon(asset('images/favicon-admin.png') . '?v=' . (@filemtime(public_path('images/favicon-admin.png')) ?: '1'))
             ->font('Inter')
             ->sidebarWidth('14rem')
             ->collapsedSidebarWidth('4.5rem')
