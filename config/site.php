@@ -3,7 +3,7 @@
 return [
     'hero' => [
         'badge' => '+500 Proyectos exitosos',
-        'title' => 'Tecnología de punta para hogares, empresas y hoteles en Medellín',
+        'title' => 'Tecnología y seguridad para empresas y hogares',
         'subtitle' => 'Más de 10 años instalando seguridad 4K, energía solar, IPTV hotelera y domótica en Medellín y el Valle de Aburrá — Envigado, Itagüí, Sabaneta, Bello y área metropolitana. Garantía real y soporte técnico especializado.',
     ],
 

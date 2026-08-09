@@ -23,3 +23,13 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 /public/web.config
+
+# Borradores / exports locales (Excel, Word, PDF, PNGs de reuniones, etc.)
+/output/
+/outputs/
+/tmp/
+/~$*
+*.pre-watermark
+public/images/*.bak*
+public/images/*-original.png
+public/images/*-original.jpg
