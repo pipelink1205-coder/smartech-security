@@ -121,33 +121,67 @@
                     <div class="project-lightbox-body {{ $openProject->description ? 'has-aside' : '' }}">
                         @if(count($gallery) > 0)
                             <div class="project-lightbox-gallery">
+                                @php
+                                    $galleryCount = count($gallery);
+                                    $hasSwipe = $galleryCount > 1;
+                                    $prevImageIndex = $hasSwipe ? ($activeImage - 1 + $galleryCount) % $galleryCount : $activeImage;
+                                    $nextImageIndex = $hasSwipe ? ($activeImage + 1) % $galleryCount : $activeImage;
+                                @endphp
                                 <div
-                                    class="project-lightbox-stage"
-                                    @if(count($gallery) > 1)
-                                        x-data="{ sx: null, sy: null }"
-                                        @touchstart.passive="sx = $event.changedTouches[0].clientX; sy = $event.changedTouches[0].clientY"
-                                        @touchend.passive="
-                                            if (sx === null) return;
-                                            const dx = $event.changedTouches[0].clientX - sx;
-                                            const dy = $event.changedTouches[0].clientY - sy;
-                                            sx = null; sy = null;
-                                            if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.15) return;
-                                            dx < 0 ? $wire.nextImage() : $wire.prevImage();
-                                        "
+                                    class="project-lightbox-stage {{ $hasSwipe ? 'has-swipe' : '' }}"
+                                    @if($hasSwipe)
+                                        x-data="projectLightboxSwipe()"
+                                        @touchstart.passive="onStart($event)"
+                                        @touchmove="onMove($event)"
+                                        @touchend.passive="onEnd()"
+                                        @touchcancel.passive="onEnd()"
                                     @endif
                                 >
-                                    @if(count($gallery) > 1)
+                                    @if($hasSwipe)
                                         <button type="button" class="project-lightbox-nav prev" wire:click="prevImage" aria-label="Foto anterior">‹</button>
                                     @endif
 
-                                    <img
-                                        src="{{ $gallery[$activeImage]['url'] }}"
-                                        alt="{{ $gallery[$activeImage]['caption'] ?? $openProject->title }}"
-                                        class="project-lightbox-main-image"
-                                        draggable="false"
-                                    />
+                                    @if($hasSwipe)
+                                        <div
+                                            class="project-lightbox-track"
+                                            :class="{ 'is-dragging': dragging, 'is-settling': settling }"
+                                            :style="trackStyle"
+                                        >
+                                            <div class="project-lightbox-slide" aria-hidden="true">
+                                                <img
+                                                    src="{{ $gallery[$prevImageIndex]['url'] }}"
+                                                    alt=""
+                                                    class="project-lightbox-main-image"
+                                                    draggable="false"
+                                                />
+                                            </div>
+                                            <div class="project-lightbox-slide">
+                                                <img
+                                                    src="{{ $gallery[$activeImage]['url'] }}"
+                                                    alt="{{ $gallery[$activeImage]['caption'] ?? $openProject->title }}"
+                                                    class="project-lightbox-main-image"
+                                                    draggable="false"
+                                                />
+                                            </div>
+                                            <div class="project-lightbox-slide" aria-hidden="true">
+                                                <img
+                                                    src="{{ $gallery[$nextImageIndex]['url'] }}"
+                                                    alt=""
+                                                    class="project-lightbox-main-image"
+                                                    draggable="false"
+                                                />
+                                            </div>
+                                        </div>
+                                    @else
+                                        <img
+                                            src="{{ $gallery[$activeImage]['url'] }}"
+                                            alt="{{ $gallery[$activeImage]['caption'] ?? $openProject->title }}"
+                                            class="project-lightbox-main-image"
+                                            draggable="false"
+                                        />
+                                    @endif
 
-                                    @if(count($gallery) > 1)
+                                    @if($hasSwipe)
                                         <button type="button" class="project-lightbox-nav next" wire:click="nextImage" aria-label="Foto siguiente">›</button>
                                     @endif
                                 </div>

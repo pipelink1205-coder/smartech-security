@@ -40,6 +40,7 @@
     </svg>
 </a>
 
+<script src="{{ asset('js/project-lightbox-swipe.js') }}?v=1"></script>
 @livewireScripts
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
