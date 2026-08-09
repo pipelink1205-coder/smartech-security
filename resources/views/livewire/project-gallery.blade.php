@@ -25,8 +25,10 @@
                     wire:click="showAllServices"
                     class="project-service-pill {{ $selectedService === null ? 'is-active' : '' }}"
                     aria-selected="{{ $selectedService === null ? 'true' : 'false' }}"
+                    title="Todos los servicios"
                 >
-                    Todos
+                    <span class="project-service-pill-icon" aria-hidden="true">✨</span>
+                    <span class="project-service-pill-label">Todos</span>
                     <span class="project-service-count">{{ $totalProjectsCount }}</span>
                 </button>
 
@@ -38,8 +40,11 @@
                         wire:key="service-filter-{{ $service->id }}"
                         class="project-service-pill {{ $selectedService === $service->id ? 'is-active' : '' }}"
                         aria-selected="{{ $selectedService === $service->id ? 'true' : 'false' }}"
+                        title="{{ $service->name }}"
+                        aria-label="{{ $service->name }} ({{ $service->projects_count }})"
                     >
-                        {{ $service->name }}
+                        <span class="project-service-pill-icon" aria-hidden="true">{{ $service->icon ?: '📁' }}</span>
+                        <span class="project-service-pill-label">{{ $service->name }}</span>
                         <span class="project-service-count">{{ $service->projects_count }}</span>
                     </button>
                 @endforeach
@@ -72,7 +77,10 @@
                             >
                                 <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy" />
                                 <div class="project-overlay">
-                                    <span class="project-tag">{{ $project->service_name }}</span>
+                                    <span class="project-tag" title="{{ $project->service_name }}">
+                                        <span class="project-tag-icon" aria-hidden="true">{{ $project->service?->icon ?: '📁' }}</span>
+                                        <span class="project-tag-label">{{ $project->service_name }}</span>
+                                    </span>
                                     <h3>{{ $project->title }}</h3>
                                     @if($project->location)
                                         <p class="project-card-location">{{ $project->location }}</p>

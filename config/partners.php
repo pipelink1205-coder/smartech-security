@@ -21,7 +21,7 @@ return [
     ],
     [
         'name' => 'Bitdefender',
-        'logo' => 'images/partners/bitdefender-logo.webp',
+        'logo' => 'images/partners/bitdefender-logo.png',
         'role' => 'Protección empresarial de endpoints',
         'badge' => 'Endpoint',
         'url' => 'https://www.bitdefender.com/',
