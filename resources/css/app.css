@@ -370,8 +370,10 @@ body {
 }
 .brand-logo:hover { opacity: .92; transform: translateY(-1px); }
 .brand-logo__mark {
-    width: 48px; height: 48px; object-fit: contain;
-    filter: drop-shadow(0 4px 10px rgba(23,143,130,.22));
+    width: 58px; height: 58px; object-fit: contain;
+    /* Sin caja/marco: solo el escudo, con sombra suave en la silueta */
+    filter: drop-shadow(0 2px 6px rgba(11, 61, 54, .18));
+    background: transparent;
 }
 .brand-logo__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .brand-logo__name {
@@ -399,7 +401,8 @@ nav#navbar {
 nav#navbar.is-scrolled { box-shadow: var(--shadow-md); }
 nav#navbar .container { max-width: 1400px; }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; min-height: 76px; gap: 20px; padding: 8px 0; }
-.nav-brand .brand-logo__mark { width: 52px; height: 52px; }
+.nav-brand .brand-logo__mark { width: 64px; height: 64px; }
+.mobile-menu-brand .brand-logo__mark { width: 60px; height: 60px; }
 .nav-links      { display: flex; align-items: center; gap: 4px; list-style: none; }
 .nav-links a    { text-decoration: none; color: var(--dark-800); font-size: .875rem; font-weight: 500; padding: 8px 13px; border-radius: var(--radius-sm); white-space: nowrap; transition: color var(--transition), background var(--transition); }
 .nav-links a:hover, .nav-links a.active { color: var(--brand-teal); background: var(--green-50); }

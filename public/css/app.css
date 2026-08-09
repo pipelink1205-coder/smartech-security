@@ -370,8 +370,10 @@ body {
 }
 .brand-logo:hover { opacity: .92; transform: translateY(-1px); }
 .brand-logo__mark {
-    width: 48px; height: 48px; object-fit: contain;
-    filter: drop-shadow(0 4px 10px rgba(23,143,130,.22));
+    width: 58px; height: 58px; object-fit: contain;
+    /* Sin caja/marco: solo el escudo, con sombra suave en la silueta */
+    filter: drop-shadow(0 2px 6px rgba(11, 61, 54, .18));
+    background: transparent;
 }
 .brand-logo__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .brand-logo__name {
