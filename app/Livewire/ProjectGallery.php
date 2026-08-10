@@ -11,14 +11,15 @@ use Livewire\Component;
 
 class ProjectGallery extends Component
 {
+    /** Slug del servicio activo (filtro PC / detalle móvil). */
+    #[Url(as: 'servicio', except: '')]
+    public ?string $selectedService = null;
+
     public ?int $openProjectId = null;
 
     public int $activeImage = 0;
 
     public bool $featuredOnly = false;
-
-    #[Url(as: 'servicio', except: '')]
-    public ?string $selectedService = null;
 
     public function mount(bool $featuredOnly = false): void
     {
@@ -29,12 +30,21 @@ class ProjectGallery extends Component
         }
     }
 
+    public function showAllServices(): void
+    {
+        $this->selectedService = null;
+        $this->closeProject();
+    }
+
+    public function filterService(int $id): void
+    {
+        $slug = Service::query()->whereKey($id)->value('slug');
+        $this->selectedService = $slug ?: null;
+        $this->closeProject();
+    }
+
     public function selectService(string $slug): void
     {
-        if ($this->featuredOnly) {
-            return;
-        }
-
         $this->selectedService = $slug;
         $this->closeProject();
     }
@@ -115,8 +125,9 @@ class ProjectGallery extends Component
             $q->featured();
         }
 
-        if ($serviceSlug) {
-            $q->whereHas('service', fn ($sq) => $sq->where('slug', $serviceSlug));
+        $slug = $serviceSlug ?? $this->selectedService;
+        if ($slug) {
+            $q->whereHas('service', fn ($sq) => $sq->where('slug', $slug));
         }
 
         return $q
@@ -155,8 +166,6 @@ class ProjectGallery extends Component
     }
 
     /**
-     * Hub cards: one per active service with cover + project count.
-     *
      * @return Collection<int, array{key: string, label: string, icon: ?string, count: int, cover: string, href: ?string}>
      */
     protected function serviceHubCards(): Collection
@@ -196,15 +205,55 @@ class ProjectGallery extends Component
         });
     }
 
+    /**
+     * @param  Collection<int, Project>  $projects
+     * @return array<int, array{key: string, label: string, hint: string, items: Collection<int, Project>}>
+     */
+    protected function projectBlocks(Collection $projects): array
+    {
+        $currentYear = (int) date('Y');
+
+        $blocks = [
+            [
+                'key' => 'destacados',
+                'label' => 'Destacados',
+                'hint' => 'Proyectos principales en el sitio',
+                'items' => $projects->where('is_featured', true)->values(),
+            ],
+            [
+                'key' => 'recientes',
+                'label' => 'Recientes',
+                'hint' => 'Trabajos de los últimos años',
+                'items' => $projects
+                    ->where('is_featured', false)
+                    ->filter(fn (Project $p) => (int) ($p->year ?? 0) >= $currentYear - 1)
+                    ->values(),
+            ],
+            [
+                'key' => 'realizados',
+                'label' => 'Más proyectos realizados',
+                'hint' => 'Trabajos anteriores',
+                'items' => $projects
+                    ->where('is_featured', false)
+                    ->filter(fn (Project $p) => (int) ($p->year ?? 0) < $currentYear - 1)
+                    ->values(),
+            ],
+        ];
+
+        return array_values(array_filter(
+            $blocks,
+            static fn (array $block): bool => $block['items']->isNotEmpty()
+        ));
+    }
+
     public function render()
     {
-        $showHub = $this->featuredOnly || blank($this->selectedService);
-        $hubCards = $showHub ? $this->serviceHubCards() : collect();
+        $projects = $this->projectsQuery()->get();
+        $projectBlocks = $this->projectBlocks($projects);
+        $hubCards = $this->serviceHubCards();
 
         $activeService = null;
-        $projects = collect();
-
-        if (! $showHub && $this->selectedService) {
+        if ($this->selectedService) {
             $activeService = Service::query()
                 ->active()
                 ->where('slug', $this->selectedService)
@@ -212,20 +261,27 @@ class ProjectGallery extends Component
 
             if (! $activeService) {
                 $this->selectedService = null;
-                $showHub = true;
-                $hubCards = $this->serviceHubCards();
-            } else {
-                $projects = $this->projectsQuery($activeService->slug)->get();
             }
         }
 
-        if ($this->featuredOnly) {
-            $mapSource = $this->projectsQuery()->get();
-        } else {
-            $mapSource = $showHub
-                ? $this->projectsQuery()->get()
-                : $projects;
-        }
+        $services = Service::query()
+            ->active()
+            ->ordered()
+            ->whereHas('projects', function ($q) {
+                if ($this->featuredOnly) {
+                    $q->featured();
+                }
+            })
+            ->withCount(['projects' => function ($q) {
+                if ($this->featuredOnly) {
+                    $q->featured();
+                }
+            }])
+            ->get();
+
+        $totalProjectsCount = Project::query()
+            ->when($this->featuredOnly, fn ($q) => $q->featured())
+            ->count();
 
         $openProject = $this->resolvedOpenProject();
         $gallery = $openProject ? $this->galleryFor($openProject) : [];
@@ -234,14 +290,19 @@ class ProjectGallery extends Component
             $this->activeImage = 0;
         }
 
+        $showMobileHub = blank($this->selectedService);
+
         return view('livewire.project-gallery', [
-            'showHub' => $showHub,
-            'hubCards' => $hubCards,
-            'activeService' => $activeService,
             'projects' => $projects,
+            'projectBlocks' => $projectBlocks,
+            'hubCards' => $hubCards,
+            'showMobileHub' => $showMobileHub,
+            'activeService' => $activeService,
+            'services' => $services,
+            'totalProjectsCount' => $totalProjectsCount,
             'openProject' => $openProject,
             'gallery' => $gallery,
-            'mapProjects' => $mapSource
+            'mapProjects' => $projects
                 ->filter(fn ($p) => $p->latitude !== null && $p->longitude !== null)
                 ->map->toMapPayload()
                 ->values(),
