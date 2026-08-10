@@ -217,12 +217,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('a[href^="#"]:not([data-page-link])').forEach((a) => {
         a.addEventListener('click', (e) => {
-            const pageId = a.getAttribute('href')?.slice(1);
-            if (!pageId || !document.getElementById(pageId)) {
+            const targetId = a.getAttribute('href')?.slice(1);
+            const target = targetId ? document.getElementById(targetId) : null;
+            if (!targetId || !target) {
                 return;
             }
             e.preventDefault();
-            window.showPage(pageId);
+
+            if (document.body.classList.contains('page-home') && target.classList.contains('site-page')) {
+                window.showPage(targetId);
+                return;
+            }
+
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            window.history.replaceState(null, '', `#${targetId}`);
         });
     });
 

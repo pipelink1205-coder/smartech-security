@@ -53,7 +53,7 @@
                 ${{ number_format($this->monthlySavings, 0, ',', '.') }} COP/mes
                 <em>({{ $this->savingsPercent }}% menos · ${{ number_format($this->monthlySavings * 12, 0, ',', '.') }} al año)</em>
             </span>
-            <a href="#diagnostico" class="btn btn-primary">Calcula tu ahorro real — diagnóstico gratuito</a>
+            <a href="{{ route('contacto', ['intent' => 'visit']) }}" class="btn btn-primary">Agendar visita para validar tu ahorro</a>
         </div>
     @endif
 
