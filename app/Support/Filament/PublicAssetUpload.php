@@ -47,11 +47,12 @@ final class PublicAssetUpload
                     @copy($absolute, $absolute.'.pre-watermark');
                 }
 
-                // Una sola corrección de orientación en servidor (píxeles derechos + sin tag EXIF).
+                // Una sola corrección EXIF en servidor (respeta vertical/horizontal; no fuerza landscape).
                 ImageWatermark::normalizeOrientation($absolute);
 
                 if ($watermark) {
-                    ImageWatermark::apply($absolute);
+                    // No volver a leer EXIF aquí: evita el doble giro.
+                    ImageWatermark::apply($absolute, normalizeExif: false);
                 }
 
                 return $relative;
@@ -59,7 +60,7 @@ final class PublicAssetUpload
 
         if (! $editor) {
             $upload->helperText(
-                'La orientación del celular se corrige sola al subir (en el servidor). '
+                'La orientación se respeta (horizontal o vertical). '
                 .'Si necesitas recortar, hazlo en el teléfono o en un editor externo antes de cargar.'
             );
         }

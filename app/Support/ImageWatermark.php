@@ -74,14 +74,20 @@ final class ImageWatermark
      *
      * @param  array{opacity?: float, size?: string, position?: string, x?: float, y?: float}  $options
      */
-    public static function apply(string $imagePath, ?string $logoPath = null, array $options = []): bool
-    {
+    public static function apply(
+        string $imagePath,
+        ?string $logoPath = null,
+        array $options = [],
+        bool $normalizeExif = true,
+    ): bool {
         if (! is_readable($imagePath) || ! extension_loaded('gd')) {
             return false;
         }
 
-        // Una sola pasada de EXIF; luego cargamos sin volver a rotar.
-        self::normalizeOrientation($imagePath);
+        // Evitar doble giro: si ya se normalizó al subir, pasar normalizeExif: false.
+        if ($normalizeExif) {
+            self::normalizeOrientation($imagePath);
+        }
 
         $logoPath ??= public_path('images/logo.png');
         if (! is_readable($logoPath)) {
