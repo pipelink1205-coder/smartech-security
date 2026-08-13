@@ -7,6 +7,7 @@ use App\Filament\Resources\ElectronicInvoices\ElectronicInvoiceResource;
 use App\Mail\ElectronicInvoiceMail;
 use App\Models\ElectronicInvoice;
 use App\Models\ElectronicInvoiceItem;
+use App\Services\Dian\DianConfig;
 use App\Services\Dian\DianService;
 use App\Services\Invoicing\ElectronicInvoicePdf;
 use App\Support\Filament\PdfPreviewModal;
@@ -85,8 +86,8 @@ class EditElectronicInvoice extends EditRecord
                 ->color('warning')
                 ->requiresConfirmation()
                 ->modalHeading('Emitir factura electrónica')
-                ->modalDescription('Envía el XML firmado a la DIAN. Requiere DIAN_ENABLED=true, certificado y resolución.')
-                ->visible(fn (): bool => (bool) config('dian.enabled'))
+                ->modalDescription('Envía el XML firmado al ambiente configurado. Requiere kill switch .env, interruptor del panel, certificado y resolución activa.')
+                ->visible(fn (): bool => app(DianConfig::class)->isEnabled())
                 ->action(function (ElectronicInvoice $record, QuoteToElectronicInvoiceMapper $mapper, DianService $dian): void {
                     $this->recalculateTotals($record);
                     $mapper->tryAssignNumber($record);

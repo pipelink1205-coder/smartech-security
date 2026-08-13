@@ -40,6 +40,21 @@ class DianResolution extends Model
         'is_active'          => 'boolean',
     ];
 
+    protected static function booted(): void
+    {
+        static::saved(function (self $resolution): void {
+            if (! $resolution->is_active) {
+                return;
+            }
+
+            static::query()
+                ->where('environment', $resolution->environment)
+                ->whereKeyNot($resolution->id)
+                ->where('is_active', true)
+                ->update(['is_active' => false]);
+        });
+    }
+
     public static function active(): ?self
     {
         $env = (int) (Setting::where('key', 'dian_environment')->value('value') ?? 2);

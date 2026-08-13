@@ -38,7 +38,7 @@ class XadesSigner
         if (!$certPath || !Storage::disk('local')->exists($certPath)) {
             throw new \RuntimeException(
                 'Certificado digital DIAN no configurado o no encontrado. '
-                . 'Súbelo desde Settings > DIAN Colombia (.p12 / .pfx).'
+                'Súbelo desde Administración → Configuración DIAN (.p12 / .pfx).'
             );
         }
 

@@ -1,16 +1,19 @@
 <?php
 
 /**
- * Facturación electrónica DIAN — módulo portado (inactivo hasta configurar).
+ * Facturación electrónica DIAN.
  *
- * No envía nada a la DIAN hasta que:
- *  - settings.dian_* estén completos
- *  - exista resolución activa en dian_resolutions
+ * No envía nada hasta que:
+ *  - DIAN_ENABLED=true en .env (kill switch)
+ *  - el interruptor del admin (settings.dian_enabled) esté encendido
+ *  - settings dian_* estén completos (Administración → Configuración DIAN)
+ *  - exista resolución activa (Administración → Resoluciones DIAN)
  *  - haya certificado .p12 en storage
  *
- * Flujo previsto: Quote → ElectronicInvoice → DianService::sendInvoice()
+ * Flujo: Quote → ElectronicInvoice → DianService::sendInvoice()
  */
 return [
+    /** Kill switch. Aunque el admin active el interruptor, sin esto no se envía. */
     'enabled' => (bool) env('DIAN_ENABLED', false),
 
     /** Ambiente por defecto si settings aún no existen: 2 = Habilitación */

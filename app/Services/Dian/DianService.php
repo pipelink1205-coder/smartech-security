@@ -31,10 +31,10 @@ class DianService
 
     public function sendInvoice(ElectronicInvoice $invoice): ElectronicInvoice
     {
-        if (! config('dian.enabled')) {
+        if (! $this->config->isEnabled()) {
             $invoice->update([
                 'dian_status'      => 'ERROR',
-                'dian_description' => 'DIAN deshabilitada (config dian.enabled / DIAN_ENABLED=false).',
+                'dian_description' => 'DIAN deshabilitada. Activa DIAN_ENABLED=true en .env y el interruptor en Configuración DIAN.',
             ]);
 
             return $invoice;
@@ -45,9 +45,10 @@ class DianService
         }
 
         if (! $this->config->isConfigured()) {
+            $missing = implode('; ', $this->config->missingRequirements());
             $invoice->update([
                 'dian_status'      => 'ERROR',
-                'dian_description' => 'DIAN no configurada. Completa settings dian_* (empresa, software, certificado).',
+                'dian_description' => 'DIAN incompleta: '.$missing,
             ]);
 
             return $invoice;

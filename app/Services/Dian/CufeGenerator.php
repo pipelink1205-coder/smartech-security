@@ -48,10 +48,7 @@ class CufeGenerator
         $nitOFE = preg_replace('/\D/', '', (string) ($emisor['nit'] ?? ''));
         $numAdq = preg_replace('/\D/', '', (string) ($invoice->client_document ?? '222222222222'));
 
-        // Clave técnica solo en habilitación, en producción es el software PIN
-        $clTec = $this->config->isProduction()
-            ? ($this->config->software()['pin'] ?? '')
-            : ($this->config->get('dian_clave_tecnica') ?? '');
+        $clTec = $this->config->claveTecnica();
 
         $tipoAmbiente = (string) $this->config->environment();          // 1 o 2
 
@@ -78,9 +75,7 @@ class CufeGenerator
         $nitOFE = preg_replace('/\D/', '', (string) ($emisor['nit'] ?? ''));
         $numAdq = preg_replace('/\D/', '', (string) ($note->invoice->client_document ?? '222222222222'));
 
-        $clTec = $this->config->isProduction()
-            ? ($this->config->software()['pin'] ?? '')
-            : ($this->config->get('dian_clave_tecnica') ?? '');
+        $clTec = $this->config->claveTecnica();
 
         $tipoAmbiente = (string) $this->config->environment();
 
