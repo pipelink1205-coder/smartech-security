@@ -2,10 +2,14 @@
 
 namespace App\Filament\Resources\Quotes\Tables;
 
+use App\Filament\Resources\Quotes\QuoteResource;
 use App\Models\Quote;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -24,7 +28,8 @@ class QuotesTable
                 TextColumn::make('name')
                     ->label('Cliente')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(fn (Quote $record): ?string => filled($record->company) ? $record->company : $record->client?->company),
                 TextColumn::make('phone')
                     ->label('Teléfono')
                     ->searchable()
@@ -90,6 +95,24 @@ class QuotesTable
                     ->options(Quote::INTENTS),
             ])
             ->recordActions([
+                Action::make('duplicate')
+                    ->label('Duplicar')
+                    ->icon(Heroicon::OutlinedDocumentDuplicate)
+                    ->color('gray')
+                    ->requiresConfirmation()
+                    ->modalHeading('Duplicar cotización')
+                    ->modalDescription('Se creará un borrador con los mismos datos e ítems, listo para ajustar.')
+                    ->action(function (Quote $record) {
+                        $copy = $record->duplicate();
+
+                        Notification::make()
+                            ->title('Cotización duplicada')
+                            ->body(($copy->quote_number ?: 'Borrador').' lista para editar.')
+                            ->success()
+                            ->send();
+
+                        return redirect(QuoteResource::getUrl('edit', ['record' => $copy]));
+                    }),
                 EditAction::make(),
             ])
             ->toolbarActions([

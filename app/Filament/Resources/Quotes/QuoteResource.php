@@ -55,7 +55,7 @@ class QuoteResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('items');
+        return parent::getEloquentQuery()->with(['items', 'client']);
     }
 
     public static function getRelations(): array

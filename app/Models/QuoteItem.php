@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domain\Quotes\CatalogItemSync;
 use App\Domain\Quotes\QuoteLineCalculator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -56,6 +57,17 @@ class QuoteItem extends Model
                 (float) $item->discount_percent,
                 (float) $item->tax_rate,
             ));
+
+            // Ítem manual → queda en catálogo para próximas cotizaciones.
+            if (blank($item->quote_catalog_item_id) && filled($item->concept)) {
+                $catalog = CatalogItemSync::ensureForQuoteItem($item);
+                if ($catalog) {
+                    $item->quote_catalog_item_id = $catalog->id;
+                    if (blank($item->code)) {
+                        $item->code = $catalog->code;
+                    }
+                }
+            }
         });
 
         static::saved(fn (QuoteItem $item) => $item->quote?->recalculateTotals());

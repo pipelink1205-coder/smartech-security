@@ -1,6 +1,24 @@
 <?php
 
 return [
+    /*
+     * Consecutivo mínimo del número COT-AAAA-XXXX.
+     * Si en BD ya hay uno mayor, sigue desde el siguiente.
+     * Ejemplo: 316 → la próxima será COT-2026-0316 (si no hay superior).
+     */
+    'number_start_sequence' => (int) env('QUOTE_NUMBER_START', 316),
+
+    'collection_number_start' => (int) env('COLLECTION_NUMBER_START', 1),
+
+    'collection_bank' => [
+        'name' => env('COLLECTION_BANK_NAME'),
+        'account_type' => env('COLLECTION_BANK_TYPE', 'Ahorros'),
+        'account_number' => env('COLLECTION_BANK_ACCOUNT'),
+        'account_holder' => env('COLLECTION_BANK_HOLDER', env('QUOTE_COMPANY_NAME', 'SMART TECH SECURITY S.A.S.')),
+        'nit' => env('COLLECTION_BANK_NIT', env('QUOTE_COMPANY_NIT')),
+        'instructions' => env('COLLECTION_BANK_INSTRUCTIONS'),
+    ],
+
     'company' => [
         'legal_name' => env('QUOTE_COMPANY_NAME', 'SMART TECH SECURITY S.A.S.'),
         'tax_id' => env('QUOTE_COMPANY_NIT'),

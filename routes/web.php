@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\GeocodeController;
+use App\Http\Controllers\CollectionAccountController;
+use App\Http\Controllers\ElectronicInvoiceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SitemapController;
@@ -30,6 +32,14 @@ Route::get('/cotizacion/{quote}/pdf', [QuoteController::class, 'pdf'])
     ->name('quotes.pdf')
     ->middleware('signed');
 
+Route::get('/factura/{invoice}/pdf', [ElectronicInvoiceController::class, 'pdf'])
+    ->name('invoices.pdf')
+    ->middleware('signed');
+
+Route::get('/cuenta-de-cobro/{account}/pdf', [CollectionAccountController::class, 'pdf'])
+    ->name('collection-accounts.pdf')
+    ->middleware('signed');
+
 // Páginas internas (para escalar)
 Route::get('/servicios', [HomeController::class, 'servicios'])->name('servicios');
 Route::get('/servicios/{service:slug}', [HomeController::class, 'servicioShow'])->name('servicios.show');
@@ -48,4 +58,16 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     Route::get('/admin/quotes/{quote}/pdf-download', [QuoteController::class, 'pdf'])
         ->name('admin.quotes.pdf-download');
+
+    Route::get('/admin/invoices/{invoice}/pdf-preview', [ElectronicInvoiceController::class, 'preview'])
+        ->name('admin.invoices.pdf-preview');
+
+    Route::get('/admin/invoices/{invoice}/pdf-download', [ElectronicInvoiceController::class, 'pdf'])
+        ->name('admin.invoices.pdf-download');
+
+    Route::get('/admin/collection-accounts/{account}/pdf-preview', [CollectionAccountController::class, 'preview'])
+        ->name('admin.collection-accounts.pdf-preview');
+
+    Route::get('/admin/collection-accounts/{account}/pdf-download', [CollectionAccountController::class, 'pdf'])
+        ->name('admin.collection-accounts.pdf-download');
 });

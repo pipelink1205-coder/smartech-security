@@ -2,7 +2,13 @@
 
 namespace App\Filament\Resources\Quotes\Pages;
 
+use App\Domain\Invoicing\QuoteToCollectionAccountMapper;
+use App\Domain\Invoicing\QuoteToElectronicInvoiceMapper;
+use App\Filament\Resources\CollectionAccounts\CollectionAccountResource;
+use App\Filament\Resources\ElectronicInvoices\ElectronicInvoiceResource;
+use App\Filament\Resources\Quotes\Pages\Concerns\SyncsQuoteClient;
 use App\Filament\Resources\Quotes\QuoteResource;
+use App\Support\Filament\PdfPreviewModal;
 use App\Mail\FormalQuoteMail;
 use App\Models\Quote;
 use Filament\Actions\Action;
@@ -16,11 +22,36 @@ use Illuminate\Support\Facades\Mail;
 
 class EditQuote extends EditRecord
 {
+    use SyncsQuoteClient;
+
     protected static string $resource = QuoteResource::class;
+
+    protected function afterSave(): void
+    {
+        $this->syncQuoteClient();
+    }
 
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('duplicate')
+                ->label('Duplicar')
+                ->icon(Heroicon::OutlinedDocumentDuplicate)
+                ->color('gray')
+                ->requiresConfirmation()
+                ->modalHeading('Duplicar cotización')
+                ->modalDescription('Se creará un borrador con los mismos datos e ítems para que ajustes lo necesario.')
+                ->action(function (Quote $record) {
+                    $copy = $record->duplicate();
+
+                    Notification::make()
+                        ->title('Cotización duplicada')
+                        ->body(($copy->quote_number ?: 'Borrador').' lista para editar.')
+                        ->success()
+                        ->send();
+
+                    return redirect(QuoteResource::getUrl('edit', ['record' => $copy]));
+                }),
             Action::make('whatsapp')
                 ->label('Abrir WhatsApp')
                 ->icon(Heroicon::OutlinedChatBubbleLeftRight)
@@ -35,12 +66,9 @@ class EditQuote extends EditRecord
                 ->modalDescription('Se muestra lo guardado. Guarde cambios antes de previsualizar para ver la versión más reciente.')
                 ->modalWidth(Width::FiveExtraLarge)
                 ->modalContent(function (Quote $record): HtmlString {
-                    $url = route('admin.quotes.pdf-preview', $record);
-
-                    return new HtmlString(
-                        '<div class="space-y-3">'
-                        .'<iframe src="'.e($url).'" title="Vista previa PDF" class="w-full rounded-xl border border-gray-200 dark:border-gray-700" style="height:75vh;background:#f8fafc;"></iframe>'
-                        .'</div>'
+                    return PdfPreviewModal::content(
+                        route('admin.quotes.pdf-preview', $record),
+                        'Vista previa · '.($record->quote_number ?: 'COT-'.$record->id),
                     );
                 })
                 ->modalSubmitAction(false)
@@ -77,7 +105,80 @@ class EditQuote extends EditRecord
                         ->success()
                         ->send();
                 }),
+            Action::make('generateInvoice')
+                ->label('Generar factura')
+                ->icon(Heroicon::OutlinedReceiptPercent)
+                ->color('warning')
+                ->requiresConfirmation()
+                ->modalHeading('Generar factura desde cotización')
+                ->modalDescription('Se creará una factura con los mismos ítems y datos del cliente. Luego podrás completar documento fiscal, emitir a DIAN y enviarla.')
+                ->visible(fn (Quote $record): bool => $record->items()->exists())
+                ->action(function (Quote $record, QuoteToElectronicInvoiceMapper $mapper) {
+                    try {
+                        $invoice = $mapper->fromQuote($record);
+                    } catch (\Throwable $e) {
+                        Notification::make()
+                            ->title('No se pudo generar la factura')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
+
+                    if ($record->status !== 'accepted') {
+                        $record->forceFill([
+                            'status' => 'accepted',
+                            'accepted_at' => $record->accepted_at ?: now(),
+                        ])->save();
+                    }
+
+                    Notification::make()
+                        ->title('Factura creada')
+                        ->body($invoice->display_number.' lista para revisar y enviar.')
+                        ->success()
+                        ->send();
+
+                    return redirect(ElectronicInvoiceResource::getUrl('edit', ['record' => $invoice]));
+                }),
+            Action::make('generateCollectionAccount')
+                ->label('Generar cuenta de cobro')
+                ->icon(Heroicon::OutlinedBanknotes)
+                ->color('gray')
+                ->requiresConfirmation()
+                ->modalHeading('Generar cuenta de cobro')
+                ->modalDescription('Documento comercial (no DIAN) con los mismos ítems y datos del cliente, listo para PDF, correo o WhatsApp.')
+                ->visible(fn (Quote $record): bool => $record->items()->exists())
+                ->action(function (Quote $record, QuoteToCollectionAccountMapper $mapper) {
+                    try {
+                        $account = $mapper->fromQuote($record);
+                    } catch (\Throwable $e) {
+                        Notification::make()
+                            ->title('No se pudo generar la cuenta de cobro')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
+
+                    if ($record->status !== 'accepted') {
+                        $record->forceFill([
+                            'status' => 'accepted',
+                            'accepted_at' => $record->accepted_at ?: now(),
+                        ])->save();
+                    }
+
+                    Notification::make()
+                        ->title('Cuenta de cobro creada')
+                        ->body($account->number.' lista para revisar y enviar.')
+                        ->success()
+                        ->send();
+
+                    return redirect(CollectionAccountResource::getUrl('edit', ['record' => $account]));
+                }),
             DeleteAction::make(),
         ];
     }
 }
+

@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class Quote extends Model
@@ -13,6 +15,7 @@ class Quote extends Model
 
     protected $fillable = [
         'quote_number',
+        'client_id',
         'name', 'phone', 'email', 'company', 'employees_range', 'current_it',
         'service', 'project_title', 'zone', 'client_address', 'message',
         'intent', 'preferred_visit_date', 'preferred_visit_slot',
@@ -87,22 +90,79 @@ class Quote extends Model
     public static function nextQuoteNumber(): string
     {
         $year = now()->format('Y');
-        $latest = static::query()
-            ->where('quote_number', 'like', "COT-{$year}-%")
-            ->orderByDesc('id')
-            ->value('quote_number');
+        $start = max(1, (int) config('quotes.number_start_sequence', 316));
 
-        $seq = 1;
-        if ($latest && preg_match('/COT-\d{4}-(\d+)/', $latest, $m)) {
-            $seq = ((int) $m[1]) + 1;
-        }
+        $latestSeq = static::query()
+            ->where('quote_number', 'like', "COT-{$year}-%")
+            ->pluck('quote_number')
+            ->map(function (?string $number): int {
+                if ($number && preg_match('/COT-\d{4}-(\d+)/', $number, $m)) {
+                    return (int) $m[1];
+                }
+
+                return 0;
+            })
+            ->max() ?: 0;
+
+        $seq = max($latestSeq + 1, $start);
 
         return sprintf('COT-%s-%04d', $year, $seq);
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 
     public function items(): HasMany
     {
         return $this->hasMany(QuoteItem::class)->orderBy('sort_order')->orderBy('id');
+    }
+
+    public function electronicInvoices(): HasMany
+    {
+        return $this->hasMany(ElectronicInvoice::class)->orderByDesc('id');
+    }
+
+    public function collectionAccounts(): HasMany
+    {
+        return $this->hasMany(CollectionAccount::class)->orderByDesc('id');
+    }
+
+    /**
+     * Copia cliente, términos e ítems a un borrador nuevo (nuevo número, sin envíos).
+     */
+    public function duplicate(): self
+    {
+        return DB::transaction(function (): self {
+            $this->loadMissing('items');
+
+            $copy = $this->replicate([
+                'quote_number',
+                'issued_at',
+                'sent_at',
+                'accepted_at',
+                'pdf_path',
+            ]);
+
+            $copy->status = 'draft';
+            $copy->valid_until = now()->addDays(15)->toDateString();
+            $copy->issued_at = null;
+            $copy->sent_at = null;
+            $copy->accepted_at = null;
+            $copy->pdf_path = null;
+            $copy->save();
+
+            foreach ($this->items as $item) {
+                $line = $item->replicate(['quote_id']);
+                $line->quote_id = $copy->id;
+                $line->save();
+            }
+
+            $copy->recalculateTotals();
+
+            return $copy->fresh(['items']);
+        });
     }
 
     public function getStatusLabelAttribute(): string
