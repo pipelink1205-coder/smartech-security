@@ -29,7 +29,8 @@ if exist "public\web.config.server" (
 )
 
 echo [2/8] composer install...
-composer install --no-dev --optimize-autoloader --no-interaction
+rem IIS usa PHP 8.5; algunos paquetes (openspout via Filament) aun declaran solo 8.2-8.4.
+composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-req=php
 if errorlevel 1 (
     echo AVISO: composer fallo ^(revisar ext-intl y ext-zip en php.ini^).
     echo Continuando si vendor ya existia...
