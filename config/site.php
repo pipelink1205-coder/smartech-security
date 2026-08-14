@@ -4,7 +4,7 @@ return [
     'hero' => [
         'badge' => '+500 Proyectos exitosos',
         'title' => 'Tecnología y seguridad para empresas y hogares',
-        'subtitle' => 'Más de 10 años instalando seguridad 4K, energía solar, IPTV hotelera y domótica en Medellín y el Valle de Aburrá — Envigado, Itagüí, Sabaneta, Bello y área metropolitana. Garantía real y soporte técnico especializado.',
+        'subtitle' => 'Más de 10 años instalando sistemas de seguridad, energía solar e IPTV. También brindamos soluciones tecnológicas, con un portafolio amplio de servicios para hogares, empresas y hoteles en Medellín y el Valle de Aburrá.',
     ],
 
     'stats' => [
