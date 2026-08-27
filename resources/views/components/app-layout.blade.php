@@ -40,7 +40,8 @@
 @endif
 
 @include('components.footer')
-@include('components.whatsapp-lead-modal')
+
+<div id="wa-click-track" hidden data-store-url="{{ route('whatsapp-leads.store') }}"></div>
 
 <a href="https://wa.me/{{ config('contact.whatsapp') }}"
    class="whatsapp-fab" target="_blank" rel="noopener"

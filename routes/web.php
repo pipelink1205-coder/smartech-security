@@ -34,7 +34,7 @@ Route::get('/verificar-empleado/{employee:verification_token}', [EmployeeCardCon
 // Cotizaciones
 Route::post('/cotizar', [QuoteController::class, 'store'])->name('quotes.store');
 Route::post('/whatsapp-lead', [WhatsappLeadController::class, 'store'])
-    ->middleware('throttle:8,1')
+    ->middleware('throttle:60,1')
     ->name('whatsapp-leads.store');
 Route::get('/cotizacion/{quote}/pdf', [QuoteController::class, 'pdf'])
     ->name('quotes.pdf')
