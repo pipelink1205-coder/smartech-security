@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="description" content="Smart Tech Security – Cámaras 4K, energía solar, IPTV para hoteles, alarmas, domótica y redes en Medellín y el Valle de Aburrá." />
     <title>{{ $title ?? 'Smart Tech Security – Medellín' }}</title>
 
@@ -39,6 +40,7 @@
 @endif
 
 @include('components.footer')
+@include('components.whatsapp-lead-modal')
 
 <a href="https://wa.me/{{ config('contact.whatsapp') }}"
    class="whatsapp-fab" target="_blank" rel="noopener"
@@ -52,5 +54,6 @@
 @livewireScripts
 @stack('scripts')
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/whatsapp-lead.js') }}?v={{ @filemtime(public_path('js/whatsapp-lead.js')) ?: '1' }}"></script>
 </body>
 </html>

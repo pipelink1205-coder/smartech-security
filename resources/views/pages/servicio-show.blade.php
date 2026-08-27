@@ -1,5 +1,5 @@
 <x-app-layout :title="$service->name . ' – Smart Tech Security'">
-    <article class="sd">
+    <article class="sd" data-wa-service="{{ $service->name }}">
 
         {{-- ═══ HERO OSCURO ═══ --}}
         <header class="sd-hero">

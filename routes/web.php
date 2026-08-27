@@ -1,12 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\GeocodeController;
 use App\Http\Controllers\CollectionAccountController;
 use App\Http\Controllers\ElectronicInvoiceController;
+use App\Http\Controllers\EmployeeCardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\WhatsappLeadController;
+use Illuminate\Support\Facades\Route;
 
 // GeoJSON del mapa de comunas (sirve el archivo con headers correctos en producción)
 Route::get('/mapa/comunas.geojson', function () {
@@ -26,8 +28,14 @@ Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 // Página principal
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+Route::get('/verificar-empleado/{employee:verification_token}', [EmployeeCardController::class, 'verify'])
+    ->name('employees.verify');
+
 // Cotizaciones
 Route::post('/cotizar', [QuoteController::class, 'store'])->name('quotes.store');
+Route::post('/whatsapp-lead', [WhatsappLeadController::class, 'store'])
+    ->middleware('throttle:8,1')
+    ->name('whatsapp-leads.store');
 Route::get('/cotizacion/{quote}/pdf', [QuoteController::class, 'pdf'])
     ->name('quotes.pdf')
     ->middleware('signed');
@@ -70,4 +78,13 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     Route::get('/admin/collection-accounts/{account}/pdf-download', [CollectionAccountController::class, 'pdf'])
         ->name('admin.collection-accounts.pdf-download');
+
+    Route::get('/admin/employees/{employee}/card-preview', [EmployeeCardController::class, 'preview'])
+        ->name('admin.employees.card-preview');
+
+    Route::get('/admin/employees/{employee}/card-pdf', [EmployeeCardController::class, 'pdf'])
+        ->name('admin.employees.card-pdf');
+
+    Route::get('/admin/employees/{employee}/photo', [EmployeeCardController::class, 'photo'])
+        ->name('admin.employees.photo');
 });

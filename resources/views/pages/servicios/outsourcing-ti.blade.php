@@ -1,5 +1,5 @@
 <x-app-layout :title="'Outsourcing de TI – Smart Tech Security'">
-    <article class="sd ot">
+    <article class="sd ot" data-wa-service="{{ $service->name }}">
 
         {{-- ═══ HERO ORIENTADO AL DOLOR ═══ --}}
         <header class="sd-hero">

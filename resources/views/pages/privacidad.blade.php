@@ -13,7 +13,7 @@
 
         <section class="legal-block">
             <h2>2. Datos que recolectamos</h2>
-            <p>A través de los formularios de cotización y diagnóstico recolectamos: nombre, teléfono, correo electrónico, nombre de la empresa, número de empleados, información sobre la situación tecnológica y el mensaje que usted nos escriba.</p>
+            <p>A través de los formularios de cotización, diagnóstico y el contacto por WhatsApp recolectamos: nombre, teléfono, correo electrónico, servicio de interés, nombre de la empresa, número de empleados, información sobre la situación tecnológica y el mensaje que usted nos escriba.</p>
         </section>
 
         <section class="legal-block">
