@@ -8,7 +8,7 @@
         <section class="legal-block">
             <h2>1. Responsable del tratamiento</h2>
             <p>Smart Tech Security, con domicilio en Envigado, Antioquia (Colombia), es responsable del tratamiento de los datos personales recolectados a través de este sitio web, en cumplimiento de la Ley 1581 de 2012 y sus decretos reglamentarios.</p>
-            <p>Canales de contacto: correo <a href="mailto:{{ config('contact.email') }}">{{ config('contact.email') }}</a> y WhatsApp <a href="https://wa.me/{{ config('contact.whatsapp') }}" target="_blank" rel="noopener">{{ config('contact.whatsapp_formatted') }}</a>.</p>
+            <p>Canales de contacto: correo <a href="mailto:{{ config('contact.email') }}">{{ config('contact.email') }}</a> y WhatsApp <x-whatsapp-link from="legal" target="_blank">{{ config('contact.whatsapp_formatted') }}</x-whatsapp-link>.</p>
         </section>
 
         <section class="legal-block">

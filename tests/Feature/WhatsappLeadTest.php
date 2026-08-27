@@ -12,6 +12,17 @@ class WhatsappLeadTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_clicking_whatsapp_link_is_logged_and_opens_chat(): void
+    {
+        $this->get(route('whatsapp.click', ['from' => 'fab']))
+            ->assertRedirect('https://wa.me/'.config('contact.whatsapp'));
+
+        $click = WhatsappLead::query()->first();
+        $this->assertNotNull($click);
+        $this->assertSame('fab', $click->source);
+        $this->assertNotNull($click->created_at);
+    }
+
     public function test_click_is_logged_without_asking_for_data(): void
     {
         $this->postJson(route('whatsapp-leads.store'), [

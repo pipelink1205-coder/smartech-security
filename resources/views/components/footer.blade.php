@@ -69,16 +69,16 @@
                 </li>
                 <li>
                     <span class="footer-contact-icon" aria-hidden="true">📞</span>
-                    <a href="https://wa.me/{{ config('contact.whatsapp') }}" target="_blank" rel="noopener">
+                    <x-whatsapp-link from="footer" target="_blank">
                         {{ config('contact.whatsapp_formatted') }}
-                    </a>
+                    </x-whatsapp-link>
                 </li>
                 @if(config('contact.whatsapp_secondary'))
                 <li>
                     <span class="footer-contact-icon" aria-hidden="true">📞</span>
-                    <a href="https://wa.me/{{ config('contact.whatsapp_secondary') }}" target="_blank" rel="noopener">
+                    <x-whatsapp-link from="footer" :number="config('contact.whatsapp_secondary')" target="_blank">
                         {{ config('contact.whatsapp_secondary_formatted') }}
-                    </a>
+                    </x-whatsapp-link>
                 </li>
                 @endif
                 <li>

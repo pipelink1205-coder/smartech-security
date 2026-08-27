@@ -28,7 +28,7 @@
                         <div class="sd-hero-actions">
                             <a href="#diagnostico" class="btn btn-primary">Solicita tu diagnóstico gratuito</a>
                             <a href="#comparador" class="btn sd-btn-outline">Calcula tu ahorro</a>
-                            <a href="https://wa.me/{{ config('contact.whatsapp') }}" class="btn sd-btn-outline" target="_blank" rel="noopener">WhatsApp</a>
+                            <x-whatsapp-link from="service_hero" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
                         </div>
                     </div>
 

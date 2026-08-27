@@ -60,7 +60,7 @@
 
         <section class="legal-block">
             <h2>10. Contacto</h2>
-            <p>Para dudas sobre estos términos, escríbanos a <a href="mailto:{{ config('contact.email') }}">{{ config('contact.email') }}</a> o por WhatsApp al <a href="https://wa.me/{{ config('contact.whatsapp') }}" target="_blank" rel="noopener">{{ config('contact.whatsapp_formatted') }}</a>.</p>
+            <p>Para dudas sobre estos términos, escríbanos a <a href="mailto:{{ config('contact.email') }}">{{ config('contact.email') }}</a> o por WhatsApp al <x-whatsapp-link from="legal" target="_blank">{{ config('contact.whatsapp_formatted') }}</x-whatsapp-link>.</p>
         </section>
     </article>
 </x-app-layout>

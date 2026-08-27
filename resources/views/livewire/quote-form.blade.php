@@ -18,14 +18,14 @@
                     <div class="contacto-info-item">
                         <div class="contacto-info-icon">📞</div>
                         <span>
-                            <a href="https://wa.me/{{ config('contact.whatsapp') }}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">
+                            <x-whatsapp-link from="contact" target="_blank" style="color:inherit;text-decoration:underline;">
                                 {{ config('contact.whatsapp_formatted') }}
-                            </a>
+                            </x-whatsapp-link>
                             @if(config('contact.whatsapp_secondary'))
                                 &nbsp;·&nbsp;
-                                <a href="https://wa.me/{{ config('contact.whatsapp_secondary') }}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">
+                                <x-whatsapp-link from="contact" :number="config('contact.whatsapp_secondary')" target="_blank" style="color:inherit;text-decoration:underline;">
                                     {{ config('contact.whatsapp_secondary_formatted') }}
-                                </a>
+                                </x-whatsapp-link>
                             @endif
                         </span>
                     </div>

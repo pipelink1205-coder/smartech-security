@@ -32,7 +32,7 @@
                             @if($service->slug === 'iptv-hoteles')
                                 <a href="{{ route('home') }}#iptv" class="btn sd-btn-outline">Ver presentación IPTV</a>
                             @endif
-                            <a href="https://wa.me/{{ config('contact.whatsapp') }}" class="btn sd-btn-outline" target="_blank" rel="noopener">WhatsApp</a>
+                            <x-whatsapp-link from="service_hero" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
                         </div>
                     </div>
 
@@ -220,7 +220,7 @@
 
                     <div class="sd-quote-actions">
                         <a href="{{ route('contacto') }}" class="btn btn-primary sd-btn-block">Solicitar información</a>
-                        <a href="https://wa.me/{{ config('contact.whatsapp') }}" class="btn btn-ghost sd-btn-block" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+                        <x-whatsapp-link from="service_sidebar" class="btn btn-ghost sd-btn-block" target="_blank">Escríbenos por WhatsApp</x-whatsapp-link>
                     </div>
 
                     <ul class="sd-quote-trust">
@@ -259,7 +259,7 @@
                     <p>Agenda tu visita técnica gratuita. Tras el diagnóstico te entregamos la cotización a la medida en Medellín y el Valle de Aburrá.</p>
                     <div class="sd-hero-actions">
                         <a href="{{ route('contacto', ['intent' => 'visit']) }}" class="btn btn-primary">Agendar visita gratuita</a>
-                        <a href="https://wa.me/{{ config('contact.whatsapp') }}" class="btn sd-btn-outline" target="_blank" rel="noopener">WhatsApp</a>
+                        <x-whatsapp-link from="service_cta" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
                     </div>
                 </div>
             </div>
