@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Carbon;
 
 class WhatsappLeadsTable
 {
@@ -17,7 +18,9 @@ class WhatsappLeadsTable
             ->columns([
                 TextColumn::make('created_at')
                     ->label('Hora')
-                    ->dateTime('d/m/Y H:i:s')
+                    ->formatStateUsing(fn ($state): string => $state
+                        ? Carbon::parse($state, 'UTC')->timezone('America/Bogota')->format('d/m/Y H:i')
+                        : '—')
                     ->sortable(),
                 TextColumn::make('ip')
                     ->label('IP')
