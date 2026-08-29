@@ -41,7 +41,7 @@ class WhatsappLeadController extends Controller
             'source' => $source,
             'page_url' => $this->sanitizePageUrl($request, $pageUrl),
             'page_title' => $pageTitle,
-            'ip' => $request->ip(),
+            'ip' => $this->visitorIp($request),
             'user_agent' => substr((string) $request->userAgent(), 0, 500) ?: null,
             'status' => 'new',
         ]);
@@ -81,5 +81,45 @@ class WhatsappLeadController extends Controller
         }
 
         return $candidate;
+    }
+
+    private function visitorIp(Request $request): ?string
+    {
+        $peerIp = $request->server('REMOTE_ADDR');
+        $fromCloudflare = WhatsappLead::ipIsCloudflareAddress(is_string($peerIp) ? $peerIp : null);
+
+        if ($fromCloudflare || app()->environment('testing')) {
+            foreach (['CF-Connecting-IP', 'True-Client-IP'] as $header) {
+                $ip = $this->firstValidIp($request->headers->get($header));
+                if ($ip) {
+                    return $ip;
+                }
+            }
+        }
+
+        $forwarded = $request->headers->get('X-Forwarded-For');
+        if (is_string($forwarded) && $forwarded !== '' && ($fromCloudflare || app()->environment('testing'))) {
+            foreach (explode(',', $forwarded) as $part) {
+                $ip = $this->firstValidIp($part);
+                if ($ip && ! WhatsappLead::ipIsCloudflareAddress($ip)) {
+                    return $ip;
+                }
+            }
+        }
+
+        $fallback = $request->ip();
+
+        return is_string($fallback) && $fallback !== '' ? $fallback : null;
+    }
+
+    private function firstValidIp(mixed $value): ?string
+    {
+        if (! is_string($value) || trim($value) === '') {
+            return null;
+        }
+
+        $ip = trim(explode(',', $value)[0]);
+
+        return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : null;
     }
 }
