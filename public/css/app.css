@@ -316,7 +316,7 @@ body {
 @media (min-width: 769px) {
     body.page-home.ticker-section-inicio { --ticker-h: 64px; }
 }
-.container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+.container { max-width: var(--container); margin: 0 auto; padding-inline: 24px; }
 
 .section-tag {
     display: inline-block;
@@ -1741,7 +1741,7 @@ body.body-scroll-locked .clients-ticker-bar { display: none !important; }
 }
 
 /* ── Scroll animations ── */
-@media (max-width: 1200px) { .container { padding: 0 32px; } }
+@media (max-width: 1200px) { .container { padding-inline: 32px; } }
 @media (max-width: 1024px) {
     /* El menú completo no cabe cómodo en tablets: pasar a hamburguesa antes. */
     .nav-links, .nav-cta { display: none; }
@@ -1870,7 +1870,7 @@ body.body-scroll-locked .clients-ticker-bar { display: none !important; }
     .section-title  { font-size: 1.6rem; }
 }
 @media (max-width: 480px) {
-    .container { padding: 0 16px; }
+    .container { padding-inline: max(20px, env(safe-area-inset-left, 0px)) max(20px, env(safe-area-inset-right, 0px)); }
     .hero-h1    { font-size: 1.75rem; }
     .hero-btns  { flex-direction: column; }
     .hero-btns .btn { text-align: center; justify-content: center; }
@@ -1886,7 +1886,7 @@ body.body-scroll-locked .clients-ticker-bar { display: none !important; }
 }
 
 /* ═════════════ Partners tecnológicos ═════════════ */
-.partners-page-wrap { padding: 8px 0 72px; }
+.partners-page-wrap { padding-block: 8px 72px; }
 .partners-section { margin: 0; }
 .partners-section__head { margin-bottom: 28px; }
 .partners-section__sub {
@@ -1950,7 +1950,7 @@ body.body-scroll-locked .clients-ticker-bar { display: none !important; }
 .legal-block a { color: var(--green-600); }
 
 /* ═════════════ Landing Outsourcing de TI ═════════════ */
-.ot-main { display: grid; gap: 64px; padding: 56px 0 72px; }
+.ot-main { display: grid; gap: 64px; padding-block: 56px 72px; }
 
 /* ── Comparador de costos ── */
 .itc { display: grid; gap: 24px; }
@@ -2073,7 +2073,7 @@ body.body-scroll-locked .clients-ticker-bar { display: none !important; }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-    .ot-main { gap: 48px; padding: 40px 0 56px; }
+    .ot-main { gap: 48px; padding-block: 40px 56px; }
     .itc-controls { grid-template-columns: 1fr; }
     .itc-compare { grid-template-columns: 1fr; }
     .itc-vs { margin: -4px auto; }
