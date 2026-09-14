@@ -18,7 +18,7 @@
     @if($showText)
         <span class="brand-logo__text">
             <span class="brand-logo__name">SMART TECH SECURITY</span>
-            <span class="brand-logo__tagline">Tecnología y seguridad para empresas y hogares</span>
+            <span class="brand-logo__tagline">Un mundo de soluciones tecnológicas</span>
         </span>
     @endif
 </a>

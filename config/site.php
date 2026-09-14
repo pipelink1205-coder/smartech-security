@@ -3,7 +3,7 @@
 return [
     'hero' => [
         'badge' => '+500 Proyectos exitosos',
-        'title' => 'Tecnología y seguridad para empresas y hogares',
+        'title' => 'Un mundo de soluciones tecnológicas',
         'subtitle' => 'Más de 10 años instalando sistemas de seguridad, energía solar e IPTV. También brindamos soluciones tecnológicas, con un portafolio amplio de servicios para hogares, empresas y hoteles en Medellín y el Valle de Aburrá.',
     ],
 
