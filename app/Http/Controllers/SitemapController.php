@@ -33,7 +33,7 @@ class SitemapController extends Controller
                     'loc' => $base.'/servicios/'.$service->slug,
                     'lastmod' => optional($service->updated_at)->toAtomString(),
                     'changefreq' => 'monthly',
-                    'priority' => in_array($service->slug, ['outsourcing-ti', 'iptv-hoteles'], true)
+                    'priority' => in_array($service->slug, ['outsourcing-ti', 'iptv-hoteles', 'software-analitica'], true)
                         ? '0.9'
                         : '0.7',
                 ];

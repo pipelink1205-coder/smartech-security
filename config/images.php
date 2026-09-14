@@ -29,6 +29,7 @@ return [
         'deteccion-incendios'         => $local('images/services/alarmas.png', $local('images/services/alarmas.jpg', $u('photo-1563986768609-322da13575f3'))),
         'outsourcing-ti'              => $local('images/services/outsourcing-ti.jpg', $u('photo-1531482615713-2afd69097998')),
         'ciberseguridad-empresas'     => $local('images/services/ciberseguridad.jpg', $u('photo-1550751827-4bd374c3f58b')),
+        'software-analitica'          => $local('images/services/software-analitica-hero.png', $u('photo-1460925895917-afdab827c52f')),
     ],
 
     'projects' => [
