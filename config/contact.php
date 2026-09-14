@@ -12,14 +12,20 @@ $format = static function (string $number): string {
     return $number;
 };
 
-$whatsapp = env('WHATSAPP_NUMBER', '573014589464');
-$whatsapp2 = env('WHATSAPP_NUMBER_2', '573006035941');
+$whatsapp = (string) env('WHATSAPP_NUMBER', '573014589464');
+$whatsapp2 = trim((string) env('WHATSAPP_NUMBER_2', ''));
+$primaryDigits = preg_replace('/\D/', '', $whatsapp);
+$secondaryDigits = preg_replace('/\D/', '', $whatsapp2);
+
+if ($whatsapp2 === '' || $secondaryDigits === $primaryDigits) {
+    $whatsapp2 = null;
+}
 
 return [
     'whatsapp' => $whatsapp,
     'whatsapp_formatted' => $format($whatsapp),
     'whatsapp_secondary' => $whatsapp2,
-    'whatsapp_secondary_formatted' => $format($whatsapp2),
+    'whatsapp_secondary_formatted' => $whatsapp2 ? $format($whatsapp2) : null,
 
     'email' => strtolower(env('CONTACT_EMAIL', 'comercial@smarttechsecurity.com.co')),
     'admin_email' => strtolower(env('ADMIN_EMAIL', 'seguridadsmarttech@gmail.com')),
