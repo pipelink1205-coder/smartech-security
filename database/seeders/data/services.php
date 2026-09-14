@@ -7,65 +7,6 @@
  */
 return [
     [
-        'name' => 'Software, web y analítica',
-        'slug' => 'software-analitica',
-        'icon' => '📊',
-        'order' => 10,
-        'price_from' => 2500000,
-        'highlight' => 'Sitios, software a la medida y tableros que convierten datos en decisiones. No un sistema genérico: el que tu operación necesita.',
-        'image' => config('images.services.software-analitica'),
-        'description' => 'Diseñamos páginas web, software operativo y dashboards de analítica para empresas en Medellín. Del primer clic a la cifra que el dueño necesita ver el lunes.',
-        'features' => [
-            'Páginas web y menús que venden',
-            'Software a la medida de tu operación',
-            'Dashboards y analítica para decidir',
-            'Integración con WhatsApp, Excel y lo que ya usas',
-        ],
-        'long_description' => 'No hacemos “un desarrollo más”. Construimos las piezas digitales con las que tu empresa se ve, se opera y se mide.
-
-Diseñamos sitios web que venden, software a la medida (órdenes, visitas, inventario, clientes) y tableros de analítica para que dejes de decidir por WhatsApp y Excel. Si ya tienes cámaras, control de acceso, energía o un equipo en campo, conectamos esa operación a un panel claro.
-
-Trabajamos como analistas y desarrolladores: primero entendemos el proceso, luego lo digitalizamos. Entregas por etapas, en español, con capacitación incluida.',
-        'includes' => [
-            'Descubrimiento: mapa de procesos, datos y prioridades',
-            'Diseño de menús, pantallas y flujo de usuario',
-            'Desarrollo web, software o dashboard según el alcance',
-            'Carga inicial de datos y conexiones (WhatsApp, correo, Excel, APIs)',
-            'Capacitación al equipo y manual corto de uso',
-            'Acompañamiento post-lanzamiento y mejoras por sprints',
-        ],
-        'process_steps' => [
-            'Diagnóstico digital gratuito — qué duele hoy: la web, el Excel o la falta de cifras',
-            'Prototipo visible — menús y pantallas antes de programar, para que apruebes el rumbo',
-            'Construcción por sprints — ves avances cada semana, no a los tres meses',
-            'Puesta en marcha y analítica — capacitación, indicadores y un tablero que el dueño entiende',
-        ],
-        'brands' => [
-            'Web: Laravel, Livewire, Filament',
-            'Datos: dashboards, reportes y alertas',
-            'Integraciones: WhatsApp, correo, Excel, APIs',
-            'Cloud: hosting seguro y copias de respaldo',
-        ],
-        'standards' => [
-            'Tratamiento de datos conforme a Ley 1581 de 2012',
-            'Acceso por roles: cada persona ve solo lo suyo',
-            'Sitios adaptados a móvil (Google lo exige)',
-            'Código documentado y entregable a tu empresa',
-        ],
-        'tools' => [
-            'Prototipos de menús y pantallas antes de construir',
-            'Tableros de indicadores (ventas, visitas, alertas, costos)',
-            'Panel de administración para que no dependas de un programador para cada cambio',
-        ],
-        'faqs' => [
-            ['question' => '¿Es lo mismo que una agencia que solo hace páginas?', 'answer' => 'No. También construimos el software con el que operas (órdenes, clientes, inventario) y los tableros con los que decides. La web es una pieza, no todo el servicio.'],
-            ['question' => '¿Puedo empezar solo con la página y luego el dashboard?', 'answer' => 'Sí. Arrancamos por el dolor más caro: a veces es la web que no convierte, a veces es el Excel que nadie entiende. El resto se suma por etapas.'],
-            ['question' => '¿Trabajan con los datos de cámaras, energía o control de acceso?', 'answer' => 'Sí. Si ya tienes operación instalada, podemos llevar conteos, alertas y tendencias a un tablero. No reemplazamos el sistema de seguridad: lo volvemos visible para la gerencia.'],
-            ['question' => '¿Cuánto tarda un primer entregable?', 'answer' => 'Un sitio o un prototipo de panel suele verse en 2 a 4 semanas según alcance. El software operativo se entrega por sprints semanales.'],
-            ['question' => '¿Me quedan amarrado a ustedes?', 'answer' => 'El código y los accesos son de tu empresa. Documentamos y capacitamos para que no dependas de una sola persona.'],
-        ],
-    ],
-    [
         'name' => 'Outsourcing de TI',
         'slug' => 'outsourcing-ti',
         'icon' => '💻',

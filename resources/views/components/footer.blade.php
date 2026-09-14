@@ -43,7 +43,6 @@
         <div class="footer-col">
             <h4>Servicios</h4>
             <ul>
-                <li><a href="{{ route('servicios.show', 'software-analitica') }}">Software, web y analítica</a></li>
                 <li><a href="{{ route('servicios.show', 'outsourcing-ti') }}">Outsourcing de TI</a></li>
                 <li><a href="{{ route('servicios.show', 'ciberseguridad-empresas') }}">Ciberseguridad</a></li>
                 <li><a href="{{ route('servicios.show', 'camaras-4k') }}">Cámaras de seguridad</a></li>
