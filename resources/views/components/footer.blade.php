@@ -16,7 +16,7 @@
     <div class="container footer-grid">
         <div class="footer-brand-col">
             <x-logo href="{{ route('home') }}" variant="footer" class="footer-brand" />
-            <p class="footer-desc">Tecnología para hogares y empresas: CCTV, alarmas, domótica, energía solar, redes, ciberseguridad y outsourcing de TI en Medellín y el Valle de Aburrá.</p>
+            <p class="footer-desc">Tecnología para hogares y empresas: CCTV, alarmas, domótica, energía solar, redes, ciberseguridad, software empresarial, automatización, analítica y outsourcing de TI en Medellín y el Valle de Aburrá.</p>
             <p class="footer-desc footer-hours">{{ config('contact.hours') }}<br>{{ config('contact.support_note') }}</p>
 
             @if($activeSocials->isNotEmpty())
@@ -44,6 +44,7 @@
             <h4>Servicios</h4>
             <ul>
                 <li><a href="{{ route('servicios.show', 'outsourcing-ti') }}">Outsourcing de TI</a></li>
+                <li><a href="{{ route('servicios.show', 'desarrollo-software') }}">Desarrollo de Software</a></li>
                 <li><a href="{{ route('servicios.show', 'ciberseguridad-empresas') }}">Ciberseguridad</a></li>
                 <li><a href="{{ route('servicios.show', 'camaras-4k') }}">Cámaras de seguridad</a></li>
                 <li><a href="{{ route('servicios.show', 'alarmas') }}">Alarmas</a></li>

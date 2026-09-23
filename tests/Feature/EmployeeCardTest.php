@@ -202,7 +202,10 @@ class EmployeeCardTest extends TestCase
         $this->actingAs($user)
             ->get(route('admin.employees.card-preview', $employee))
             ->assertOk()
-            ->assertSee('employee-card__foreground', escape: false);
+            ->assertSee('employee-card__watermark', escape: false)
+            ->assertSee('PERSONAL AUTORIZADO')
+            ->assertSee('Escanee para verificar')
+            ->assertDontSee('EMPLEADO VERIFICADO');
         $this->actingAs($user)
             ->get(route('admin.employees.card-pdf', $employee))
             ->assertOk()

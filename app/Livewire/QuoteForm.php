@@ -27,12 +27,17 @@ class QuoteForm extends Component
 
     public bool $submitted = false;
 
-    public function mount(?string $intent = null): void
+    public function mount(?string $intent = null, ?string $service = null): void
     {
         $fromQuery = $intent ?: request()->query('intent');
 
         if (in_array($fromQuery, ['info', 'visit'], true)) {
             $this->intent = $fromQuery;
+        }
+
+        $serviceFromQuery = $service ?: request()->query('servicio');
+        if (is_string($serviceFromQuery) && in_array($serviceFromQuery, $this->serviceOptions(), true)) {
+            $this->service = $serviceFromQuery;
         }
     }
 

@@ -33,3 +33,16 @@ Thumbs.db
 public/images/*.bak*
 public/images/*-original.png
 public/images/*-original.jpg
+tmp_portfolio_assets/icon-chart.png
+tmp_portfolio_assets/icon-checklist.png
+tmp_portfolio_assets/icon-clock.png
+tmp_portfolio_assets/icon-gear.png
+tmp_portfolio_assets/icon-person.png
+tmp_portfolio_assets/icon-server.png
+tmp_portfolio_assets/icon-three-circles.png
+tmp_portfolio_assets/icon-wrench.png
+tmp_portfolio_assets/smarttech-shield.png
+tmp_portfolio_assets/smarttech-watermark-10pct.png
+tmp_portfolio_assets/smarttech-watermark-17pct.png
+tmp_portfolio_assets/smarttech-watermark-32pct.png
+tmp_portfolio_assets/smarttech-watermark-40pct.png

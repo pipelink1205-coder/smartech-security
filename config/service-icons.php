@@ -20,6 +20,7 @@ return [
         'fire'     => 'Incendios',
         'shield'   => 'Seguridad',
         'support'  => 'Soporte TI',
+        'code'     => 'Desarrollo de software',
     ],
 
     'emojis' => [

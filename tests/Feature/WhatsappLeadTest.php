@@ -23,6 +23,20 @@ class WhatsappLeadTest extends TestCase
         $this->assertNotNull($click->created_at);
     }
 
+    public function test_clicking_whatsapp_link_can_open_with_a_prefilled_message_and_is_logged(): void
+    {
+        $message = 'Hola, necesito asesoría sobre software para mi empresa.';
+
+        $this->get(route('whatsapp.click', ['from' => 'service_hero', 'text' => $message]))
+            ->assertRedirect('https://wa.me/'.config('contact.whatsapp').'?text='.urlencode($message));
+
+        $this->assertDatabaseHas('whatsapp_leads', [
+            'source' => 'service_hero',
+            'name' => '',
+            'phone' => '',
+        ]);
+    }
+
     public function test_click_is_logged_without_asking_for_data(): void
     {
         $this->postJson(route('whatsapp-leads.store'), [

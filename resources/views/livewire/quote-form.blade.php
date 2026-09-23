@@ -121,7 +121,7 @@
                                 <select id="service" wire:model="service">
                                     <option value="">Seleccione…</option>
                                     @foreach($serviceOptions as $name)
-                                        <option value="{{ $name }}">{{ $name }}</option>
+                                        <option value="{{ $name }}" @selected($service === $name)>{{ $name }}</option>
                                     @endforeach
                                 </select>
                                 @error('service') <span class="form-error">{{ $message }}</span> @enderror

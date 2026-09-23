@@ -1,4 +1,15 @@
-@props(['title' => null])
+@props([
+    'title' => null,
+    'description' => 'Smart Tech Security – Cámaras 4K, energía solar, IPTV para hoteles, alarmas, domótica y redes en Medellín y el Valle de Aburrá.',
+    'canonical' => null,
+    'ogImage' => null,
+])
+
+@php
+    $pageTitle = $title ?? 'Smart Tech Security – Medellín';
+    $pageCanonical = $canonical ?? url()->current();
+    $pageOgImage = $ogImage ?? asset('images/logo-transparent.png');
+@endphp
 
 <!DOCTYPE html>
 <html lang="es">
@@ -6,8 +17,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <meta name="description" content="Smart Tech Security – Cámaras 4K, energía solar, IPTV para hoteles, alarmas, domótica y redes en Medellín y el Valle de Aburrá." />
-    <title>{{ $title ?? 'Smart Tech Security – Medellín' }}</title>
+    <meta name="description" content="{{ $description }}" />
+    <link rel="canonical" href="{{ $pageCanonical }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Smart Tech Security" />
+    <meta property="og:title" content="{{ $pageTitle }}" />
+    <meta property="og:description" content="{{ $description }}" />
+    <meta property="og:url" content="{{ $pageCanonical }}" />
+    <meta property="og:image" content="{{ $pageOgImage }}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ $pageTitle }}" />
+    <meta name="twitter:description" content="{{ $description }}" />
+    <meta name="twitter:image" content="{{ $pageOgImage }}" />
+    <title>{{ $pageTitle }}</title>
 
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v={{ @filemtime(public_path('favicon.png')) ?: '1' }}" />
     <link rel="apple-touch-icon" href="{{ asset('images/favicon-shield.png') }}?v={{ @filemtime(public_path('images/favicon-shield.png')) ?: '1' }}" />

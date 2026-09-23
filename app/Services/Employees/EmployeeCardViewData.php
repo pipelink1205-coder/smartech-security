@@ -70,9 +70,7 @@ class EmployeeCardViewData
     private function make(array $data): array
     {
         return [
-            'front_template' => $this->publicImageDataUri('designs/papeleria/plantilla-carnet-frente-v1.png'),
-            'front_foreground' => $this->publicImageDataUri('designs/papeleria/plantilla-carnet-frente-capa-superior-v1.png'),
-            'back_template' => $this->publicImageDataUri('designs/papeleria/plantilla-carnet-reverso-v1.png'),
+            'brand_mark' => $this->publicImageDataUri('images/logo-transparent.png'),
             'full_name' => mb_strtoupper(trim(($data['first_names'] ?? '').' '.($data['last_names'] ?? ''))) ?: 'NOMBRE DEL EMPLEADO',
             'position' => trim((string) ($data['position'] ?? '')) ?: 'Cargo del empleado',
             'employee_code' => $data['employee_code'] ?: 'STS-XXXX',

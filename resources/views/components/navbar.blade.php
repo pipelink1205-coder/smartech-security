@@ -7,6 +7,7 @@
             <li><a href="{{ route('servicios') }}">Servicios</a></li>
             <li><a href="{{ route('home') }}#iptv" data-page-link="iptv">IPTV Hoteles</a></li>
             <li><a href="{{ route('servicios.show', 'outsourcing-ti') }}">Outsourcing TI</a></li>
+            <li><a href="{{ route('servicios.show', 'desarrollo-software') }}">Desarrollo de Software</a></li>
             <li><a href="{{ route('home') }}#proyectos" data-page-link="proyectos">Proyectos</a></li>
             <li><a href="{{ route('home') }}#faq" data-page-link="faq">FAQ</a></li>
             <li><a href="{{ route('home') }}#contacto" data-page-link="contacto">Contacto</a></li>

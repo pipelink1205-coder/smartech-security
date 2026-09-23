@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 class ServiceSeeder extends Seeder
 {
     /**
-     * Servicios del sitio (11 base + los que exportes desde admin).
+     * Servicios del sitio y servicios adicionales exportados desde admin.
      * Idempotente: updateOrCreate por slug — seguro en local y producción.
      *
      *   php artisan db:seed --class=ServiceSeeder
