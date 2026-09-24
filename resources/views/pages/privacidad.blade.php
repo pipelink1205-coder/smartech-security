@@ -1,4 +1,8 @@
-<x-app-layout :title="'Política de Privacidad – Smart Tech Security'">
+<x-app-layout
+    :title="\App\Support\Seo::page('privacidad')['title']"
+    :description="\App\Support\Seo::page('privacidad')['description']"
+    :canonical="\App\Support\Seo::url('/privacidad')"
+>
     <article class="legal container">
         <header class="legal-head">
             <h1>Política de privacidad y tratamiento de datos personales</h1>

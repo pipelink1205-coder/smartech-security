@@ -1,4 +1,8 @@
-<x-app-layout :title="'Términos y Condiciones – Smart Tech Security'">
+<x-app-layout
+    :title="\App\Support\Seo::page('terminos')['title']"
+    :description="\App\Support\Seo::page('terminos')['description']"
+    :canonical="\App\Support\Seo::url('/terminos-y-condiciones')"
+>
     <article class="legal container">
         <header class="legal-head">
             <h1>Términos y condiciones</h1>

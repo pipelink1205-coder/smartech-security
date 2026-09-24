@@ -58,7 +58,7 @@ class SoftwareServicePageTest extends TestCase
             ->assertSee($service->name)
             ->assertSee('Conocer soluciones')
             ->assertSee($serviceUrl, false)
-            ->assertSee('images/services/desarrollo-software.svg', false);
+            ->assertSee('images/services/desarrollo-software.jpg', false);
 
         $this->get('/servicios')
             ->assertOk()

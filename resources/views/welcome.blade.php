@@ -1,7 +1,15 @@
-<x-app-layout>
+<x-app-layout
+    :title="\App\Support\Seo::page('home')['title']"
+    :description="\App\Support\Seo::page('home')['description']"
+    :canonical="\App\Support\Seo::url('/')"
+    :extra-json-ld="[\App\Support\Seo::faqGraph()]"
+>
 
     <x-site-page id="inicio" active>
-        @include('components.hero')
+        <div class="home-hero-stage">
+            @include('components.hero')
+            <x-hero-tech-intro />
+        </div>
         @include('components.services-strip')
     </x-site-page>
 

@@ -1,4 +1,8 @@
-<x-app-layout :title="'Política de Ventas – Smart Tech Security'">
+<x-app-layout
+    :title="\App\Support\Seo::page('politica-ventas')['title']"
+    :description="\App\Support\Seo::page('politica-ventas')['description']"
+    :canonical="\App\Support\Seo::url('/politica-de-ventas')"
+>
     <article class="legal container">
         <header class="legal-head">
             <h1>Política de ventas</h1>

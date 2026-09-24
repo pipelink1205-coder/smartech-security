@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Support\Seo;
 use Illuminate\Http\Response;
 use Throwable;
 
@@ -10,21 +11,22 @@ class SitemapController extends Controller
 {
     public function __invoke(): Response
     {
-        $base = rtrim((string) config('app.url'), '/');
+        $base = Seo::siteUrl();
 
-        // Si APP_URL está mal en el servidor, no servir URLs de localhost a Google.
-        if ($base === '' || str_contains($base, 'localhost') || str_contains($base, '127.0.0.1')) {
-            $base = 'https://smarttechsecurity.com.co';
-        }
+        $lastmod = static function (string $view): ?string {
+            $path = resource_path('views/'.$view);
+
+            return is_file($path) ? date('c', filemtime($path)) : null;
+        };
 
         $urls = [
-            ['loc' => $base.'/', 'changefreq' => 'weekly', 'priority' => '1.0'],
-            ['loc' => $base.'/servicios', 'changefreq' => 'weekly', 'priority' => '0.9'],
-            ['loc' => $base.'/proyectos', 'changefreq' => 'weekly', 'priority' => '0.8'],
-            ['loc' => $base.'/contacto', 'changefreq' => 'monthly', 'priority' => '0.8'],
-            ['loc' => $base.'/privacidad', 'changefreq' => 'yearly', 'priority' => '0.3'],
-            ['loc' => $base.'/terminos-y-condiciones', 'changefreq' => 'yearly', 'priority' => '0.3'],
-            ['loc' => $base.'/politica-de-ventas', 'changefreq' => 'yearly', 'priority' => '0.3'],
+            ['loc' => $base.'/', 'lastmod' => $lastmod('welcome.blade.php'), 'changefreq' => 'weekly', 'priority' => '1.0'],
+            ['loc' => $base.'/servicios', 'lastmod' => $lastmod('pages/servicios.blade.php'), 'changefreq' => 'weekly', 'priority' => '0.9'],
+            ['loc' => $base.'/proyectos', 'lastmod' => $lastmod('pages/proyectos.blade.php'), 'changefreq' => 'weekly', 'priority' => '0.8'],
+            ['loc' => $base.'/contacto', 'lastmod' => $lastmod('pages/contacto.blade.php'), 'changefreq' => 'monthly', 'priority' => '0.8'],
+            ['loc' => $base.'/privacidad', 'lastmod' => $lastmod('pages/privacidad.blade.php'), 'changefreq' => 'yearly', 'priority' => '0.3'],
+            ['loc' => $base.'/terminos-y-condiciones', 'lastmod' => $lastmod('pages/terminos.blade.php'), 'changefreq' => 'yearly', 'priority' => '0.3'],
+            ['loc' => $base.'/politica-de-ventas', 'lastmod' => $lastmod('pages/politica-ventas.blade.php'), 'changefreq' => 'yearly', 'priority' => '0.3'],
         ];
 
         try {
@@ -33,7 +35,7 @@ class SitemapController extends Controller
                     'loc' => $base.'/servicios/'.$service->slug,
                     'lastmod' => optional($service->updated_at)->toAtomString(),
                     'changefreq' => 'monthly',
-                    'priority' => in_array($service->slug, ['outsourcing-ti', 'iptv-hoteles'], true)
+                    'priority' => in_array($service->slug, ['outsourcing-ti', 'iptv-hoteles', 'desarrollo-software'], true)
                         ? '0.9'
                         : '0.7',
                 ];

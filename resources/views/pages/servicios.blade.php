@@ -1,4 +1,8 @@
-<x-app-layout :title="'Servicios – Smart Tech Security'">
+<x-app-layout
+    :title="\App\Support\Seo::page('servicios')['title']"
+    :description="\App\Support\Seo::page('servicios')['description']"
+    :canonical="\App\Support\Seo::url('/servicios')"
+>
     @include('components.servicios', ['services' => $services])
 
     <div class="container partners-page-wrap">

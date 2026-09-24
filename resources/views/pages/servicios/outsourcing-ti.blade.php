@@ -1,4 +1,10 @@
-<x-app-layout :title="'Outsourcing de TI – Smart Tech Security'">
+<x-app-layout
+    :title="\App\Support\Seo::page('outsourcing-ti')['title']"
+    :description="\App\Support\Seo::page('outsourcing-ti')['description']"
+    :canonical="\App\Support\Seo::url('/servicios/outsourcing-ti')"
+    :og-image="$service->image_url"
+    :extra-json-ld="[\App\Support\Seo::serviceGraph($service, \App\Support\Seo::page('outsourcing-ti')['description']), \App\Support\Seo::faqGraph($service->faqs)]"
+>
     <article class="sd ot" data-wa-service="{{ $service->name }}">
 
         {{-- ═══ HERO ORIENTADO AL DOLOR ═══ --}}

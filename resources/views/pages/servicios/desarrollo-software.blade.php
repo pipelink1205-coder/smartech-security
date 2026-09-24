@@ -1,7 +1,9 @@
 <x-app-layout
-    :title="'Desarrollo de Software a la Medida | Smart Tech Security'"
-    :description="'Desarrollo de software a la medida, aplicaciones web, automatización, inteligencia artificial, analítica de datos e integraciones para empresas.'"
-    :canonical="route('servicios.show', 'desarrollo-software')"
+    :title="\App\Support\Seo::page('desarrollo-software')['title']"
+    :description="\App\Support\Seo::page('desarrollo-software')['description']"
+    :canonical="\App\Support\Seo::url('/servicios/desarrollo-software')"
+    :og-image="$service->image_url"
+    :extra-json-ld="[\App\Support\Seo::serviceGraph($service, \App\Support\Seo::page('desarrollo-software')['description']), \App\Support\Seo::faqGraph($service->faqs)]"
 >
     @php
         $contactUrl = route('contacto', ['servicio' => $service->name]);
@@ -112,7 +114,7 @@
                     </div>
 
                     <figure class="sd-hero-media">
-                        <img src="{{ $service->image_url }}" alt="Ilustración de una aplicación web conectada con una base de datos y un dashboard" width="880" height="550" fetchpriority="high" />
+                        <img src="{{ $service->image_url }}" alt="Especialista interactuando con un panel de desarrollo de software, automatización e inteligencia de datos" width="880" height="550" fetchpriority="high" />
                     </figure>
                 </div>
             </div>

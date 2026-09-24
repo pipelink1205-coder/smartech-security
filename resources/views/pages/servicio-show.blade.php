@@ -1,4 +1,10 @@
-<x-app-layout :title="$service->name . ' – Smart Tech Security'">
+<x-app-layout
+    :title="$service->name.' en Medellín | Smart Tech Security'"
+    :description="\Illuminate\Support\Str::limit(preg_replace('/\s+/', ' ', strip_tags((string) $service->description)), 155, '')"
+    :canonical="\App\Support\Seo::url('/servicios/'.$service->slug)"
+    :og-image="$service->image_url"
+    :extra-json-ld="[\App\Support\Seo::serviceGraph($service), \App\Support\Seo::faqGraph($service->faqs)]"
+>
     <article class="sd" data-wa-service="{{ $service->name }}">
 
         {{-- ═══ HERO OSCURO ═══ --}}

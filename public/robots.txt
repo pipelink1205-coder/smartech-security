@@ -1,8 +1,14 @@
 User-agent: *
 Allow: /
 
-# Panel de administración — no indexar
+# Panel, tracking y documentos firmados — no indexar
 Disallow: /admin
 Disallow: /livewire
+Disallow: /ir/whatsapp
+Disallow: /whatsapp-lead
+Disallow: /verificar-empleado
+Disallow: /cotizacion/
+Disallow: /factura/
+Disallow: /cuenta-de-cobro/
 
 Sitemap: https://smarttechsecurity.com.co/sitemap.xml
