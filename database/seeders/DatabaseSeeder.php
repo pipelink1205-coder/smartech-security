@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ServiceSeeder::class,
             QuoteCatalogSeeder::class,
+            HomeCoverSeeder::class,
         ]);
 
         $projects = [

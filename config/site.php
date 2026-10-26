@@ -71,6 +71,14 @@ return [
         'Conjunto Residencial', 'Industria / Bodega', 'Otro',
     ],
 
+    /** Slugs que ya tienen botón propio en el menú; no se repiten en el desplegable de Servicios. */
+    'nav_featured_slugs' => [
+        'iptv-hoteles',
+        'outsourcing-ti',
+        'desarrollo-software',
+        'camaras',
+    ],
+
     /** Secciones del sitio (navegación por páginas en desktop / scroll en móvil). */
     'sections' => [
         ['id' => 'inicio', 'label' => 'Inicio'],

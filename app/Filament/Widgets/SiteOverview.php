@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\HomeCover;
 use App\Models\Project;
 use App\Models\Quote;
 use App\Models\Service;
@@ -17,7 +18,14 @@ class SiteOverview extends StatsOverviewWidget
     {
         $newQuotes = Quote::query()->where('status', 'new')->count();
 
+        $cover = HomeCover::current();
+
         return [
+            Stat::make('Portada', $cover->exists ? $cover->name : 'Institucional')
+                ->description($cover->kindLabel().($cover->is_fallback ? ' · respaldo' : ' · en vivo'))
+                ->descriptionIcon('heroicon-m-photo')
+                ->color($cover->exists && ! $cover->is_fallback ? 'success' : 'primary')
+                ->url(route('filament.admin.resources.portadas.index')),
             Stat::make('Proyectos', Project::query()->count())
                 ->description(Project::query()->where('is_featured', true)->count() . ' destacados')
                 ->descriptionIcon('heroicon-m-map')

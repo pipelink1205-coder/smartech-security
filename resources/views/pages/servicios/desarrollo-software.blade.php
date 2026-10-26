@@ -132,7 +132,7 @@
             </div>
         </x-section>
 
-        <x-section tone="default" class="software-section" tag="Soluciones" title="Tecnología alineada con tu operación" subtitle="Cada proyecto parte de una necesidad concreta. El alcance se define según los procesos, usuarios, datos e integraciones involucrados.">
+        <x-section id="sw-solutions" tone="default" class="software-section" tag="Soluciones" title="Tecnología alineada con tu operación" subtitle="Cada proyecto parte de una necesidad concreta. El alcance se define según los procesos, usuarios, datos e integraciones involucrados.">
             <div class="software-solutions">
                 @foreach($solutions as $index => $solution)
                     <article class="software-card glass-card">
@@ -149,7 +149,7 @@
             </div>
         </x-section>
 
-        <x-section tone="dark" class="software-section software-analytics" tag="Analítica de datos" title="Convierte tus datos en decisiones" subtitle="Integramos información proveniente de diferentes fuentes y la transformamos en indicadores claros para apoyar la toma de decisiones.">
+        <x-section id="sw-analytics" tone="dark" class="software-section software-analytics" tag="Analítica de datos" title="Convierte tus datos en decisiones" subtitle="Integramos información proveniente de diferentes fuentes y la transformamos en indicadores claros para apoyar la toma de decisiones.">
             <ol class="software-data-flow" aria-label="Flujo desde las fuentes de datos hasta los indicadores">
                 <li><span class="software-flow-label">Fuentes</span><strong>ERP + Excel + Bases de Datos + APIs</strong></li>
                 <li><span class="software-flow-label">Preparación</span><strong>Integración y procesamiento</strong></li>
@@ -158,7 +158,7 @@
             </ol>
         </x-section>
 
-        <x-section tone="alt" class="software-section" tag="Inteligencia Artificial" title="Inteligencia Artificial aplicada a procesos reales" subtitle="Evaluamos dónde puede aportar valor y cómo integrarla con los procesos, sistemas y permisos de la organización.">
+        <x-section id="sw-ai" tone="alt" class="software-section" tag="Inteligencia Artificial" title="Inteligencia Artificial aplicada a procesos reales" subtitle="Evaluamos dónde puede aportar valor y cómo integrarla con los procesos, sistemas y permisos de la organización.">
             <div class="software-ai-grid">
                 @foreach($aiUses as $use)
                     <article class="software-ai-card glass-card">
@@ -216,7 +216,7 @@
             </div>
         </x-section>
 
-        <x-section tone="default" class="software-section" tag="Preguntas frecuentes" title="Respuestas para empezar">
+        <x-section id="sw-faq" tone="default" class="software-section" tag="Preguntas frecuentes" title="Respuestas para empezar">
             <div class="faq-list software-faqs">
                 @foreach($service->faqs ?? [] as $faq)
                     <details class="faq-item glass-card">

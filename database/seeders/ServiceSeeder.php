@@ -21,10 +21,20 @@ class ServiceSeeder extends Seeder
         $services = require __DIR__ . '/data/services.php';
 
         foreach ($services as $service) {
-            Service::updateOrCreate(
-                ['slug' => $service['slug']],
-                array_merge(['is_active' => true, 'show_on_home' => true], $service),
-            );
+            $existing = Service::query()->where('slug', $service['slug'])->first();
+
+            if ($existing) {
+                // En producción las fotos y la visibilidad se editan en Filament.
+                // El seeder actualiza textos/datos, no pisa image ni los toggles.
+                unset($service['image'], $service['is_active'], $service['show_on_home']);
+                $existing->fill($service)->save();
+                continue;
+            }
+
+            Service::query()->create(array_merge([
+                'is_active' => true,
+                'show_on_home' => true,
+            ], $service));
         }
     }
 }

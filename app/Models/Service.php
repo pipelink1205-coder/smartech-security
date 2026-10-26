@@ -34,6 +34,26 @@ class Service extends Model
     public function scopeOnHome($q)   { return $q->where('show_on_home', true); }
     public function scopeOrdered($q)  { return $q->orderBy('order'); }
 
+    /**
+     * Servicios activos que no tienen botón propio en el menú superior.
+     *
+     * @return \Illuminate\Support\Collection<int, self>
+     */
+    public static function extraForNavMenu()
+    {
+        $exclude = array_values(array_filter(config('site.nav_featured_slugs', [])));
+
+        try {
+            return static::query()
+                ->active()
+                ->ordered()
+                ->when($exclude !== [], fn ($query) => $query->whereNotIn('slug', $exclude))
+                ->get(['id', 'name', 'slug', 'icon']);
+        } catch (\Throwable) {
+            return collect();
+        }
+    }
+
     public function getImageUrlAttribute(): string
     {
         $url = null;

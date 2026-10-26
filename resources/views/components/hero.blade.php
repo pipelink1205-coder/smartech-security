@@ -1,36 +1,47 @@
 @php
-    $hero = config('images.hero');
-    if (str_starts_with((string) $hero, 'http')) {
-        $heroSrc = $hero;
-    } else {
-        $heroPath = public_path($hero);
-        $heroSrc = asset($hero) . '?v=' . (@filemtime($heroPath) ?: time());
-    }
+    $cover ??= \App\Models\HomeCover::current();
+    $primaryHref = $cover->primaryHref();
+    $secondaryHref = $cover->secondaryHref();
+    $primaryLink = $cover->pageLinkFor($primaryHref);
+    $secondaryLink = $cover->pageLinkFor($secondaryHref);
+    $secondaryIntent = $cover->secondaryQuoteIntent();
 @endphp
 
 <x-section tone="hero" class="hero-block">
+    @if($cover->isPreview())
+        <div class="cover-preview-banner" role="status">
+            Vista previa · {{ $cover->name }}
+            <span>{{ $cover->kindLabel() }}</span>
+        </div>
+    @endif
     <div class="hero-pattern" aria-hidden="true"></div>
     <div class="hero-grid">
         <div class="hero-content">
-            <div class="hero-badge">{{ config('site.hero.badge') }}</div>
-            <h1 class="hero-h1">{{ config('site.hero.title') }}</h1>
-            <p class="hero-p">{{ config('site.hero.subtitle') }}</p>
+            @if(filled($cover->badge))
+                <div class="hero-badge">{{ $cover->badge }}</div>
+            @endif
+            <h1 class="hero-h1">{{ $cover->title }}</h1>
+            @if(filled($cover->subtitle))
+                <p class="hero-p">{{ $cover->subtitle }}</p>
+            @endif
             <div class="hero-btns">
-                <a href="#servicios" class="btn btn-primary" data-page-link="servicios">Ver Servicios</a>
-                <a href="{{ route('home') }}?intent=visit#contacto" class="btn btn-outline" data-page-link="contacto" data-quote-intent="visit">Agendar visita gratuita</a>
+                <a href="{{ $primaryHref }}" class="btn btn-primary"{{ $primaryLink ? ' data-page-link="'.$primaryLink.'"' : '' }}>{{ $cover->cta_primary_label }}</a>
+                <a href="{{ $secondaryHref }}" class="btn btn-outline"{{ $secondaryLink ? ' data-page-link="'.$secondaryLink.'"' : '' }}{{ $secondaryIntent ? ' data-quote-intent="'.$secondaryIntent.'"' : '' }}>{{ $cover->cta_secondary_label }}</a>
             </div>
-            <div class="hero-stats">
-                @foreach(config('site.stats') as $stat)
-                    <div>
-                        <div class="hero-stat-num">{{ $stat['num'] }}</div>
-                        <div class="hero-stat-label">{{ $stat['label'] }}</div>
-                    </div>
-                @endforeach
-            </div>
+            @if($cover->displayStats() !== [])
+                <div class="hero-stats">
+                    @foreach($cover->displayStats() as $stat)
+                        <div>
+                            <div class="hero-stat-num">{{ $stat['num'] ?? '' }}</div>
+                            <div class="hero-stat-label">{{ $stat['label'] ?? '' }}</div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
         <div class="hero-image">
             <div class="hero-img-wrap glass-card">
-                <img src="{{ $heroSrc }}" alt="Instalación de cámaras de seguridad y sistemas tecnológicos en Medellín" loading="eager" />
+                <img src="{{ $cover->image_url }}" alt="{{ $cover->image_alt ?: $cover->title }}" loading="eager" />
             </div>
         </div>
     </div>
