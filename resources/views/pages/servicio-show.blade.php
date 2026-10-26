@@ -4,6 +4,7 @@
     :canonical="\App\Support\Seo::url('/servicios/'.$service->slug)"
     :og-image="$service->image_url"
     :extra-json-ld="[\App\Support\Seo::serviceGraph($service), \App\Support\Seo::faqGraph($service->faqs)]"
+    :whatsapp-service="$service->name"
 >
     <article class="sd" data-wa-service="{{ $service->name }}">
 
@@ -38,7 +39,7 @@
                             @if($service->slug === 'iptv-hoteles')
                                 <a href="{{ route('home') }}#iptv" class="btn sd-btn-outline">Ver presentación IPTV</a>
                             @endif
-                            <x-whatsapp-link from="service_hero" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
+                            <x-whatsapp-link from="service_hero" :service="$service->name" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
                         </div>
                     </div>
 
@@ -226,7 +227,7 @@
 
                     <div class="sd-quote-actions">
                         <a href="{{ route('contacto') }}" class="btn btn-primary sd-btn-block">Solicitar información</a>
-                        <x-whatsapp-link from="service_sidebar" class="btn btn-ghost sd-btn-block" target="_blank">Escríbenos por WhatsApp</x-whatsapp-link>
+                        <x-whatsapp-link from="service_sidebar" :service="$service->name" class="btn btn-ghost sd-btn-block" target="_blank">Escríbenos por WhatsApp</x-whatsapp-link>
                     </div>
 
                     <ul class="sd-quote-trust">
@@ -265,7 +266,7 @@
                     <p>Agenda tu visita técnica gratuita. Tras el diagnóstico te entregamos la cotización a la medida en Medellín y el Valle de Aburrá.</p>
                     <div class="sd-hero-actions">
                         <a href="{{ route('contacto', ['intent' => 'visit']) }}" class="btn btn-primary">Agendar visita gratuita</a>
-                        <x-whatsapp-link from="service_cta" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
+                        <x-whatsapp-link from="service_cta" :service="$service->name" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
                     </div>
                 </div>
             </div>

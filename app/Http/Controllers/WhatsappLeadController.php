@@ -14,7 +14,7 @@ class WhatsappLeadController extends Controller
         $this->record($request, (string) $request->query('from', 'link'), $request->headers->get('referer'));
 
         $url = 'https://wa.me/'.$this->destinationDigits($request->query('n'));
-        $message = trim((string) $request->query('text', ''));
+        $message = \App\Support\WhatsappMessage::for($request->query('text'));
 
         if ($message !== '') {
             $url .= '?text='.urlencode(mb_substr($message, 0, 1000));

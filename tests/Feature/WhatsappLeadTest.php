@@ -15,7 +15,7 @@ class WhatsappLeadTest extends TestCase
     public function test_clicking_whatsapp_link_is_logged_and_opens_chat(): void
     {
         $this->get(route('whatsapp.click', ['from' => 'fab']))
-            ->assertRedirect('https://wa.me/'.config('contact.whatsapp'));
+            ->assertRedirect('https://wa.me/'.config('contact.whatsapp').'?text='.urlencode(config('contact.whatsapp_message')));
 
         $click = WhatsappLead::query()->first();
         $this->assertNotNull($click);
@@ -35,6 +35,13 @@ class WhatsappLeadTest extends TestCase
             'name' => '',
             'phone' => '',
         ]);
+    }
+
+    public function test_home_whatsapp_bubble_uses_the_ready_to_send_message(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee(rawurlencode(config('contact.whatsapp_message')), false);
     }
 
     public function test_click_is_logged_without_asking_for_data(): void

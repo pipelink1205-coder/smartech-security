@@ -4,6 +4,7 @@
     :canonical="\App\Support\Seo::url('/servicios/outsourcing-ti')"
     :og-image="$service->image_url"
     :extra-json-ld="[\App\Support\Seo::serviceGraph($service, \App\Support\Seo::page('outsourcing-ti')['description']), \App\Support\Seo::faqGraph($service->faqs)]"
+    :whatsapp-service="$service->name"
 >
     <article class="sd ot" data-wa-service="{{ $service->name }}">
 
@@ -34,7 +35,7 @@
                         <div class="sd-hero-actions">
                             <a href="#diagnostico" class="btn btn-primary">Solicita tu diagnóstico gratuito</a>
                             <a href="#comparador" class="btn sd-btn-outline">Calcula tu ahorro</a>
-                            <x-whatsapp-link from="service_hero" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
+                            <x-whatsapp-link from="service_hero" :service="$service->name" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
                         </div>
                     </div>
 
