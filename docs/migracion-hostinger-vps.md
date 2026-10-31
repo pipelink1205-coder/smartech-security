@@ -135,15 +135,16 @@ New-Item -ItemType Directory -Force -Path C:\temp\smartech-migracion
 Test-Path C:\temp\smartech-migracion
 ```
 
-Tiene que imprimir `True`. Luego, desde `C:\inetpub\wwwroot\smartech`:
+Tiene que imprimir `True`. En PowerShell pega **una línea**, pulsa Enter y espera a que vuelva `PS C:\...>`. Si aparece `>>`, pulsa Ctrl+C y no pegues el bloque entero.
 
 ```powershell
 cd C:\inetpub\wwwroot\smartech
 Copy-Item -Force .env C:\temp\smartech-migracion\.env
 tar -a -c -f C:\temp\smartech-migracion\private.zip -C storage\app private
-$dirs = @('projects','services','portadas','clients') | Where-Object { Test-Path "public\images\$_" }
-tar -a -c -f C:\temp\smartech-migracion\imagenes.zip -C public\images @dirs
+tar -a -c -f C:\temp\smartech-migracion\imagenes.zip -C public\images projects services portadas clients
 ```
+
+Si el último `tar` dice que falta una carpeta, repítelo nombrando solo las que existan en `public\images` (`projects`, `services`, `portadas`, `clients`).
 
 `mysqldump` no está en el PATH de IIS. Localízalo y lee el nombre de la base sin mostrar la clave:
 
