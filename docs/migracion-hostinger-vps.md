@@ -75,9 +75,7 @@ FLUSH PRIVILEGES;
 EXIT;
 ```
 
-En el servidor IIS, con el MySQL de producción (ajusta usuario y ruta de `mysqldump`):
-
-En este IIS el servicio es MySQL 8.0, la base es `db_smart_tech_security`, el usuario es `root` y no tiene contraseña. El programa está en `C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe`. No pongas `-p`: sin eso MySQL se queda esperando una clave.
+En este IIS el servicio es MySQL 8.0, la base es `db_smart_tech_security`, el usuario es `root` y no tiene contraseña. El programa está en `C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe`. Omite `-p`: ese flag deja a MySQL esperando una clave.
 
 ```powershell
 & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe" --host=127.0.0.1 --port=3306 --user=root --default-character-set=utf8mb4 --single-transaction --routines --triggers --result-file=C:\temp\smartech-migracion\smartech.sql db_smart_tech_security
@@ -86,7 +84,7 @@ En este IIS el servicio es MySQL 8.0, la base es `db_smart_tech_security`, el us
 Súbelo e impórtalo. No ejecutes `migrate:fresh` ni un seed completo: borrarían cotizaciones y usuarios.
 
 ```bash
-scp C:\temp\smartech.sql root@IP_DEL_VPS:/root/smartech.sql
+scp C:\temp\smartech-migracion\smartech.sql root@IP_DEL_VPS:/root/smartech.sql
 mysql -u smartech -p db_smart_tech_security < /root/smartech.sql
 ```
 
@@ -148,20 +146,13 @@ tar -a -c -f C:\temp\smartech-migracion\imagenes.zip -C public\images projects s
 
 Si el último `tar` dice que falta una carpeta, repítelo nombrando solo las que existan en `public\images` (`projects`, `services`, `portadas`, `clients`).
 
-`mysqldump` no está en el PATH de IIS. Localízalo y lee el nombre de la base sin mostrar la clave:
+El volcado de esta base, sin contraseña y sin pasar por el PATH:
 
 ```powershell
-Get-ChildItem -Path 'C:\Program Files','C:\Program Files (x86)','C:\laragon','C:\xampp' -Filter mysqldump.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
-Select-String -Path .env -Pattern '^DB_(HOST|PORT|DATABASE|USERNAME)='
+& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe" --host=127.0.0.1 --port=3306 --user=root --default-character-set=utf8mb4 --single-transaction --routines --triggers --result-file=C:\temp\smartech-migracion\smartech.sql db_smart_tech_security
 ```
 
-El volcado lo escribe el propio `mysqldump` (`--result-file`). En PowerShell, redirigir con `>` guarda el SQL en UTF-16 y luego no importa en Linux.
-
-```powershell
-& 'C:\RUTA\mysqldump.exe' -u USUARIO -p --single-transaction --routines --triggers --result-file=C:\temp\smartech-migracion\smartech.sql NOMBRE_BD
-```
-
-`USUARIO` y `NOMBRE_BD` salen de `DB_USERNAME` y `DB_DATABASE` en ese `.env`. El sitio puede seguir recibiendo visitas: este paquete es una foto del momento. Justo antes de cambiar el DNS se repite el volcado para no perder cotizaciones nuevas.
+`--result-file` lo escribe el propio programa. En PowerShell, redirigir con `>` guarda el SQL en UTF-16 y luego no importa en Linux. El sitio puede seguir recibiendo visitas: este paquete es una foto del momento. Justo antes de cambiar el DNS se repite el volcado para no perder cotizaciones nuevas.
 
 En el VPS:
 
