@@ -13,7 +13,7 @@ Git no trae el `.env` ni los archivos que el panel fue guardando en producción.
 | `APP_KEY` | `.env` | Cifra el documento de los empleados y la clave del certificado DIAN. Si cambia, esos datos no se pueden leer. |
 | Base de datos | MySQL de ese servidor | Usuarios del panel, cotizaciones, facturas, proyectos, configuración DIAN. |
 | `storage\app\private\` | disco `local` | Certificado `.p12`, XML de facturas, fotos y firmas de empleados. |
-| Fotos subidas por el panel | `public\images\projects\`, `public\images\services\` y logos nuevos en `public\images\clients\` | El repo tiene el diseño base; las cargas de Filament solo están en el disco de IIS. |
+| Fotos subidas por el panel | `public\images\projects\`, `public\images\services\`, `public\images\portadas\` y `public\images\clients\` | El repo tiene el diseño base; las cargas de Filament solo están en el disco de IIS. |
 
 `public\web.config` no se copia. En Linux lo reemplaza `deploy/hostinger/nginx-smartech.conf`.
 
@@ -126,12 +126,23 @@ CACHE_STORE=database
 
 Copia el resto de correo, WhatsApp, DIAN y datos bancarios desde el `.env` de IIS. Deja `DIAN_ENABLED` como esté hoy.
 
-Trae los archivos que no están en Git (desde `C:\inetpub\wwwroot\smartech`):
+Trae los archivos que no están en Git. En el IIS, desde `C:\inetpub\wwwroot\smartech`, arma el paquete antes de apagar el sitio:
+
+```powershell
+New-Item -ItemType Directory -Force C:\temp\smartech-migracion | Out-Null
+mysqldump -u USUARIO -p NOMBRE_BD > C:\temp\smartech-migracion\smartech.sql
+tar -a -c -f C:\temp\smartech-migracion\private.zip -C storage\app private
+tar -a -c -f C:\temp\smartech-migracion\imagenes.zip -C public\images projects services portadas clients
+copy .env C:\temp\smartech-migracion\.env
+```
+
+`USUARIO` y `NOMBRE_BD` salen de `DB_USERNAME` y `DB_DATABASE` en ese `.env`. El sitio puede seguir recibiendo visitas: este paquete es una foto del momento. Justo antes de cambiar el DNS se repite el volcado para no perder cotizaciones nuevas.
+
+En el VPS:
 
 ```bash
-# En el VPS, después de copiar los zip por scp:
 unzip -o private.zip -d /var/www/smartech/storage/app/
-unzip -o images-projects.zip -d /var/www/smartech/public/images/
+unzip -o imagenes.zip -d /var/www/smartech/public/images/
 ```
 
 `storage/app/private/` debe quedar con `dian/certs`, fotos de empleados y XML. No subas esa carpeta a Git.
