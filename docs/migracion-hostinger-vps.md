@@ -68,24 +68,26 @@ mysql
 ```
 
 ```sql
-CREATE DATABASE smart_tech_security CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE db_smart_tech_security CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'smartech'@'localhost' IDENTIFIED BY 'una-clave-larga';
-GRANT ALL PRIVILEGES ON smart_tech_security.* TO 'smartech'@'localhost';
+GRANT ALL PRIVILEGES ON db_smart_tech_security.* TO 'smartech'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 ```
 
 En el servidor IIS, con el MySQL de producción (ajusta usuario y ruta de `mysqldump`):
 
-```bat
-mysqldump -u root -p --single-transaction --routines --triggers --result-file=C:\temp\smartech.sql smart_tech_security
+En este IIS el servicio es MySQL 8.0, la base es `db_smart_tech_security`, el usuario es `root` y no tiene contraseña. El programa está en `C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe`. No pongas `-p`: sin eso MySQL se queda esperando una clave.
+
+```powershell
+& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe" --host=127.0.0.1 --port=3306 --user=root --default-character-set=utf8mb4 --single-transaction --routines --triggers --result-file=C:\temp\smartech-migracion\smartech.sql db_smart_tech_security
 ```
 
 Súbelo e impórtalo. No ejecutes `migrate:fresh` ni un seed completo: borrarían cotizaciones y usuarios.
 
 ```bash
 scp C:\temp\smartech.sql root@IP_DEL_VPS:/root/smartech.sql
-mysql -u smartech -p smart_tech_security < /root/smartech.sql
+mysql -u smartech -p db_smart_tech_security < /root/smartech.sql
 ```
 
 El usuario administrador es el que ya existe en la tabla `users`. No hace falta `make:filament-user` si el volcado entró bien.
@@ -112,7 +114,7 @@ APP_KEY=base64:...
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=smart_tech_security
+DB_DATABASE=db_smart_tech_security
 DB_USERNAME=smartech
 DB_PASSWORD=una-clave-larga
 
