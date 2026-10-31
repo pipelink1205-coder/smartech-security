@@ -78,7 +78,7 @@ EXIT;
 En el servidor IIS, con el MySQL de producción (ajusta usuario y ruta de `mysqldump`):
 
 ```bat
-mysqldump -u root -p --single-transaction --routines --triggers smart_tech_security > C:\temp\smartech.sql
+mysqldump -u root -p --single-transaction --routines --triggers --result-file=C:\temp\smartech.sql smart_tech_security
 ```
 
 Súbelo e impórtalo. No ejecutes `migrate:fresh` ni un seed completo: borrarían cotizaciones y usuarios.
@@ -126,14 +126,36 @@ CACHE_STORE=database
 
 Copia el resto de correo, WhatsApp, DIAN y datos bancarios desde el `.env` de IIS. Deja `DIAN_ENABLED` como esté hoy.
 
-Trae los archivos que no están en Git. En el IIS, desde `C:\inetpub\wwwroot\smartech`, arma el paquete antes de apagar el sitio:
+Trae los archivos que no están en Git. En el IIS, en PowerShell, el prompt tiene que ser `PS C:\...>`. Si aparece `>>`, pulsa Ctrl+C: esa línea todavía no se ejecutó.
+
+Crea la carpeta y comprueba que existe:
 
 ```powershell
-New-Item -ItemType Directory -Force C:\temp\smartech-migracion | Out-Null
-mysqldump -u USUARIO -p NOMBRE_BD > C:\temp\smartech-migracion\smartech.sql
+New-Item -ItemType Directory -Force -Path C:\temp\smartech-migracion
+Test-Path C:\temp\smartech-migracion
+```
+
+Tiene que imprimir `True`. Luego, desde `C:\inetpub\wwwroot\smartech`:
+
+```powershell
+cd C:\inetpub\wwwroot\smartech
+Copy-Item -Force .env C:\temp\smartech-migracion\.env
 tar -a -c -f C:\temp\smartech-migracion\private.zip -C storage\app private
-tar -a -c -f C:\temp\smartech-migracion\imagenes.zip -C public\images projects services portadas clients
-copy .env C:\temp\smartech-migracion\.env
+$dirs = @('projects','services','portadas','clients') | Where-Object { Test-Path "public\images\$_" }
+tar -a -c -f C:\temp\smartech-migracion\imagenes.zip -C public\images @dirs
+```
+
+`mysqldump` no está en el PATH de IIS. Localízalo y lee el nombre de la base sin mostrar la clave:
+
+```powershell
+Get-ChildItem -Path 'C:\Program Files','C:\Program Files (x86)','C:\laragon','C:\xampp' -Filter mysqldump.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+Select-String -Path .env -Pattern '^DB_(HOST|PORT|DATABASE|USERNAME)='
+```
+
+El volcado lo escribe el propio `mysqldump` (`--result-file`). En PowerShell, redirigir con `>` guarda el SQL en UTF-16 y luego no importa en Linux.
+
+```powershell
+& 'C:\RUTA\mysqldump.exe' -u USUARIO -p --single-transaction --routines --triggers --result-file=C:\temp\smartech-migracion\smartech.sql NOMBRE_BD
 ```
 
 `USUARIO` y `NOMBRE_BD` salen de `DB_USERNAME` y `DB_DATABASE` en ese `.env`. El sitio puede seguir recibiendo visitas: este paquete es una foto del momento. Justo antes de cambiar el DNS se repite el volcado para no perder cotizaciones nuevas.
