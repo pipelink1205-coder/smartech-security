@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Cloudflare / IIS: sin esto PHP ve HTTP y Livewire rechaza uploads firmados (401).
+        // Cloudflare delante de Nginx o IIS: sin esto PHP ve HTTP y Livewire rechaza uploads firmados (401).
         $middleware->trustProxies(
             at: '*',
             headers: Request::HEADER_X_FORWARDED_FOR

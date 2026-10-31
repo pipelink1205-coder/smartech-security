@@ -81,6 +81,20 @@ Panel admin: http://localhost:8000/admin
 
 ---
 
+## Producción en VPS Hostinger
+
+El sitio en IIS se migra a Ubuntu con Nginx y PHP-FPM. Guía, virtual host, PHP y el script de cada deploy:
+
+**[docs/migracion-hostinger-vps.md](docs/migracion-hostinger-vps.md)**
+
+En el servidor, después del primer montaje:
+
+```bash
+sudo bash deploy.sh
+```
+
+---
+
 ## 📁 Estructura del proyecto
 
 ```

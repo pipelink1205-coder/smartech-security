@@ -116,7 +116,9 @@ class GeocodeController extends Controller
             $message = 'No se encontró una ubicación fiable. Coloca el pin manualmente en el mapa.';
 
             if (! extension_loaded('curl')) {
-                $message .= ' En el servidor IIS active extension=curl en C:\\PHP\\php.ini y ejecute iisreset.';
+                $message .= PHP_OS_FAMILY === 'Windows'
+                    ? ' En el servidor active extension=curl en php.ini y reinicie IIS.'
+                    : ' En el servidor active la extensión php-curl y reinicie PHP-FPM.';
             }
 
             return response()->json(['message' => $message], 404);
