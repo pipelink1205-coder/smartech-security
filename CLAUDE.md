@@ -54,6 +54,12 @@ php artisan config:clear && php artisan route:clear && php artisan view:clear
 8. Formularios nuevos: honeypot anti-spam, rate limit, casilla de autorización de datos (**Ley 1581 de 2012**) y guardar el lead en `Quote`.
 9. Al editar archivos grandes con scripts, reemplazar por coincidencia exacta y única (no por posición): ya hubo un incidente de secciones duplicadas en `desarrollo-software.blade.php`.
 
+## Specs listas para implementar
+
+Están en `docs/specs/`. Para implementar una, leerla completa, crear la rama que indica y cumplir sus criterios de aceptación.
+
+- **`docs/specs/flujo-solicitudes-visitas.md`**: separar Solicitudes → Agenda de visitas → Cotizaciones en el panel (siguiente prioridad).
+
 ## Pendientes conocidos
 
 - Módulo **Soluciones** en Filament para editar el contenido de `config/propiedad-horizontal.php` y `config/lead-forms.php` sin deploy (pasar a tablas + seeder + caché).
