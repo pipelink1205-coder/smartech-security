@@ -2628,3 +2628,84 @@ body.body-scroll-locked .clients-ticker-bar { display: none !important; }
     .sc { padding: 56px 0; }
     .slf.form-card { padding: 22px 18px; }
 }
+
+
+/* ════════════════════════════════════════════
+   Barra de acción inferior (móvil) · m-cta
+   ════════════════════════════════════════════ */
+.m-cta { display: none; }
+@media (max-width: 768px) {
+    .m-cta {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 10030;
+        display: flex; gap: 10px; align-items: center;
+        padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+        background: rgba(255,255,255,.94);
+        -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+        border-top: 1px solid rgba(23,143,130,.14);
+        box-shadow: 0 -10px 30px rgba(11,61,54,.12);
+        transition: transform .25s ease, opacity .25s ease;
+    }
+    .m-cta.is-hidden { transform: translateY(110%); opacity: 0; pointer-events: none; }
+    .m-cta__primary {
+        flex: 1; min-height: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        border-radius: 14px; background: var(--brand-gradient); color: #fff; text-decoration: none;
+        font-weight: 800; font-size: .95rem; box-shadow: 0 6px 18px rgba(23,143,130,.32);
+        touch-action: manipulation;
+    }
+    .m-cta__primary:active { transform: scale(.98); }
+    .m-cta__wa {
+        flex-shrink: 0; width: 50px; height: 50px; border-radius: 14px; display: grid; place-items: center;
+        background: #25d366; color: #fff; box-shadow: 0 6px 18px rgba(37,211,102,.32); touch-action: manipulation;
+    }
+    body.has-m-cta { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+    body.has-m-cta .whatsapp-fab { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) { .m-cta { transition: none; } }
+
+/* Contacto contextual de servicios en móvil: formulario primero, menos texto */
+@media (max-width: 640px) {
+    .sc { padding: 40px 0 48px; }
+    .sc__grid { gap: 20px; }
+    .sc h2 { font-size: 1.45rem; }
+    .sc__copy > p { margin-bottom: 0; font-size: .92rem; }
+    .sc__list, .sc__wa { display: none; }
+    .slf .form-row { grid-template-columns: 1fr; gap: 0; }
+    .slf-pill span { padding: 9px 13px; }
+}
+
+@media (max-width: 768px) { html, body { overflow-x: clip; } }
+
+/* Páginas de servicio (sd-) en móvil: título primero, sin duplicar acciones */
+@media (max-width: 640px) {
+    .sd:not(.ph) .sd-hero { padding: 18px 0 28px; margin-bottom: 28px; }
+    .sd:not(.ph) .sd-breadcrumb { display: none; }
+    .sd:not(.ph) .sd-hero-grid { gap: 18px; }
+    .sd:not(.ph) .sd-hero-copy { order: 1; }
+    .sd:not(.ph) .sd-hero-media { order: 2; aspect-ratio: 16 / 9; border-radius: 18px; }
+    .sd:not(.ph) .sd-hero-kicker { font-size: .66rem; padding: 5px 11px; margin-bottom: 12px; }
+    .sd:not(.ph) .sd-hero-title { font-size: 1.85rem; }
+    .sd:not(.ph) .sd-hero-tagline { font-size: .95rem; margin-bottom: 14px; }
+    .sd:not(.ph) .sd-hero-badges { gap: 6px; margin-bottom: 16px; }
+    .sd:not(.ph) .sd-hero-badges li { font-size: .7rem; padding: 5px 10px; }
+    .sd:not(.ph) .sd-hero-actions .btn { min-height: 50px; border-radius: 14px; }
+    .sd:not(.ph) .sd-hero-actions .sd-btn-outline:not(:first-child) { display: none; }
+    .sd .sd-main { gap: 40px; }
+    .sd .sd-aside .sd-quote { display: none; }
+    .sd .sd-others { padding: 16px; }
+    .sd .sd-others ul { display: flex; flex-wrap: wrap; gap: 8px; }
+    .sd .sd-others li { border: 0; padding: 0; }
+    .sd .sd-others a {
+        display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 12px;
+        border-radius: 999px; border: 1px solid rgba(23,143,130,.18); background: var(--green-50); font-size: .8rem;
+    }
+}
+@media (max-width: 640px) {
+    .sd:not(.ph) .sd-hero-actions .btn { flex: 1 1 100%; justify-content: center; }
+    .sd .sd-others ul {
+        flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+        margin-inline: -16px; padding: 2px 16px 6px;
+    }
+    .sd .sd-others ul::-webkit-scrollbar { display: none; }
+    .sd .sd-others li { flex: 0 0 auto; scroll-snap-align: start; }
+    .sd .sd-others a { white-space: nowrap; }
+}

@@ -261,5 +261,7 @@
         {{-- ═══ CONTACTO CONTEXTUAL DEL SERVICIO ═══ --}}
         <x-service-contact :service="$service" />
 
+
+        <x-mobile-cta href="#contacto-servicio" label="Solicitar cotización" intent="info" :wa-message="str_replace(':service', $service->name, \App\Livewire\ServiceLeadForm::configFor($service->slug)['whatsapp'])" />
     </article>
 </x-app-layout>

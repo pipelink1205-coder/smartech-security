@@ -255,5 +255,7 @@
             </section>
 
         </div>
+
+        <x-mobile-cta href="#diagnostico" label="Diagnóstico de TI gratis" />
     </article>
 </x-app-layout>

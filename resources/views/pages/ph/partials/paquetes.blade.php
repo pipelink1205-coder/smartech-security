@@ -9,9 +9,19 @@
         <h2 class="sd-block-title" id="ph-paq">Tres paquetes cerrados, listos para presentar al consejo</h2>
     </header>
 
+    <div x-data="{ plan: '{{ $destacado }}' }">
+    {{-- Móvil: selector tipo app, se ve un paquete a la vez --}}
+    <div class="ph-seg" role="tablist" aria-label="Elegir paquete">
+        @foreach($paquetes as $key => $plan)
+            <button type="button" role="tab" @class(['ph-seg__btn', 'is-active' => $key === $destacado])
+                    :class="{ 'is-active': plan === '{{ $key }}' }" @click="plan = '{{ $key }}'">{{ $plan['name'] }}</button>
+        @endforeach
+    </div>
+
     <div class="ph-plans">
         @foreach($paquetes as $key => $plan)
-            <article @class(['ph-plan', 'ph-plan--featured' => $key === $destacado])>
+            <article @class(['ph-plan', 'ph-plan--featured' => $key === $destacado, 'm-hidden' => $key !== $destacado])
+                     :class="{ 'm-hidden': plan !== '{{ $key }}' }">
                 @if($key === $destacado)
                     <span class="ph-plan__badge">{{ isset($recomendadoLabel) ? $recomendadoLabel : 'Más elegido' }}</span>
                 @endif
@@ -26,6 +36,7 @@
                 <a href="#diagnostico" class="btn {{ $key === $destacado ? 'btn-primary' : 'btn-ghost' }} ph-plan__cta">Cotizar con diagnóstico gratis</a>
             </article>
         @endforeach
+    </div>
     </div>
 
     <div class="ph-plus">

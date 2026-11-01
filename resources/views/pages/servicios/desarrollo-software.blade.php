@@ -228,5 +228,7 @@
         </x-section>
 
         <x-service-contact :service="$service" />
+
+        <x-mobile-cta href="#contacto-servicio" label="Cuéntenos su proyecto" intent="info" :wa-message="str_replace(':service', $service->name, \App\Livewire\ServiceLeadForm::configFor($service->slug)['whatsapp'])" />
     </article>
 </x-app-layout>

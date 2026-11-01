@@ -154,5 +154,7 @@
         </div>
 
         @include('pages.ph.partials.cta')
+
+        <x-mobile-cta href="#diagnostico" label="Agendar diagnóstico gratis" wa-message="Hola, soy de una unidad residencial y quiero agendar el diagnóstico de seguridad gratuito." />
     </article>
 </x-app-layout>

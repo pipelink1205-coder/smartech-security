@@ -163,5 +163,7 @@
             'municipioSlug' => $municipio['slug'],
             'titulo' => 'Diagnóstico gratuito para su unidad en '.$municipio['short'],
         ])
+
+        <x-mobile-cta href="#diagnostico" :label="'Diagnóstico gratis en '.$municipio['short']" :wa-message="'Hola, administro una unidad residencial en '.$municipio['name'].' y quiero información sobre '.$servicio['short'].'.'" />
     </article>
 </x-app-layout>

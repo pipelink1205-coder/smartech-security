@@ -123,5 +123,7 @@
                 <a href="#diagnostico" class="btn btn-primary">Agendar mi diagnóstico gratuito</a>
             </div>
         </div>
+
+        <x-mobile-cta href="#diagnostico" label="Agendar diagnóstico gratis" wa-message="Hola, quiero agendar el diagnóstico de seguridad gratuito para mi unidad residencial." />
     </article>
 </x-app-layout>

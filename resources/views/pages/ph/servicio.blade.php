@@ -134,5 +134,7 @@
         </div>
 
         @include('pages.ph.partials.cta', ['servicioSlug' => $servicio['slug']])
+
+        <x-mobile-cta href="#diagnostico" label="Agendar diagnóstico gratis" :wa-message="'Hola, quiero información sobre '.$servicio['short'].' para mi unidad residencial.'" />
     </article>
 </x-app-layout>
