@@ -35,11 +35,11 @@
                             <li>Medellín y Valle de Aburrá</li>
                         </ul>
                         <div class="sd-hero-actions">
-                            <a href="{{ route('contacto', ['intent' => 'visit']) }}" class="btn btn-primary">Agendar visita gratuita</a>
+                            <a href="#contacto-servicio" data-lead-intent="visit" class="btn btn-primary">Agendar visita gratuita</a>
                             @if($service->slug === 'iptv-hoteles')
                                 <a href="{{ route('home') }}#iptv" class="btn sd-btn-outline">Ver presentación IPTV</a>
                             @endif
-                            <x-whatsapp-link from="service_hero" :service="$service->name" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
+                            <x-whatsapp-link from="service_hero" :message="str_replace(':service', $service->name, \App\Livewire\ServiceLeadForm::configFor($service->slug)['whatsapp'])" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
                         </div>
                     </div>
 
@@ -226,8 +226,8 @@
                     @endif
 
                     <div class="sd-quote-actions">
-                        <a href="{{ route('contacto') }}" class="btn btn-primary sd-btn-block">Solicitar información</a>
-                        <x-whatsapp-link from="service_sidebar" :service="$service->name" class="btn btn-ghost sd-btn-block" target="_blank">Escríbenos por WhatsApp</x-whatsapp-link>
+                        <a href="#contacto-servicio" data-lead-intent="info" class="btn btn-primary sd-btn-block">Solicitar información</a>
+                        <x-whatsapp-link from="service_sidebar" :message="str_replace(':service', $service->name, \App\Livewire\ServiceLeadForm::configFor($service->slug)['whatsapp'])" class="btn btn-ghost sd-btn-block" target="_blank">Escríbenos por WhatsApp</x-whatsapp-link>
                     </div>
 
                     <ul class="sd-quote-trust">
@@ -258,19 +258,8 @@
             </aside>
         </div>
 
-        {{-- ═══ CTA FINAL ═══ --}}
-        <section class="sd-cta">
-            <div class="container">
-                <div class="sd-cta-inner">
-                    <h2>¿Listo para empezar?</h2>
-                    <p>Agenda tu visita técnica gratuita. Tras el diagnóstico te entregamos la cotización a la medida en Medellín y el Valle de Aburrá.</p>
-                    <div class="sd-hero-actions">
-                        <a href="{{ route('contacto', ['intent' => 'visit']) }}" class="btn btn-primary">Agendar visita gratuita</a>
-                        <x-whatsapp-link from="service_cta" :service="$service->name" class="btn sd-btn-outline" target="_blank">WhatsApp</x-whatsapp-link>
-                    </div>
-                </div>
-            </div>
-        </section>
+        {{-- ═══ CONTACTO CONTEXTUAL DEL SERVICIO ═══ --}}
+        <x-service-contact :service="$service" />
 
     </article>
 </x-app-layout>

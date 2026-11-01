@@ -98,7 +98,7 @@
 <script src="{{ asset('js/project-lightbox-swipe.js') }}?v=1"></script>
 @livewireScripts
 @stack('scripts')
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/app.js') }}?v={{ @filemtime(public_path('js/app.js')) ?: '1' }}"></script>
 <script src="{{ asset('js/whatsapp-lead.js') }}?v={{ @filemtime(public_path('js/whatsapp-lead.js')) ?: '1' }}"></script>
 </body>
 </html>

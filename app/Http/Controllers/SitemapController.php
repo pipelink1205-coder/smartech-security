@@ -44,6 +44,15 @@ class SitemapController extends Controller
             // Si la BD falla, devolvemos al menos las páginas fijas.
         }
 
+        foreach (\App\Support\PropiedadHorizontal::allPaths() as $page) {
+            $urls[] = [
+                'loc' => $base.$page['path'],
+                'lastmod' => $lastmod('../../config/propiedad-horizontal.php'),
+                'changefreq' => 'monthly',
+                'priority' => $page['priority'],
+            ];
+        }
+
         $xml = view('sitemap', ['urls' => $urls])->render();
 
         return response($xml, 200, [

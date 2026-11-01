@@ -5,6 +5,7 @@ use App\Http\Controllers\CollectionAccountController;
 use App\Http\Controllers\ElectronicInvoiceController;
 use App\Http\Controllers\EmployeeCardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PropiedadHorizontalController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WhatsappLeadController;
@@ -56,6 +57,22 @@ Route::get('/servicios', [HomeController::class, 'servicios'])->name('servicios'
 Route::get('/servicios/{service:slug}', [HomeController::class, 'servicioShow'])->name('servicios.show');
 Route::get('/proyectos', [HomeController::class, 'proyectos'])->name('proyectos');
 Route::get('/contacto', [HomeController::class, 'contacto'])->name('contacto');
+// Nicho Propiedad Horizontal (unidades / conjuntos residenciales) · landings SEO
+Route::get('/unidades-residenciales', [PropiedadHorizontalController::class, 'hub'])->name('ph.hub');
+Route::get('/unidades-residenciales/diagnostico-gratuito', [PropiedadHorizontalController::class, 'diagnostico'])->name('ph.diagnostico');
+Route::get('/unidades-residenciales/{servicio}', [PropiedadHorizontalController::class, 'servicio'])
+    ->where('servicio', '[a-z0-9-]+')
+    ->name('ph.servicio');
+Route::get('/unidades-residenciales/{servicio}/medellin-el-poblado', fn (string $servicio) => redirect("/unidades-residenciales/{$servicio}/medellin", 301))
+    ->where('servicio', '[a-z0-9-]+');
+Route::get('/unidades-residenciales/{servicio}/{municipio}', [PropiedadHorizontalController::class, 'local'])
+    ->where(['servicio' => '[a-z0-9-]+', 'municipio' => '[a-z0-9-]+'])
+    ->name('ph.local');
+// Alias: "conjuntos" → "unidades" (301 para no perder enlaces ni búsquedas)
+Route::permanentRedirect('/diagnostico-gratuito-conjuntos', '/unidades-residenciales/diagnostico-gratuito');
+Route::get('/conjuntos-residenciales/{path?}', fn (?string $path = null) => redirect('/unidades-residenciales'.($path ? '/'.$path : ''), 301))
+    ->where('path', '[a-z0-9/-]+');
+
 Route::view('/privacidad', 'pages.privacidad')->name('privacidad');
 Route::view('/terminos-y-condiciones', 'pages.terminos')->name('terminos');
 Route::view('/politica-de-ventas', 'pages.politica-ventas')->name('politica-ventas');

@@ -238,7 +238,7 @@
             @endif
 
             {{-- ═══ CTA FINAL + FORMULARIO DE DIAGNÓSTICO ═══ --}}
-            <section class="sd-block ot-final" aria-labelledby="ot-cta">
+            <section class="sd-block ot-final" aria-labelledby="ot-cta" data-contextual-contact>
                 <div class="ot-final-grid">
                     <div class="ot-final-copy">
                         <span class="sd-block-tag">Empieza hoy</span>

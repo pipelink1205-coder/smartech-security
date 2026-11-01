@@ -54,6 +54,37 @@ class Service extends Model
         }
     }
 
+    /**
+     * Servicios activos agrupados para el menú "Servicios" (config/site.php → nav_service_groups).
+     *
+     * @return array<string, \Illuminate\Support\Collection<int, self>>
+     */
+    public static function navGroups(): array
+    {
+        try {
+            $all = static::query()->active()->ordered()->get(['id', 'name', 'slug', 'icon'])->keyBy('slug')->toBase();
+        } catch (\Throwable) {
+            return [];
+        }
+
+        $groups = [];
+        $used = [];
+        foreach (config('site.nav_service_groups', []) as $label => $slugs) {
+            $items = collect($slugs)->map(fn ($slug) => $all->get($slug))->filter()->values();
+            if ($items->isNotEmpty()) {
+                $groups[$label] = $items;
+                $used = array_merge($used, $slugs);
+            }
+        }
+
+        $rest = $all->except($used)->values();
+        if ($rest->isNotEmpty()) {
+            $groups['Más servicios'] = $rest;
+        }
+
+        return $groups;
+    }
+
     public function getImageUrlAttribute(): string
     {
         $url = null;

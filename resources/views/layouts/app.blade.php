@@ -42,6 +42,6 @@
 
 <script src="{{ asset('js/project-lightbox-swipe.js') }}?v=1"></script>
 @livewireScripts
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/app.js') }}?v={{ @filemtime(public_path('js/app.js')) ?: '1' }}"></script>
 </body>
 </html>

@@ -72,6 +72,20 @@ return [
     ],
 
     /** Slugs que ya tienen botón propio en el menú; no se repiten en el desplegable de Servicios. */
+    /** Menú "Servicios": servicios agrupados por categoría (los que no estén aquí van a "Más servicios"). */
+    'nav_service_groups' => [
+        'Seguridad electrónica' => [
+            'camaras-4k', 'control-acceso', 'control-acceso-vehicular',
+            'video-porteros-citofonia-ip', 'alarmas', 'deteccion-incendios',
+        ],
+        'Conectividad y energía' => [
+            'redes-fibra', 'enlaces-inalambricos', 'iptv-hoteles', 'domotica', 'energia-solar',
+        ],
+        'Tecnología para empresas' => [
+            'outsourcing-ti', 'ciberseguridad-empresas', 'desarrollo-software',
+        ],
+    ],
+
     'nav_featured_slugs' => [
         'iptv-hoteles',
         'outsourcing-ti',

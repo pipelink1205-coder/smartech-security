@@ -199,10 +199,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Contacto contextual: en páginas con formulario propio, "Contacto" y "Agendar visita"
+    // llevan a ese formulario (no al genérico del inicio).
+    const scrollToContextualContact = (intent) => {
+        const ctx = document.querySelector('[data-contextual-contact]');
+        if (!ctx) {
+            return false;
+        }
+        const navH = document.getElementById('navbar')?.offsetHeight || 0;
+        window.scrollTo({ top: ctx.getBoundingClientRect().top + window.scrollY - navH - 16, behavior: 'smooth' });
+        if (intent && window.Livewire) {
+            window.Livewire.dispatch('setLeadIntent', { intent });
+        }
+        closeMobileMenu();
+        return true;
+    };
+
+    document.querySelectorAll('[data-lead-intent]').forEach((el) => {
+        el.addEventListener('click', () => {
+            if (window.Livewire) {
+                window.Livewire.dispatch('setLeadIntent', { intent: el.dataset.leadIntent });
+            }
+        });
+    });
+
     document.querySelectorAll('[data-page-link]').forEach((el) => {
         el.addEventListener('click', (e) => {
             const pageId = el.dataset.pageLink;
             if (!pageId) {
+                return;
+            }
+            if (pageId === 'contacto' && scrollToContextualContact(el.dataset.quoteIntent)) {
+                e.preventDefault();
                 return;
             }
             e.preventDefault();
@@ -218,11 +246,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="#"]:not([data-page-link])').forEach((a) => {
         a.addEventListener('click', (e) => {
             const pageId = a.getAttribute('href')?.slice(1);
-            if (!pageId || !document.getElementById(pageId)) {
+            const target = pageId ? document.getElementById(pageId) : null;
+            if (!target) {
                 return;
             }
             e.preventDefault();
-            window.showPage(pageId);
+
+            // Secciones del home (.site-page): navegación por "páginas".
+            if (target.classList.contains('site-page')) {
+                window.showPage(pageId);
+                return;
+            }
+
+            // Anclas internas (ej. #diagnostico en páginas de servicio): scroll suave bajo el navbar fijo.
+            const navH = document.getElementById('navbar')?.offsetHeight || 0;
+            const top = target.getBoundingClientRect().top + window.scrollY - navH - 16;
+            window.scrollTo({ top, behavior: 'smooth' });
+            history.replaceState(null, '', `#${pageId}`);
+            closeMobileMenu();
         });
     });
 

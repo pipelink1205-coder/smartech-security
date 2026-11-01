@@ -7,7 +7,7 @@
     :whatsapp-service="$service->name"
 >
     @php
-        $contactUrl = route('contacto', ['servicio' => $service->name]);
+        $contactUrl = '#contacto-servicio';
         $problems = [
             'Información dispersa en archivos Excel',
             'Procesos administrativos manuales',
@@ -108,8 +108,8 @@
                         <p class="sd-hero-tagline">Diseñamos aplicaciones web, sistemas empresariales, automatizaciones y soluciones de analítica de datos construidas alrededor de los procesos reales de tu organización.</p>
                         <p class="software-hero-topics">Software a medida · Aplicaciones Web · Automatización · Inteligencia Artificial · Analítica de Datos · Integraciones</p>
                         <div class="sd-hero-actions">
-                            <a href="{{ $contactUrl }}" class="btn btn-primary">Solicitar diagnóstico</a>
-                            <x-whatsapp-link from="service_hero" :service="$service->name" class="btn sd-btn-outline" target="_blank">Hablar con un especialista</x-whatsapp-link>
+                            <a href="{{ $contactUrl }}" data-lead-intent="info" class="btn btn-primary">Solicitar diagnóstico</a>
+                            <x-whatsapp-link from="service_hero" :message="str_replace(':service', $service->name, \App\Livewire\ServiceLeadForm::configFor($service->slug)['whatsapp'])" class="btn sd-btn-outline" target="_blank">Hablar con un especialista</x-whatsapp-link>
                         </div>
                     </div>
 
@@ -227,11 +227,6 @@
             </div>
         </x-section>
 
-        <x-section tone="contact" class="software-final" tag="Hablemos de tu proyecto" title="¿Tienes un proceso que podría funcionar mejor?" subtitle="Cuéntanos cómo trabaja actualmente tu empresa. Podemos analizar el proceso y evaluar qué solución tecnológica puede ayudarte a optimizarlo.">
-            <div class="software-final-actions">
-                <a href="{{ $contactUrl }}" class="btn btn-primary">Solicitar diagnóstico</a>
-                <x-whatsapp-link from="service_cta" :service="$service->name" class="btn btn-outline-white" target="_blank">Hablar por WhatsApp</x-whatsapp-link>
-            </div>
-        </x-section>
+        <x-service-contact :service="$service" />
     </article>
 </x-app-layout>
