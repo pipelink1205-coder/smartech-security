@@ -196,6 +196,10 @@ images/services/nombre-archivo.png
 
 No hace falta ejecutar `php artisan storage:link` para esas carpetas.
 
+### Producción en VPS (Hostinger)
+
+La guía para dejar el sitio en un VPS Linux (Nginx + PHP-FPM), saliendo de IIS, está en [docs/migracion-hostinger-vps.md](docs/migracion-hostinger-vps.md). Los apartados de IIS de abajo siguen aplicando solo mientras el sitio viva en Windows.
+
 ### Producción (IIS + Cloudflare): error 401 al subir
 
 Si en el navegador la petición `livewire/.../upload-file` devuelve **401 Unauthorized**:

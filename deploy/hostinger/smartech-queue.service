@@ -1,0 +1,22 @@
+# Worker de colas. Hace falta si QUEUE_CONNECTION=database (valor por defecto del proyecto).
+# Si en .env quedó QUEUE_CONNECTION=sync, no actives esta unidad.
+#
+#   sudo cp deploy/hostinger/smartech-queue.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now smartech-queue
+
+[Unit]
+Description=Smart Tech Security queue worker
+After=network.target mariadb.service mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=3
+WorkingDirectory=/var/www/smartech
+ExecStart=/usr/bin/php artisan queue:work --sleep=1 --tries=3 --timeout=120 --max-time=3600
+
+[Install]
+WantedBy=multi-user.target
